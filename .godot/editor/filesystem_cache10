@@ -1,3 +1,12 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1769407656
+::res://::1769410607
+export_presets.cfg::TextFile::-1::1769408060::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::1722042659524607886::1769407643::1769407661::1::::<><><>0<>0<>05aae86a133ed43399370163acfe64b6<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
+README.md::TextFile::-1::1769406395::0::1::::<><><>0<>0<><>::
+::res://scenes/::1769410934
+Commander.tscn::PackedScene::6823573952492351123::1769410692::0::1::::<><><>0<>0<><>::uid://dbxm3x0u6vblc::::res://scripts/Commander.gd<>uid://ysf15n2ryn0y::::res://icon.svg
+how-do-i-make-a-scrolling-map-like-vampire-survivors-v0-ujso3gr2c2cd1.webp::CompressedTexture2D::2135166628717580207::1769410934::1769410934::1::::<><><>0<>0<>6aa5ea96e56d6622ed956eec2d2a722b<>res://.godot/imported/how-do-i-make-a-scrolling-map-like-vampire-survivors-v0-ujso3gr2c2cd1.webp-a4d0a893925e0237deb03a939b10c0b3.ctex::
+World.tscn::PackedScene::513275374555787192::1769410829::0::1::::<><><>0<>0<><>::
+::res://scripts/::1769410691
+Commander.gd::GDScript::7277711436811370580::1769410691::0::1::::<>CharacterBody2D<><>0<>0<><>::
+GameData.gd::GDScript::5577441655176471578::1769409694::0::1::::<>Node<><>0<>0<><>::
