@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4hnjbti1u5md"]
+
+[ext_resource type="Script" uid="uid://dbxm3x0u6vblc" path="res://scripts/Commander.gd" id="1_8r5yp"]
+[ext_resource type="Texture2D" uid="uid://ysf15n2ryn0y" path="res://icon.svg" id="2_4iiit"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fn4fg"]
+radius = 82.4
+
+[node name="Commander" type="CharacterBody2D" groups=["commander"]]
+script = ExtResource("1_8r5yp")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_4iiit")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 0)
+shape = SubResource("CircleShape2D_fn4fg")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(1, 0)
