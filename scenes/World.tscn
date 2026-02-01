@@ -1,13 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://hkvtnoedc113"]
 
-[ext_resource type="Texture2D" uid="uid://ysf15n2ryn0y" path="res://icon.svg" id="1_32lhk"]
 [ext_resource type="PackedScene" uid="uid://c4hnjbti1u5md" path="res://scenes/Commander.tscn" id="2_7g83o"]
+[ext_resource type="Script" uid="uid://dblgcfbmsn2rj" path="res://scripts/GridBackground.gd" id="2_32lhk"]
 
 [node name="World" type="Node2D"]
 
-[node name="Icon" type="Sprite2D" parent="."]
-position = Vector2(123, -3)
-texture = ExtResource("1_32lhk")
+[node name="GridBackground" type="Node2D" parent="."]
+script = ExtResource("2_32lhk")
 
 [node name="Commander" parent="." instance=ExtResource("2_7g83o")]
-position = Vector2(-3, 0)
+position = Vector2(576, 324)
