@@ -167,7 +167,7 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hogjo"]
-radius = 9.0
+radius = 12.0
 height = 65.0
 
 [node name="Commander" type="CharacterBody2D" unique_id=645142591 groups=["commander"]]
