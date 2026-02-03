@@ -69,13 +69,20 @@ func _physics_process(delta):
 		# normal movement
 		if direction != Vector2.ZERO:
 			velocity = direction.normalized() * SPEED
+			$AnimatedSprite2D.play()
 		else:
 			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
-	
-	# mouse controls moving direction
-	if mouse_control_enabled:
-		var mouse_pos = get_global_mouse_position()
-		look_at(mouse_pos)
+			$AnimatedSprite2D.stop()
+		
+		if velocity.x < 0:
+			$AnimatedSprite2D.animation = "walk_left"
+		elif velocity.x > 0:
+			$AnimatedSprite2D.animation = "walk_right"
+		elif velocity.y < 0:
+			$AnimatedSprite2D.animation = "walk_up"
+		else:
+			$AnimatedSprite2D.animation = "walk_down"
+		
 	
 	move_and_slide()
 
