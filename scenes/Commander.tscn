@@ -167,18 +167,21 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hogjo"]
-radius = 12.0
-height = 65.0
+radius = 21.94
+height = 103.52
 
-[node name="Commander" type="CharacterBody2D" unique_id=645142591 groups=["commander"]]
+[node name="Commander" type="Area2D" unique_id=547804967 groups=["commander"]]
 script = ExtResource("1_8r5yp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=558732170]
+scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_yhqtw")
 animation = &"walk_down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=95487807]
-position = Vector2(1, 2)
+position = Vector2(1, 6)
 shape = SubResource("CapsuleShape2D_hogjo")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=466306321]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

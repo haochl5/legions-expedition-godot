@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Legions Expedition"
-run/main_scene="uid://hkvtnoedc113"
+run/main_scene="uid://d2p17av5l7byy"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 

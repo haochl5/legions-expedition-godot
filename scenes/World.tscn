@@ -1,12 +1,15 @@
 [gd_scene format=3 uid="uid://hkvtnoedc113"]
 
+[ext_resource type="PackedScene" uid="uid://c7a417v843a7d" path="res://scenes/grid_background.tscn" id="1_7g83o"]
 [ext_resource type="PackedScene" uid="uid://c4hnjbti1u5md" path="res://scenes/Commander.tscn" id="2_7g83o"]
-[ext_resource type="Script" uid="uid://dblgcfbmsn2rj" path="res://scripts/GridBackground.gd" id="2_32lhk"]
+[ext_resource type="PackedScene" uid="uid://draqeog44flqa" path="res://scenes/mob.tscn" id="3_7g83o"]
 
 [node name="World" type="Node2D" unique_id=1052436173]
 
-[node name="GridBackground" type="Node2D" parent="." unique_id=947237990]
-script = ExtResource("2_32lhk")
+[node name="GridBackground" parent="." unique_id=1365587525 instance=ExtResource("1_7g83o")]
 
 [node name="Commander" parent="." unique_id=1758030851 instance=ExtResource("2_7g83o")]
 position = Vector2(576, 324)
+
+[node name="Mob" parent="." unique_id=1251889614 instance=ExtResource("3_7g83o")]
+position = Vector2(715, 86)

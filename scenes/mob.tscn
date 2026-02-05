@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://draqeog44flqa"]
+
+[ext_resource type="Script" uid="uid://cx8gymhwbygr0" path="res://scenes/mob.gd" id="1_bsing"]
+[ext_resource type="Texture2D" uid="uid://b3w8rf75y2umw" path="res://assets/character/godotmob.png" id="2_d4cuo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d1c63"]
+atlas = ExtResource("2_d4cuo")
+region = Rect2(0, 0, 313, 297)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1lgw5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d1c63")
+}],
+"loop": true,
+"name": &"movement",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hlk0d"]
+radius = 49.0
+height = 98.0
+
+[node name="Mob" type="RigidBody2D" unique_id=1251889614]
+collision_mask = 0
+gravity_scale = 0.0
+script = ExtResource("1_bsing")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=685656536]
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_1lgw5")
+animation = &"movement"
+frame_progress = 0.7975492
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=563808431]
+position = Vector2(47, 44.25)
+shape = SubResource("CapsuleShape2D_hlk0d")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=455221872]
