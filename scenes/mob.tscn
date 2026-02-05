@@ -18,25 +18,25 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hlk0d"]
-radius = 49.0
-height = 98.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_bsing"]
+radius = 25.279686
 
 [node name="Mob" type="RigidBody2D" unique_id=1251889614]
+position = Vector2(-24, -10)
 collision_mask = 0
 gravity_scale = 0.0
 script = ExtResource("1_bsing")
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=685656536]
-scale = Vector2(0.3, 0.3)
+scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_1lgw5")
 animation = &"movement"
 frame_progress = 0.7975492
 centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=563808431]
-position = Vector2(47, 44.25)
-shape = SubResource("CapsuleShape2D_hlk0d")
+position = Vector2(31, 30.25)
+shape = SubResource("CircleShape2D_bsing")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=455221872]

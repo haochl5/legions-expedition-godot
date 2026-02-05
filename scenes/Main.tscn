@@ -7,7 +7,7 @@
 
 [sub_resource type="Curve2D" id="Curve2D_rvslj"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 168, 368, 0, 0, 0, 0, 336, 368, 0, 0, 0, 0, 344, 536, 0, 0, 0, 0, 168, 536, 0, 0, 0, 0, 168, 368)
+"points": PackedVector2Array(0, 0, 0, 0, 128, 312, 0, 0, 0, 0, 384, 320, 0, 0, 0, 0, 384, 504, 0, 0, 0, 0, 128, 504, 0, 0, 0, 0, 128, 312)
 }
 point_count = 5
 
@@ -25,8 +25,6 @@ mob_scene = ExtResource("2_0bbpv")
 wait_time = 0.5
 one_shot = true
 
-[node name="ScoreTimer" type="Timer" parent="." unique_id=113365451]
-
 [node name="StartPosition" type="Marker2D" parent="." unique_id=782387401]
 position = Vector2(240, 450)
 
@@ -34,9 +32,9 @@ position = Vector2(240, 450)
 curve = SubResource("Curve2D_rvslj")
 
 [node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=1750953879]
-position = Vector2(168, 368)
+position = Vector2(128, 312)
+rotation = 0.031239834
 
 [connection signal="hit" from="Commander" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
 [connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
-[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
