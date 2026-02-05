@@ -1,4 +1,6 @@
-extends CharacterBody2D
+extends Area2D
+
+signal hit
 
 # Movement parameters
 const SPEED = 400.0
@@ -24,6 +26,9 @@ var shoot_cooldown_timer = 0.0
 # Mouse-based rotation
 var mouse_control_enabled = true
 
+# Movement
+var velocity = Vector2.ZERO
+
 func _ready():
 	# lock mouse to the window
 	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
@@ -43,7 +48,7 @@ func _input(event):
 			if event.button_index == MOUSE_BUTTON_LEFT:
 				shoot()
 
-func _physics_process(delta):
+func _process(delta):
 	# dash cooldown
 	if dash_cooldown_timer > 0:
 		dash_cooldown_timer -= delta
@@ -69,15 +74,21 @@ func _physics_process(delta):
 		# normal movement
 		if direction != Vector2.ZERO:
 			velocity = direction.normalized() * SPEED
+			$AnimatedSprite2D.play()
 		else:
 			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
-	
-	# mouse controls moving direction
-	if mouse_control_enabled:
-		var mouse_pos = get_global_mouse_position()
-		look_at(mouse_pos)
-	
-	move_and_slide()
+			$AnimatedSprite2D.stop()
+		
+		if velocity.x < 0:
+			$AnimatedSprite2D.animation = "walk_left"
+		elif velocity.x > 0:
+			$AnimatedSprite2D.animation = "walk_right"
+		elif velocity.y < 0:
+			$AnimatedSprite2D.animation = "walk_up"
+		else:
+			$AnimatedSprite2D.animation = "walk_down"
+		
+	global_position += velocity * delta
 
 func start_dash(direction: Vector2):
 	is_dashing = true
@@ -104,3 +115,15 @@ func shoot():
 	
 	# Add the bullet to the scene tree (add it to the World hierarchy, not as a child node of the Commander).
 	get_parent().add_child(bullet)
+
+
+func _on_body_entered(body: Node2D) -> void:
+	hide() # Player disappears after being hit.
+	hit.emit()
+	# Must be deferred as we can't change physics properties on a physics callback.
+	$CollisionShape2D.set_deferred("disabled", true)
+
+func start(pos):
+	position = pos
+	show()
+	$CollisionShape2D.disabled = false

@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://d2p17av5l7byy"]
+
+[ext_resource type="PackedScene" uid="uid://c4hnjbti1u5md" path="res://scenes/Commander.tscn" id="1_elqb8"]
+[ext_resource type="Script" uid="uid://28k3b60vtk1q" path="res://scenes/main.gd" id="1_rvslj"]
+[ext_resource type="PackedScene" uid="uid://draqeog44flqa" path="res://scenes/mob.tscn" id="2_0bbpv"]
+[ext_resource type="PackedScene" uid="uid://c7a417v843a7d" path="res://scenes/grid_background.tscn" id="3_rarhs"]
+
+[sub_resource type="Curve2D" id="Curve2D_rvslj"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 128, 312, 0, 0, 0, 0, 384, 320, 0, 0, 0, 0, 384, 504, 0, 0, 0, 0, 128, 504, 0, 0, 0, 0, 128, 312)
+}
+point_count = 5
+
+[node name="Main" type="Node" unique_id=1901518659]
+script = ExtResource("1_rvslj")
+mob_scene = ExtResource("2_0bbpv")
+
+[node name="GridBackground" parent="." unique_id=1365587525 instance=ExtResource("3_rarhs")]
+
+[node name="Commander" parent="." unique_id=547804967 instance=ExtResource("1_elqb8")]
+
+[node name="MobTimer" type="Timer" parent="." unique_id=1820607704]
+
+[node name="StartTimer" type="Timer" parent="." unique_id=1433707992]
+wait_time = 0.5
+one_shot = true
+
+[node name="StartPosition" type="Marker2D" parent="." unique_id=782387401]
+position = Vector2(240, 450)
+
+[node name="MobPath" type="Path2D" parent="." unique_id=1742900561]
+curve = SubResource("Curve2D_rvslj")
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=1750953879]
+position = Vector2(128, 312)
+rotation = 0.031239834
+
+[connection signal="hit" from="Commander" to="." method="game_over"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
