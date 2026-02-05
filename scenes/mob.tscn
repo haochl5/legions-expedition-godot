@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://draqeog44flqa"]
 
-[ext_resource type="Script" uid="uid://cx8gymhwbygr0" path="res://scenes/mob.gd" id="1_bsing"]
+[ext_resource type="Script" uid="uid://cx8gymhwbygr0" path="res://scripts/mob.gd" id="1_bsing"]
 [ext_resource type="Texture2D" uid="uid://b3w8rf75y2umw" path="res://assets/character/godotmob.png" id="2_d4cuo"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d1c63"]
