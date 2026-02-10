@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://dugrjvededq2o"]
+
+[node name="Control" type="Control" unique_id=1600530245]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=387820048]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.019607844, 0.019607844, 0.019607844, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1356435547]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=965574305]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer" unique_id=1985117759]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=929567827]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=27345630]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=324297400]
+layout_mode = 2
+
+[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1024151882]
+layout_mode = 2

@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://era5pcnk2fj5"]
+
+[ext_resource type="Script" uid="uid://crl8nj07iibvy" path="res://scripts/shop_card.gd" id="1_f6rn2"]
+
+[node name="PanelContainer" type="PanelContainer" unique_id=13821212]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_f6rn2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1305537610]
+layout_mode = 2
+
+[node name="visual" type="TextureRect" parent="VBoxContainer" unique_id=224377679]
+layout_mode = 2
+
+[node name="name" type="Label" parent="VBoxContainer" unique_id=906355101]
+layout_mode = 2
+
+[node name="stats" type="Label" parent="VBoxContainer" unique_id=619417827]
+layout_mode = 2
+
+[node name="Description" type="Label" parent="VBoxContainer" unique_id=1444732677]
+layout_mode = 2
+
+[node name="Buy Button" type="Button" parent="VBoxContainer" unique_id=1794927950]
+layout_mode = 2
