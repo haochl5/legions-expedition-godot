@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://28k3b60vtk1q" path="res://scripts/main.gd" id="1_rvslj"]
 [ext_resource type="PackedScene" uid="uid://draqeog44flqa" path="res://scenes/mob.tscn" id="2_0bbpv"]
 [ext_resource type="PackedScene" uid="uid://c7a417v843a7d" path="res://scenes/grid_background.tscn" id="3_rarhs"]
+[ext_resource type="PackedScene" uid="uid://dhdmpiip6op6t" path="res://scenes/Bullet.tscn" id="5_vcsgt"]
+[ext_resource type="PackedScene" uid="uid://dm82kvnejq8ys" path="res://scenes/UI.tscn" id="6_c01mt"]
 
 [sub_resource type="Curve2D" id="Curve2D_rvslj"]
 _data = {
@@ -19,7 +21,10 @@ mob_scene = ExtResource("2_0bbpv")
 
 [node name="Commander" parent="." unique_id=547804967 instance=ExtResource("1_elqb8")]
 
+[node name="Bullet" parent="." unique_id=972359357 instance=ExtResource("5_vcsgt")]
+
 [node name="MobTimer" type="Timer" parent="." unique_id=1820607704]
+wait_time = 3.0
 
 [node name="StartTimer" type="Timer" parent="." unique_id=1433707992]
 wait_time = 0.5
@@ -34,6 +39,10 @@ curve = SubResource("Curve2D_rvslj")
 [node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=1750953879]
 position = Vector2(128, 312)
 rotation = 0.031239834
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=996040357]
+
+[node name="UI" parent="CanvasLayer" unique_id=1022567123 instance=ExtResource("6_c01mt")]
 
 [connection signal="hit" from="Commander" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
