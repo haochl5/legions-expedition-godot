@@ -1,18 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://dhdmpiip6op6t"]
+[gd_scene format=3 uid="uid://dhdmpiip6op6t"]
 
 [ext_resource type="Script" uid="uid://cym4vbx0hl3pr" path="res://scripts/Bullet.gd" id="1_p1sfj"]
-[ext_resource type="Texture2D" uid="uid://ysf15n2ryn0y" path="res://icon.svg" id="2_4utqk"]
+[ext_resource type="Texture2D" uid="uid://dimg27jg6vlqu" path="res://assets/Ninja Adventure - Asset Pack/Items/Projectile/Shuriken.png" id="2_p1sfj"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_51h0o"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_p1sfj"]
 radius = 8.0
 
-[node name="Bullet" type="Area2D"]
+[node name="Bullet" type="Area2D" unique_id=345806133]
 script = ExtResource("1_p1sfj")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1035598040]
 modulate = Color(1, 0.92156863, 0.23137255, 1)
-scale = Vector2(0.063, 0.063)
-texture = ExtResource("2_4utqk")
+scale = Vector2(2, 2)
+texture = ExtResource("2_p1sfj")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_51h0o")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=669034383]
+scale = Vector2(1.5, 1.5)
+shape = SubResource("CircleShape2D_p1sfj")
