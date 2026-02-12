@@ -38,9 +38,12 @@ var mouse_control_enabled = true
 # Movement
 var velocity = Vector2.ZERO
 
+@onready var physics_body = $StaticBody2D
+
 func _ready():
 	# lock mouse to the window
 	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	
 
 func _input(event):
 	# ESC exit mouse control
@@ -55,6 +58,7 @@ func _input(event):
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED
 
 func _process(delta):
+	
 	if is_invincible:
 		invincibility_timer -= delta
 		if invincibility_timer <= 0:
@@ -104,8 +108,18 @@ func _process(delta):
 			$AnimatedSprite2D.animation = "walk_up"
 		else:
 			$AnimatedSprite2D.animation = "walk_down"
-		
-	global_position += velocity * delta
+	
+	# wall collision - moved outside else block
+	var motion = velocity * delta
+	var collision = physics_body.move_and_collide(motion, false, 0.08, true)
+
+	if collision:
+		motion = velocity.slide(collision.get_normal()) * delta
+		physics_body.position = Vector2.ZERO
+		global_position += motion
+	else:
+		physics_body.position = Vector2.ZERO
+		global_position += motion
 
 func start_dash(direction: Vector2):
 	is_dashing = true
@@ -158,6 +172,7 @@ func die():
 	hide()
 	hit.emit()
 	$CollisionShape2D.set_deferred("disabled", true)
+	physics_body.get_node("CollisionShape2D").set_deferred("disabled", true)
 
 func start(pos):
 	position = pos
@@ -167,3 +182,4 @@ func start(pos):
 	$AnimatedSprite2D.visible = true
 	show()
 	$CollisionShape2D.disabled = false
+	physics_body.get_node("CollisionShape2D").disabled = false
