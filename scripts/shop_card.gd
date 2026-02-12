@@ -11,14 +11,13 @@ var my_data: ChampionData
 @onready var buy_btn = $VBoxContainer/BuyButton
 
 func setup(data: ChampionData):
+	icon_rect.texture = data.icon
 	my_data = data
 	name_lbl.text = data.display_name
 	role_lbl.text = "%s | HP: %d" % [data.role, data.hp]
 	desc_lbl.text = "%s: %s" % [data.skill_name, data.description]
 	buy_btn.text = "%d Gold" % data.cost
 	
-	# Apply color styling similar to HTML CSS
-	self.modulate = data.color 
 	
 	# Connect the button internally
 	if not buy_btn.pressed.is_connected(_on_buy_pressed):

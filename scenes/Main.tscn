@@ -6,6 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://c7a417v843a7d" path="res://scenes/grid_background.tscn" id="3_rarhs"]
 [ext_resource type="PackedScene" uid="uid://dhdmpiip6op6t" path="res://scenes/Bullet.tscn" id="5_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://dm82kvnejq8ys" path="res://scenes/UI.tscn" id="6_c01mt"]
+[ext_resource type="Script" uid="uid://djhvnww3w8no4" path="res://scripts/SquadManager.gd" id="7_nxtc6"]
+[ext_resource type="PackedScene" uid="uid://52sfw5gytgx6" path="res://scenes/Unit.tscn" id="8_q8u5g"]
+[ext_resource type="PackedScene" uid="uid://dugrjvededq2o" path="res://scenes/ReinforcementScreen.tscn" id="9_lhr70"]
 
 [sub_resource type="Curve2D" id="Curve2D_rvslj"]
 _data = {
@@ -43,6 +46,16 @@ rotation = 0.031239834
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=996040357]
 
 [node name="UI" parent="CanvasLayer" unique_id=1022567123 instance=ExtResource("6_c01mt")]
+
+[node name="Control" parent="CanvasLayer" unique_id=1600530245 instance=ExtResource("9_lhr70")]
+process_mode = 3
+visible = false
+
+[node name="SquadManager" type="Node" parent="." unique_id=1103785219 node_paths=PackedStringArray("reinforcement_screen", "player")]
+script = ExtResource("7_nxtc6")
+reinforcement_screen = NodePath("../CanvasLayer/Control")
+player = NodePath("../Commander")
+unit_scene = ExtResource("8_q8u5g")
 
 [connection signal="hit" from="Commander" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]

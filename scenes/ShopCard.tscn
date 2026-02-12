@@ -3,24 +3,29 @@
 [ext_resource type="Script" uid="uid://crl8nj07iibvy" path="res://scripts/shop_card.gd" id="1_f6rn2"]
 
 [node name="PanelContainer" type="PanelContainer" unique_id=13821212]
+custom_minimum_size = Vector2(150, 250)
 offset_right = 40.0
 offset_bottom = 40.0
+size_flags_horizontal = 3
 script = ExtResource("1_f6rn2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1305537610]
 layout_mode = 2
 
-[node name="visual" type="TextureRect" parent="VBoxContainer" unique_id=224377679]
+[node name="IconRect" type="TextureRect" parent="VBoxContainer" unique_id=224377679]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="VBoxContainer" unique_id=906355101]
 layout_mode = 2
 
-[node name="name" type="Label" parent="VBoxContainer" unique_id=906355101]
+[node name="RoleLabel" type="Label" parent="VBoxContainer" unique_id=619417827]
 layout_mode = 2
 
-[node name="stats" type="Label" parent="VBoxContainer" unique_id=619417827]
+[node name="DescLabel" type="Label" parent="VBoxContainer" unique_id=1444732677]
 layout_mode = 2
 
-[node name="Description" type="Label" parent="VBoxContainer" unique_id=1444732677]
-layout_mode = 2
-
-[node name="Buy Button" type="Button" parent="VBoxContainer" unique_id=1794927950]
+[node name="BuyButton" type="Button" parent="VBoxContainer" unique_id=1794927950]
 layout_mode = 2
