@@ -6,10 +6,19 @@ signal hit
 const SPEED = 400.0
 const DASH_SPEED = 1200.0
 const DASH_DURATION = 0.15
-const DASH_COOLDOWN = 1.0
+const DASH_COOLDOWN = 2.0
+
+# Health
+const MAX_HP = 10
+var hp = MAX_HP
+
+# Invincibility after being hit
+const INVINCIBILITY_TIME = 1.0
+var is_invincible = false
+var invincibility_timer = 0.0
 
 # Shooting parameters
-const SHOOT_COOLDOWN = 0.3    # shooting interval
+const SHOOT_COOLDOWN = 0.5    # shooting interval
 const BULLET_OFFSET = 40.0     # Bullet generation offset distance
 
 var bullet_scene = preload("res://scenes/Bullet.tscn")
@@ -29,9 +38,12 @@ var mouse_control_enabled = true
 # Movement
 var velocity = Vector2.ZERO
 
+@onready var physics_body = $StaticBody2D
+
 func _ready():
 	# lock mouse to the window
 	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	
 
 func _input(event):
 	# ESC exit mouse control
@@ -44,16 +56,25 @@ func _input(event):
 		if not mouse_control_enabled:
 			mouse_control_enabled = true
 			Input.mouse_mode = Input.MOUSE_MODE_CONFINED
-		else:
-			if event.button_index == MOUSE_BUTTON_LEFT:
-				shoot()
 
 func _process(delta):
+	
+	if is_invincible:
+		invincibility_timer -= delta
+		if invincibility_timer <= 0:
+			is_invincible = false
+			$AnimatedSprite2D.visible = true
+		else:
+			$AnimatedSprite2D.visible = int(invincibility_timer * 10) % 2 == 0
+	
 	# dash cooldown
 	if dash_cooldown_timer > 0:
 		dash_cooldown_timer -= delta
 	if shoot_cooldown_timer > 0:
 		shoot_cooldown_timer -= delta
+	
+	if mouse_control_enabled and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		shoot()
 	
 	# dash logic
 	if is_dashing:
@@ -87,8 +108,18 @@ func _process(delta):
 			$AnimatedSprite2D.animation = "walk_up"
 		else:
 			$AnimatedSprite2D.animation = "walk_down"
-		
-	global_position += velocity * delta
+	
+	# wall collision - moved outside else block
+	var motion = velocity * delta
+	var collision = physics_body.move_and_collide(motion, false, 0.08, true)
+
+	if collision:
+		motion = velocity.slide(collision.get_normal()) * delta
+		physics_body.position = Vector2.ZERO
+		global_position += motion
+	else:
+		physics_body.position = Vector2.ZERO
+		global_position += motion
 
 func start_dash(direction: Vector2):
 	is_dashing = true
@@ -108,22 +139,47 @@ func shoot():
 	
 	var shoot_direction = (get_global_mouse_position() - global_position).normalized()
 	
+	bullet.direction = shoot_direction
+	
 	# Set the initial position of the bullet (slightly in front of the character).
 	bullet.global_position = global_position + shoot_direction * BULLET_OFFSET
 	
-	bullet.direction = shoot_direction
-	
-	# Add the bullet to the scene tree (add it to the World hierarchy, not as a child node of the Commander).
-	get_parent().add_child(bullet)
+	get_tree().root.add_child(bullet)
 
 
 func _on_body_entered(body: Node2D) -> void:
-	hide() # Player disappears after being hit.
+	# Take damage only when it collided with the mob
+	if body.is_in_group("enemy"):
+		take_damage(1)
+
+func take_damage(damage: int):
+	if is_invincible:
+		return
+	
+	hp -= damage
+	hp = max(hp, 0)
+	
+	if hp <= 0:
+		die()
+	else:
+		invincible_on()
+
+func invincible_on():	
+	is_invincible = true
+	invincibility_timer = INVINCIBILITY_TIME
+
+func die():
+	hide()
 	hit.emit()
-	# Must be deferred as we can't change physics properties on a physics callback.
 	$CollisionShape2D.set_deferred("disabled", true)
+	physics_body.get_node("CollisionShape2D").set_deferred("disabled", true)
 
 func start(pos):
 	position = pos
+	hp = MAX_HP
+	is_invincible = false
+	invincibility_timer = 0.0
+	$AnimatedSprite2D.visible = true
 	show()
 	$CollisionShape2D.disabled = false
+	physics_body.get_node("CollisionShape2D").disabled = false

@@ -6,11 +6,9 @@ extends Node
 func _ready() -> void:
 	new_game()
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
-
+	$CanvasLayer/UI.update_hp($Commander.hp)
 
 func game_over() -> void:
 	$MobTimer.stop()
@@ -18,7 +16,6 @@ func game_over() -> void:
 func new_game():
 	$Commander.start($StartPosition.position)
 	$StartTimer.start()
-
 
 func _on_mob_timer_timeout() -> void:
 	# create new instance for Mob
