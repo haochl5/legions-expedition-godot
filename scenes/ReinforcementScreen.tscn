@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://dugrjvededq2o"]
+
+[ext_resource type="Script" uid="uid://ct8sqlmn0clwx" path="res://scripts/reinforcement_screen.gd" id="1_6ihf8"]
+
+[node name="Control" type="Control" unique_id=1600530245]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6ihf8")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=387820048]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.019607844, 0.019607844, 0.019607844, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1356435547]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="VBoxContainer" unique_id=965574305]
+layout_mode = 2
+text = "REINFORCEMENTS
+"
+horizontal_alignment = 1
+
+[node name="BankLabel" type="Label" parent="VBoxContainer" unique_id=1985117759]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+
+[node name="CardsContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=929567827]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="VBoxContainer" unique_id=27345630]
+layout_mode = 2
+alignment = 1
+
+[node name="RerollBtn" type="Button" parent="VBoxContainer/Buttons" unique_id=324297400]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ReROLL(2G)
+"
+
+[node name="DeployBtn" type="Button" parent="VBoxContainer/Buttons" unique_id=1024151882]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "DEPLOY"
+
+[node name="Label" type="Label" parent="VBoxContainer/Buttons/DeployBtn" unique_id=2123562153]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[connection signal="pressed" from="VBoxContainer/Buttons/RerollBtn" to="." method="_on_reroll_btn_down"]
+[connection signal="pressed" from="VBoxContainer/Buttons/RerollBtn" to="." method="_on_reroll_btn_pressed"]
+[connection signal="pressed" from="VBoxContainer/Buttons/DeployBtn" to="." method="_on_deploy_btn_down"]
