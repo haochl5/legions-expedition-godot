@@ -5,15 +5,16 @@ extends Node
 const MOB_TYPES = {
 	"ghost": preload("res://scenes/mobs/ghost.tscn"),
 	# To add a new mob, simply add one line here.
-	# "slime": preload("res://scenes/mobs/slime.tscn"),
-	# "bat": preload("res://scenes/mobs/bat.tscn"),
+	"bear": preload("res://scenes/mobs/bear.tscn"),
+	"mushroom": preload("res://scenes/mobs/mushroom.tscn"),
 }
 
 # Current wave's mob configuration
-@export var wave_config: Array[Dictionary] = [
-	{"type": "ghost", "weight": 1.0}
+@export var wave_config = [
+	{"type": "ghost", "weight": 0.5},
+	{"type": "bear", "weight": 0.5}
+	
 ]
-
 # generate a random mob
 func spawn_random_mob(position: Vector2, target: Node2D) -> MobBase:
 	var mob_type = _get_random_mob_type()
@@ -48,7 +49,7 @@ func _get_random_mob_type() -> String:
 	return wave_config[0]["type"]
 
 # Set the mob configuration for the current wave.
-func set_wave_config(configs: Array[Dictionary]):
+func set_wave_config(configs):
 	wave_config = configs
 
 

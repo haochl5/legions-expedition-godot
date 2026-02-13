@@ -12,6 +12,12 @@ extends Node
 func _ready() -> void:
 	# Connect the shop's deploy button to unpause the game
 	reinforcement_screen.wave_started.connect(_on_wave_started)
+	mob_spawner.set_wave_config([
+		{"type": "bear", "weight": 0.5},
+		{"type": "ghost", "weight": 0.8},
+		{"type": "mushroom", "weight": 0.8},
+		
+	])
 	new_game()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

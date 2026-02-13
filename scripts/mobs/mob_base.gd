@@ -21,6 +21,9 @@ func _ready():
 	if screen_notifier:
 		screen_notifier.screen_exited.connect(_on_screen_exited)
 	
+	
+	body_entered.connect(_on_body_entered)
+	
 	setup_animation()
 	setup_behavior()
 	
@@ -63,4 +66,7 @@ func flash_red():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	pass
+	
+func _on_body_entered(body):
 	pass
