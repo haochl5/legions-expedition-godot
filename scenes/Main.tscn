@@ -2,13 +2,13 @@
 
 [ext_resource type="PackedScene" uid="uid://c4hnjbti1u5md" path="res://scenes/Commander.tscn" id="1_elqb8"]
 [ext_resource type="Script" uid="uid://28k3b60vtk1q" path="res://scripts/main.gd" id="1_rvslj"]
-[ext_resource type="PackedScene" uid="uid://draqeog44flqa" path="res://scenes/mob.tscn" id="2_0bbpv"]
-[ext_resource type="PackedScene" uid="uid://c7a417v843a7d" path="res://scenes/grid_background.tscn" id="3_rarhs"]
+[ext_resource type="PackedScene" path="res://scenes/grid_background.tscn" id="3_rarhs"]
 [ext_resource type="PackedScene" uid="uid://dhdmpiip6op6t" path="res://scenes/Bullet.tscn" id="5_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://dm82kvnejq8ys" path="res://scenes/UI.tscn" id="6_c01mt"]
 [ext_resource type="Script" uid="uid://djhvnww3w8no4" path="res://scripts/SquadManager.gd" id="7_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://52sfw5gytgx6" path="res://scenes/Unit.tscn" id="8_q8u5g"]
 [ext_resource type="PackedScene" uid="uid://dugrjvededq2o" path="res://scenes/ReinforcementScreen.tscn" id="9_lhr70"]
+[ext_resource type="Script" uid="uid://bl1xvv4obsedm" path="res://scripts/MobSpawner.gd" id="9_q8u5g"]
 
 [sub_resource type="Curve2D" id="Curve2D_rvslj"]
 _data = {
@@ -18,7 +18,6 @@ point_count = 5
 
 [node name="Main" type="Node" unique_id=1901518659]
 script = ExtResource("1_rvslj")
-mob_scene = ExtResource("2_0bbpv")
 
 [node name="GridBackground" parent="." unique_id=1365587525 instance=ExtResource("3_rarhs")]
 
@@ -56,6 +55,9 @@ script = ExtResource("7_nxtc6")
 reinforcement_screen = NodePath("../CanvasLayer/Control")
 player = NodePath("../Commander")
 unit_scene = ExtResource("8_q8u5g")
+
+[node name="MobSpawner" type="Node" parent="." unique_id=547164164]
+script = ExtResource("9_q8u5g")
 
 [connection signal="hit" from="Commander" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]

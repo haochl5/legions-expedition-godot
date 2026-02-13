@@ -3,7 +3,8 @@ extends Area2D
 signal hit
 
 # Movement parameters
-const SPEED = 400.0
+var base_speed: float = 400.0  
+var current_speed: float = 400.0 
 const DASH_SPEED = 1200.0
 const DASH_DURATION = 0.15
 const DASH_COOLDOWN = 2.0
@@ -38,11 +39,18 @@ var mouse_control_enabled = true
 # Movement
 var velocity = Vector2.ZERO
 
+
+var slow_stacks: int = 0
+
 @onready var physics_body = $StaticBody2D
 
 func _ready():
 	# lock mouse to the window
 	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	current_speed = base_speed
+	
+	# let the physical_body could reference back to Commander
+	physics_body.set_meta("commander", self)
 	
 
 func _input(event):
@@ -92,12 +100,12 @@ func _process(delta):
 		if Input.is_action_just_pressed("dash") and dash_cooldown_timer <= 0 and direction != Vector2.ZERO:
 			start_dash(direction)
 		
-		# normal movement
+	
 		if direction != Vector2.ZERO:
-			velocity = direction.normalized() * SPEED
+			velocity = direction.normalized() * current_speed
 			$AnimatedSprite2D.play()
 		else:
-			velocity = velocity.move_toward(Vector2.ZERO, SPEED)
+			velocity = velocity.move_toward(Vector2.ZERO, current_speed)
 			$AnimatedSprite2D.stop()
 		
 		if velocity.x < 0:
@@ -183,3 +191,20 @@ func start(pos):
 	show()
 	$CollisionShape2D.disabled = false
 	physics_body.get_node("CollisionShape2D").disabled = false
+	# reset speed
+	slow_stacks = 0
+	current_speed = base_speed
+	
+func apply_slow(factor: float):
+	if slow_stacks == 0:
+		current_speed = base_speed * factor
+		print("Commander slowed! Speed: ", base_speed, " -> ", current_speed)
+	slow_stacks += 1
+
+func remove_slow():
+	slow_stacks -= 1
+	if slow_stacks <= 0:
+		# remove slow down effect
+		current_speed = base_speed
+		slow_stacks = 0
+		print("Commander speed restored! Speed: ", current_speed)
