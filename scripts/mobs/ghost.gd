@@ -1,4 +1,4 @@
-# scripts/mob.gd
+# scripts/ghost.gd
 class_name GhostMob
 extends MobBase
 
@@ -7,7 +7,7 @@ func setup_animation():
 	sprite.play("movement")
 
 func setup_behavior():
-	pass
+	speed = 150
 
 func movement_pattern(delta: float):
 	if target == null:

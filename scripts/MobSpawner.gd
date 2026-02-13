@@ -1,0 +1,58 @@
+# scripts/MobSpawner.gd
+extends Node
+
+# Define all available mob types
+const MOB_TYPES = {
+	"ghost": preload("res://scenes/mobs/ghost.tscn"),
+	# To add a new mob, simply add one line here.
+	# "slime": preload("res://scenes/mobs/slime.tscn"),
+	# "bat": preload("res://scenes/mobs/bat.tscn"),
+}
+
+# Current wave's mob configuration
+@export var wave_config: Array[Dictionary] = [
+	{"type": "ghost", "weight": 1.0}
+]
+
+# generate a random mob
+func spawn_random_mob(position: Vector2, target: Node2D) -> MobBase:
+	var mob_type = _get_random_mob_type()
+	return spawn_mob(mob_type, position, target)
+
+# Generate a mob of a specified type
+func spawn_mob(type: String, position: Vector2, target: Node2D) -> MobBase:
+	if type not in MOB_TYPES:
+		push_error("Unknown mob type: " + type)
+		return null
+	
+	var mob: MobBase = MOB_TYPES[type].instantiate()
+	mob.global_position = position
+	mob.target = target
+	
+	return mob
+
+# The mob type is randomly selected based on weight.
+func _get_random_mob_type() -> String:
+	var total_weight = 0.0
+	for config in wave_config:
+		total_weight += config["weight"]
+	
+	var random_value = randf() * total_weight
+	var current_weight = 0.0
+	
+	for config in wave_config:
+		current_weight += config["weight"]
+		if random_value <= current_weight:
+			return config["type"]
+	
+	return wave_config[0]["type"]
+
+# Set the mob configuration for the current wave.
+func set_wave_config(configs: Array[Dictionary]):
+	wave_config = configs
+
+
+# spawner.set_wave_config([
+#     {"type": "ghost", "weight": 0.5},
+#     {"type": "slime", "weight": 0.5}
+# ])

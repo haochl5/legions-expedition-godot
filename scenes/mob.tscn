@@ -1,7 +1,55 @@
-[gd_scene format=3 uid="uid://ixvqom2enlvs"]
+[gd_scene format=3 uid="uid://draqeog44flqa"]
 
-[ext_resource type="Script" uid="uid://cx8gymhwbygr0" path="res://scripts/mob.gd" id="1_bsing"]
 [ext_resource type="Texture2D" uid="uid://dxaxpuhee1qyp" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Spirit/SpriteSheet.png" id="2_bsing"]
+
+[sub_resource type="GDScript" id="GDScript_4are2"]
+script/source = "extends RigidBody2D
+
+var target: Node2D
+
+# HP point
+const MAX_HP = 30
+var hp = MAX_HP
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$AnimatedSprite2D.play()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _physics_process(delta: float) -> void:
+	if target == null:
+		return
+
+	# Direction toward the Player
+	var direction = (target.global_position - global_position).normalized()
+		
+	# Set rotation so the mob faces the player
+	rotation = direction.angle()
+	# Set velocity
+	var velocity = 150.0
+	linear_velocity = direction * velocity
+
+func take_damage(damage: int):
+	hp -= damage
+	hp = max(hp, 0)
+	
+	if hp <= 0:
+		die()
+	
+	flash_red()
+
+func die():
+	queue_free()
+	
+func flash_red():
+	var sprite = $AnimatedSprite2D
+	sprite.modulate = Color.RED
+	
+	var tween = create_tween()
+	tween.tween_property(sprite, \"modulate\", Color.WHITE, 0.1)
+	
+"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d4cuo"]
 atlas = ExtResource("2_bsing")
@@ -46,7 +94,7 @@ radius = 16.234608
 position = Vector2(-24, -10)
 collision_mask = 0
 gravity_scale = 0.0
-script = ExtResource("1_bsing")
+script = SubResource("GDScript_4are2")
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=685656536]
