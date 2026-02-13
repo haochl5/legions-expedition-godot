@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cgmwr6kh0eyj8"]
+
+[ext_resource type="Script" uid="uid://cx8gymhwbygr0" path="res://scripts/mobs/ghost.gd" id="1_bsing"]
+[ext_resource type="PackedScene" uid="uid://d1b8ao1pv0f32" path="res://scenes/mobs/mob_base.tscn" id="1_d4xx5"]
+
+[node name="Mob" unique_id=1251889614 instance=ExtResource("1_d4xx5")]
+script = ExtResource("1_bsing")

@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://ixvqom2enlvs"]
+[gd_scene format=3 uid="uid://d1b8ao1pv0f32"]
 
-[ext_resource type="Script" uid="uid://cx8gymhwbygr0" path="res://scripts/mob.gd" id="1_bsing"]
+[ext_resource type="Script" uid="uid://be2vb0w6qhbdv" path="res://scripts/mobs/mob_base.gd" id="1_ilhiv"]
 [ext_resource type="Texture2D" uid="uid://dxaxpuhee1qyp" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Spirit/SpriteSheet.png" id="2_bsing"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d4cuo"]
@@ -46,7 +46,7 @@ radius = 16.234608
 position = Vector2(-24, -10)
 collision_mask = 0
 gravity_scale = 0.0
-script = ExtResource("1_bsing")
+script = ExtResource("1_ilhiv")
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=685656536]
