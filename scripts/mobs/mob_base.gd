@@ -7,6 +7,13 @@ extends RigidBody2D
 @export var speed: float = 150.0
 @export var damage: int = 10
 
+# gold logic
+@export var coin_scene: PackedScene
+@export var gold_drop_count: int = 3  
+@export var gold_drop_value: int = 10  
+@export var drop_spread_radius: float = 30.0  
+
+
 var hp: int
 var target: Node2D
 
@@ -55,6 +62,7 @@ func take_damage(damage_amount: int):
 	flash_red()
 	
 func die():
+	call_deferred("drop_gold")
 	queue_free()
 	
 func flash_red():
@@ -62,6 +70,24 @@ func flash_red():
 	
 	var tween = create_tween()
 	tween.tween_property(sprite, "modulate", Color.WHITE, 0.1)
+	
+	
+func drop_gold():
+	if not coin_scene:
+		return
+	
+	for i in range(gold_drop_count):
+		var coin = coin_scene.instantiate()
+		
+		var random_offset = Vector2(
+			randf_range(-drop_spread_radius, drop_spread_radius),
+			randf_range(-drop_spread_radius, drop_spread_radius)
+		)
+		
+		coin.global_position = global_position + random_offset
+		coin.gold_value = gold_drop_value
+		
+		get_parent().add_child(coin)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
