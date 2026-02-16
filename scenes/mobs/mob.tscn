@@ -1,23 +1,23 @@
-[gd_scene format=3 uid="uid://jquy6vq725qb"]
+[gd_scene format=3 uid="uid://bgjaybrni35pj"]
 
-[ext_resource type="PackedScene" uid="uid://d1b8ao1pv0f32" path="res://scenes/mobs/mob_base.tscn" id="1_ynhbu"]
-[ext_resource type="Texture2D" uid="uid://xjjun2jv85c8" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Mushroom/mushroom.png" id="2_7bfd0"]
-[ext_resource type="Script" uid="uid://hld7n8f4kfhu" path="res://scripts/mobs/mushroom.gd" id="2_w5ttn"]
+[ext_resource type="PackedScene" uid="uid://d1b8ao1pv0f32" path="res://scenes/mobs/mob_base.tscn" id="1_q44lt"]
+[ext_resource type="Script" uid="uid://hld7n8f4kfhu" path="res://scripts/mobs/mushroom.gd" id="2_62b1e"]
+[ext_resource type="Texture2D" uid="uid://xjjun2jv85c8" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Mushroom/mushroom.png" id="3_2sf44"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vc4an"]
-atlas = ExtResource("2_7bfd0")
+atlas = ExtResource("3_2sf44")
 region = Rect2(0, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ale1i"]
-atlas = ExtResource("2_7bfd0")
+atlas = ExtResource("3_2sf44")
 region = Rect2(0, 32, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_guypw"]
-atlas = ExtResource("2_7bfd0")
+atlas = ExtResource("3_2sf44")
 region = Rect2(0, 16, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eugpe"]
-atlas = ExtResource("2_7bfd0")
+atlas = ExtResource("3_2sf44")
 region = Rect2(0, 48, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_abgeh"]
@@ -40,8 +40,8 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Mob" unique_id=1251889614 instance=ExtResource("1_ynhbu")]
-script = ExtResource("2_w5ttn")
+[node name="Mob" unique_id=1251889614 instance=ExtResource("1_q44lt")]
+script = ExtResource("2_62b1e")
 slow_radius = 80.0
 slow_factor = 0.5
 gold_drop_count = 1

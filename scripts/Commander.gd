@@ -42,7 +42,12 @@ var velocity = Vector2.ZERO
 
 var slow_stacks: int = 0
 
+# gold logic
+var gold: int = 0
+signal gold_changed(new_amount)
+
 @onready var physics_body = $StaticBody2D
+@onready var magnet_area: Area2D = $MagnetArea
 
 func _ready():
 	# lock mouse to the window
@@ -52,6 +57,7 @@ func _ready():
 	# let the physical_body could reference back to Commander
 	physics_body.set_meta("commander", self)
 	
+	magnet_area.area_entered.connect(_on_magnet_area_entered)
 
 func _input(event):
 	# ESC exit mouse control
@@ -198,7 +204,6 @@ func start(pos):
 func apply_slow(factor: float):
 	if slow_stacks == 0:
 		current_speed = base_speed * factor
-		print("Commander slowed! Speed: ", base_speed, " -> ", current_speed)
 	slow_stacks += 1
 
 func remove_slow():
@@ -207,4 +212,14 @@ func remove_slow():
 		# remove slow down effect
 		current_speed = base_speed
 		slow_stacks = 0
-		print("Commander speed restored! Speed: ", current_speed)
+		
+		
+		
+
+func _on_magnet_area_entered(area):
+	if area is Coin:
+		area.start_magnetize(self)
+
+func add_gold(amount: int):
+	gold += amount
+	emit_signal("gold_changed", gold)

@@ -5,3 +5,4 @@
 
 [node name="Mob" unique_id=1251889614 instance=ExtResource("1_d4xx5")]
 script = ExtResource("2_xk3ph")
+gold_drop_count = 2
