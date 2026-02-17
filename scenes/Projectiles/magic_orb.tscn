@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://c22eon1rsq3ij"]
+
+[ext_resource type="PackedScene" uid="uid://dhdmpiip6op6t" path="res://scenes/Projectiles/Bullet.tscn" id="1_lny1k"]
+[ext_resource type="Texture2D" uid="uid://btwxhe0jfjpco" path="res://assets/Ninja Adventure - Asset Pack/Items/Projectile/magicOrb.png" id="2_uq70w"]
+
+[node name="MagicOrb" unique_id=345806133 instance=ExtResource("1_lny1k")]
+speed = 400.0
+damage = 20
+
+[node name="Sprite2D" parent="." index="0" unique_id=1035598040]
+texture = ExtResource("2_uq70w")

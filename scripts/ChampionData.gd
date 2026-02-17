@@ -6,7 +6,7 @@ extends Resource
 @export var display_name: String = "Unit Name"
 @export var role: String = "Role" # e.g., Tank, DPS, Mage
 @export var icon: Texture2D # You can use PlaceholderTexture2D for now
-@export var sprite: Texture2D
+@export var unit_scene: PackedScene
 
 @export_group("Stats")
 @export var cost: int = 3

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://da21yu1fn5pmk"]
+
+[ext_resource type="PackedScene" uid="uid://52sfw5gytgx6" path="res://scenes/Unit.tscn" id="1_0s8us"]
+[ext_resource type="Script" uid="uid://byi5xmep2846a" path="res://scripts/champions/Squire.gd" id="2_gmh3v"]
+
+[node name="Unit" unique_id=1630320502 instance=ExtResource("1_0s8us")]
+script = ExtResource("2_gmh3v")
