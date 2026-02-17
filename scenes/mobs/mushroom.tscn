@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://d1b8ao1pv0f32" path="res://scenes/mobs/mob_base.tscn" id="1_ynhbu"]
 [ext_resource type="Texture2D" uid="uid://xjjun2jv85c8" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Mushroom/mushroom.png" id="2_7bfd0"]
 [ext_resource type="Script" uid="uid://hld7n8f4kfhu" path="res://scripts/mobs/mushroom.gd" id="2_w5ttn"]
+[ext_resource type="PackedScene" uid="uid://i1f5vuupftc4" path="res://scenes/exp.tscn" id="3_7bfd0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vc4an"]
 atlas = ExtResource("2_7bfd0")
@@ -45,6 +46,8 @@ script = ExtResource("2_w5ttn")
 slow_radius = 80.0
 slow_factor = 0.5
 gold_drop_count = 1
+exp_scene = ExtResource("3_7bfd0")
+exp_drop_count = 2
 
 [node name="AnimatedSprite2D" parent="." index="0" unique_id=685656536]
 sprite_frames = SubResource("SpriteFrames_abgeh")

@@ -2,6 +2,12 @@
 
 [ext_resource type="Script" uid="uid://d2u1k8bqvni62" path="res://scripts/UI.gd" id="1_dj8aq"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ro3t7"]
+bg_color = Color(0.13333334, 0.54509807, 0.13333334, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dj8aq"]
+bg_color = Color(0, 1, 1, 1)
+
 [node name="UI" type="Control" unique_id=1022567123]
 layout_mode = 3
 anchors_preset = 15
@@ -11,18 +17,63 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_dj8aq")
 
-[node name="HP" type="ProgressBar" parent="." unique_id=1212697792]
-layout_mode = 1
-offset_right = 4.0
-offset_bottom = 27.0
-theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
-max_value = 10.0
-value = 10.0
+[node name="HPContainer" type="MarginContainer" parent="." unique_id=78752530]
+layout_mode = 0
+offset_left = -6.0
+offset_top = -1.0
+offset_right = 229.0
+offset_bottom = 48.0
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+
+[node name="HPBar" type="ProgressBar" parent="HPContainer" unique_id=46324844]
+custom_minimum_size = Vector2(200, 35)
+layout_mode = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_ro3t7")
 show_percentage = false
 
-[node name="HPLabel" type="Label" parent="." unique_id=162374023]
+[node name="HPLabel" type="Label" parent="HPContainer" unique_id=162374023]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "10/10"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GoldLabel" type="Label" parent="." unique_id=992388616]
 layout_mode = 1
-offset_left = 10.0
-offset_right = 50.0
-offset_bottom = 45.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -52.0
+offset_top = 5.0
+offset_right = -12.0
+offset_bottom = 50.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 0.8745098, 0, 1)
 theme_override_font_sizes/font_size = 32
+
+[node name="EXPContainer" type="MarginContainer" parent="." unique_id=1609771738]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -128.0
+offset_right = 184.0
+offset_bottom = 45.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 10
+
+[node name="EXPBar" type="ProgressBar" parent="EXPContainer" unique_id=2056690370]
+custom_minimum_size = Vector2(600, 35)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/fill = SubResource("StyleBoxFlat_dj8aq")
+show_percentage = false
+
+[node name="LevelLabel" type="Label" parent="EXPContainer" unique_id=1843875828]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Level: 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true

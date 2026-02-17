@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://i1f5vuupftc4"]
+
+[ext_resource type="Script" uid="uid://bc8f8u1ti7xg3" path="res://scripts/exp.gd" id="1_7gp3u"]
+[ext_resource type="Texture2D" uid="uid://0twrxxyeo85r" path="res://assets/Ninja Adventure - Asset Pack/Items/Treasure/Coin2.png" id="2_vrp6w"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8hd41"]
+atlas = ExtResource("2_vrp6w")
+region = Rect2(0, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gtj16"]
+atlas = ExtResource("2_vrp6w")
+region = Rect2(10, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rmv6m"]
+atlas = ExtResource("2_vrp6w")
+region = Rect2(20, 0, 10, 10)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cybhl"]
+atlas = ExtResource("2_vrp6w")
+region = Rect2(30, 0, 10, 10)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_g10jr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8hd41")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gtj16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rmv6m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cybhl")
+}],
+"loop": true,
+"name": &"EXP",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hwmkj"]
+radius = 5.39
+
+[node name="EXP" type="Area2D" unique_id=1641050900]
+script = ExtResource("1_7gp3u")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=324663398]
+sprite_frames = SubResource("SpriteFrames_g10jr")
+animation = &"EXP"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=302707834]
+shape = SubResource("CircleShape2D_hwmkj")

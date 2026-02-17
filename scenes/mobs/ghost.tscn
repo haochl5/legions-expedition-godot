@@ -2,7 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://d1b8ao1pv0f32" path="res://scenes/mobs/mob_base.tscn" id="1_d4xx5"]
 [ext_resource type="Script" uid="uid://cx8gymhwbygr0" path="res://scripts/mobs/ghost.gd" id="2_xk3ph"]
+[ext_resource type="PackedScene" uid="uid://i1f5vuupftc4" path="res://scenes/exp.tscn" id="3_skyw5"]
 
 [node name="Mob" unique_id=1251889614 instance=ExtResource("1_d4xx5")]
 script = ExtResource("2_xk3ph")
 gold_drop_count = 2
+exp_scene = ExtResource("3_skyw5")
+exp_drop_count = 4

@@ -180,7 +180,7 @@ radius = 23.086792
 radius = 23.09
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_eunaa"]
-radius = 64.0
+radius = 128.24976
 
 [node name="Commander" type="Area2D" unique_id=547804967 groups=["commander"]]
 disable_mode = 1
