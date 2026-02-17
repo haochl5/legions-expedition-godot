@@ -38,13 +38,17 @@ var mouse_control_enabled = true
 
 # Movement
 var velocity = Vector2.ZERO
-
-
 var slow_stacks: int = 0
 
 # gold logic
 var gold: int = 0
 signal gold_changed(new_amount)
+
+# EXP
+var current_exp: int = 0
+var level: int = 1
+var exp_to_level_up: int = 30
+signal leveled_up(new_level)
 
 @onready var physics_body = $StaticBody2D
 @onready var magnet_area: Area2D = $MagnetArea
@@ -212,14 +216,25 @@ func remove_slow():
 		# remove slow down effect
 		current_speed = base_speed
 		slow_stacks = 0
-		
-		
-		
 
 func _on_magnet_area_entered(area):
 	if area is Coin:
+		area.start_magnetize(self)
+	elif area is ExpereincePoints:
 		area.start_magnetize(self)
 
 func add_gold(amount: int):
 	gold += amount
 	emit_signal("gold_changed", gold)
+
+func add_exp(amount: int):
+	current_exp += amount
+	if current_exp >= exp_to_level_up:
+		level_up()
+
+func level_up():
+	current_exp = 0
+	level += 1
+	exp_to_level_up = int(exp_to_level_up * 1.2) + 20
+	emit_signal("leveled_up", level)
+	

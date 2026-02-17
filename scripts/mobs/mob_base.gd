@@ -11,8 +11,13 @@ extends RigidBody2D
 @export var coin_scene: PackedScene
 @export var gold_drop_count: int = 3  
 @export var gold_drop_value: int = 10  
-@export var drop_spread_radius: float = 30.0  
+@export var drop_spread_radius: float = 30.0 
 
+# exp logic
+@export var exp_scene: PackedScene
+@export var exp_drop_count: int = 3
+@export var exp_drop_value: int = 5
+@export var exp_drop_spread_radius: float = 30.0
 
 var hp: int
 var target: Node2D
@@ -46,6 +51,7 @@ func movement_pattern(delta: float):
 	
 func attack_pattern(target_node: Node2D):
 	pass
+	
 func _physics_process(delta):
 	movement_pattern(delta)
 	
@@ -62,7 +68,7 @@ func take_damage(damage_amount: int):
 	flash_red()
 	
 func die():
-	call_deferred("drop_gold")
+	call_deferred("drop_items")
 	queue_free()
 	
 func flash_red():
@@ -70,6 +76,27 @@ func flash_red():
 	
 	var tween = create_tween()
 	tween.tween_property(sprite, "modulate", Color.WHITE, 0.1)
+
+func drop_items():
+	drop_gold()
+	drop_exp()
+	
+func drop_exp():
+	if not exp_scene:
+		return
+
+	for i in range(exp_drop_count):
+		var exp = exp_scene.instantiate()
+		
+		var random_offset = Vector2(
+			randf_range(-exp_drop_spread_radius, exp_drop_spread_radius),
+			randf_range(-exp_drop_spread_radius, exp_drop_spread_radius)
+		)
+		
+		exp.global_position = global_position + random_offset
+		exp.exp_value = exp_drop_value
+		
+		get_parent().add_child(exp)
 	
 	
 func drop_gold():

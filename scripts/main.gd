@@ -23,6 +23,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	$CanvasLayer/UI.update_hp($Commander.hp)
+	$CanvasLayer/UI.update_gold($Commander.gold)
 
 func game_over() -> void:
 	$MobTimer.stop()

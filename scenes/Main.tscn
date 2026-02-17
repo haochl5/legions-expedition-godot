@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c4hnjbti1u5md" path="res://scenes/Commander.tscn" id="1_elqb8"]
 [ext_resource type="Script" uid="uid://28k3b60vtk1q" path="res://scripts/main.gd" id="1_rvslj"]
-[ext_resource type="PackedScene" path="res://scenes/grid_background.tscn" id="3_rarhs"]
+[ext_resource type="PackedScene" uid="uid://c7a417v843a7d" path="res://scenes/grid_background.tscn" id="3_rarhs"]
 [ext_resource type="PackedScene" uid="uid://dhdmpiip6op6t" path="res://scenes/Bullet.tscn" id="5_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://dm82kvnejq8ys" path="res://scenes/UI.tscn" id="6_c01mt"]
 [ext_resource type="Script" uid="uid://djhvnww3w8no4" path="res://scripts/SquadManager.gd" id="7_nxtc6"]
@@ -26,7 +26,7 @@ script = ExtResource("1_rvslj")
 [node name="Bullet" parent="." unique_id=972359357 instance=ExtResource("5_vcsgt")]
 
 [node name="MobTimer" type="Timer" parent="." unique_id=1820607704]
-wait_time = 3.0
+wait_time = 2.0
 
 [node name="StartTimer" type="Timer" parent="." unique_id=1433707992]
 wait_time = 0.5

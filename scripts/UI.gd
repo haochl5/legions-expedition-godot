@@ -9,5 +9,7 @@ func _process(delta: float) -> void:
 	pass
 	
 func update_hp(current_hp: int):
-	$HP.value = current_hp
 	$HPLabel.text = "HP: " + str(current_hp) + "/ 10"
+
+func update_gold(current_gold: int):
+	$GoldLabel.text = str(current_gold) + " G"

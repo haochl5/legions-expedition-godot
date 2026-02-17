@@ -45,6 +45,7 @@ script = ExtResource("2_w5ttn")
 slow_radius = 80.0
 slow_factor = 0.5
 gold_drop_count = 1
+exp_drop_count = 2
 
 [node name="AnimatedSprite2D" parent="." index="0" unique_id=685656536]
 sprite_frames = SubResource("SpriteFrames_abgeh")
