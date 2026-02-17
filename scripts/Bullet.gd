@@ -1,36 +1,32 @@
+class_name Projectile
 extends Area2D
 
-# constants
-const SPEED = 800.0           # speed (px/s)
-const LIFETIME = 3.0          # the existence time
-const DAMAGE = 10             # damage
+# 1. Change CONSTANTS to EXPORT VARS so we can edit them in Inspector
+@export var speed: float = 800.0
+@export var damage: int = 10
+@export var lifetime: float = 3.0
 
-# runtime variables
-var direction: Vector2 = Vector2.RIGHT  # shooting direction, set when generated
-var velocity: Vector2 = Vector2.ZERO
-var lifetime_timer: float = 0.0
+var direction: Vector2 = Vector2.RIGHT
 
 func _ready():
-	# velocity vector
-	velocity = direction.normalized() * SPEED
-	lifetime_timer = LIFETIME
+	# We remove the velocity calculation here to avoid bugs if
+	# direction is set AFTER add_child()
 	
-	# connet signal
-	body_entered.connect(_on_body_entered)
+	# Connect signal if not already connected via Editor
+	if not body_entered.is_connected(_on_body_entered):
+		body_entered.connect(_on_body_entered)
 
 func _physics_process(delta):
-	# fix direction
-	position += velocity * delta
+	# Calculate movement dynamically (safer)
+	position += direction * speed * delta
 	
-	# lifetime countdown
-	lifetime_timer -= delta
-	if lifetime_timer <= 0:
-		queue_free()  # delete this bullet
+	# Lifetime countdown
+	lifetime -= delta
+	if lifetime <= 0:
+		queue_free()
 
 func _on_body_entered(body):
-	# collision logic
 	if body.is_in_group("enemy"):
-		# TODO: damage enemy
 		if body.has_method("take_damage"):
-			body.take_damage(DAMAGE)
-		queue_free()  # delete bullet after hurting enemy(maybe want to change this logic)
+			body.take_damage(damage)
+		queue_free()

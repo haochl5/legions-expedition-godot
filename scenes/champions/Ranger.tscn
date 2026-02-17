@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://ddh1wsd8bx5li"]
+
+[ext_resource type="PackedScene" uid="uid://52sfw5gytgx6" path="res://scenes/Unit.tscn" id="1_pvohn"]
+[ext_resource type="Script" uid="uid://dtg4xngttr7ob" path="res://scripts/champions/ranger.gd" id="2_pvohn"]
+
+[node name="Unit" unique_id=1630320502 instance=ExtResource("1_pvohn")]
+script = ExtResource("2_pvohn")

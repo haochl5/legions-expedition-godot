@@ -4,7 +4,7 @@ extends Node
 
 @onready var mob_spawner = $MobSpawner
 
-# --- NODES ---
+# --- NODES --- 
 # Grab a reference to the screen you just dragged in
 @onready var reinforcement_screen = $CanvasLayer/Control
 

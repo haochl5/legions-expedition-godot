@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://t7p1lny60k26"]
+
+[ext_resource type="PackedScene" uid="uid://dhdmpiip6op6t" path="res://scenes/Projectiles/Bullet.tscn" id="1_orrjv"]
+[ext_resource type="Texture2D" uid="uid://ctafo8dmnkjhj" path="res://assets/Ninja Adventure - Asset Pack/Items/Projectile/Arrow.png" id="2_wo2vr"]
+
+[node name="Arrow" unique_id=345806133 instance=ExtResource("1_orrjv")]
+speed = 600.0
+
+[node name="Sprite2D" parent="." index="0" unique_id=1035598040]
+rotation = 0.7853982
+texture = ExtResource("2_wo2vr")
