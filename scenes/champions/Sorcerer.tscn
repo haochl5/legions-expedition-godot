@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://boclv314fpjwk"]
+
+[ext_resource type="PackedScene" uid="uid://52sfw5gytgx6" path="res://scenes/Unit.tscn" id="1_pvohn"]
+[ext_resource type="Script" uid="uid://c8umf32ptqsd7" path="res://scripts/champions/sorcerer.gd" id="2_irppk"]
+
+[node name="Unit" unique_id=1630320502 instance=ExtResource("1_pvohn")]
+script = ExtResource("2_irppk")

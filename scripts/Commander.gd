@@ -22,7 +22,7 @@ var invincibility_timer = 0.0
 const SHOOT_COOLDOWN = 0.5    # shooting interval
 const BULLET_OFFSET = 40.0     # Bullet generation offset distance
 
-var bullet_scene = preload("res://scenes/Bullet.tscn")
+var bullet_scene = preload("res://scenes/Projectiles/Bullet.tscn")
 
 # Dash state
 var is_dashing = false

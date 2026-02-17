@@ -1,14 +1,14 @@
 extends Node
 
 @export var reinforcement_screen: Control
-@export var player: Node2D # Reference to your "Commander"
-@export var unit_scene: PackedScene # Drag your Unit.tscn here
+@export var player: Node2D 
 
-# Track all active units: [UnitInstance, UnitInstance, ...]
+# DELETE THIS LINE: You don't need a generic unit scene anymore!
+# @export var unit_scene: PackedScene 
+
 var squad_roster: Array[Unit] = []
 
 func _ready():
-	# Connect the UI signal to our spawn logic
 	if reinforcement_screen:
 		reinforcement_screen.unit_purchased.connect(_on_unit_bought)
 
@@ -17,18 +17,18 @@ func _on_unit_bought(unit_data: ChampionData):
 	check_for_merge(unit_data.id)
 
 func spawn_unit(data: ChampionData, level: int):
-	var new_unit = unit_scene.instantiate()
+	# --- CRITICAL CHANGE HERE ---
+	# We instantiate the SPECIFIC scene from the card data (e.g., Sorcerer.tscn)
+	var new_unit = data.unit_scene.instantiate() 
 	
-	# Add to scene tree (Child of Main, usually, not Child of Player)
 	get_parent().add_child(new_unit)
 	
-	# Random spawn offset so they don't stack perfectly
 	var offset = Vector2(randf_range(-40, 40), randf_range(-40, 40))
 	new_unit.global_position = player.global_position + offset
 	
-	# Initialize data
-	new_unit.setup(data, level)
+	new_unit.setup(data, level, player)
 	squad_roster.append(new_unit)
+
 
 # --- THE MERGE LOGIC ---
 func check_for_merge(unit_id: String):

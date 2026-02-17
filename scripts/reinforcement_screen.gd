@@ -25,47 +25,44 @@ func _init_champion_database():
 	# In a real project, you would load these from .tres files.
 	# Here, we create them via code to match your request immediately.
 	# (Make sure this path matches exactly where you put it in your FileSystem!)
-	var samurai_face1 = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiRed/Faceset.png")
-	var samurai_face2 = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/Faceset.png")
-	var samurai_face3 = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Samurai/Faceset.png")
-	# 1. SQUIRE (Tank)
+	var knight_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Knight/Faceset.png")
+	var samurai_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/Faceset.png")
+	var sorcerer_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SorcererOrange/Faceset.png")
+	# 1. SQUIRE
 	var squire = ChampionData.new()
 	squire.id = "squire"
 	squire.display_name = "Squire"
-	squire.icon = samurai_face1
 	squire.role = "Tank"
-	squire.sprite = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiRed/SeparateAnim/Idle.png")
+	squire.icon = knight_face
 	squire.cost = 3
 	squire.hp = 120
-	squire.skill_name = "Iron Will"
-	squire.description = "Gains Shield & emits Burning Aura."
+	# CHANGE: Load the SCENE, not the png
+	squire.unit_scene = preload("res://scenes/champions/Squire.tscn") 
 	available_champions.append(squire)
 	
-	# 2. RANGER (DPS)
+	# 2. RANGER
 	var ranger = ChampionData.new()
 	ranger.id = "ranger"
-	ranger.icon = samurai_face2
-	ranger.sprite = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/SeparateAnim/Idle.png")
 	ranger.display_name = "Ranger"
 	ranger.role = "DPS"
+	ranger.icon = samurai_face
 	ranger.cost = 3
 	ranger.hp = 60
-	ranger.skill_name = "Magic Arrows"
-	ranger.description = "Arrows gain velocity & pierce."
+	# CHANGE: Load the SCENE
+	ranger.unit_scene = preload("res://scenes/champions/Ranger.tscn") 
 	available_champions.append(ranger)
 
-	# 3. ALCHEMIST (Mage)
-	var alch = ChampionData.new()
-	alch.id = "alchemist"
-	alch.icon = samurai_face3
-	alch.display_name = "Alchemist"
-	alch.sprite = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Samurai/SeparateAnim/Idle.png")
-	alch.role = "Mage"
-	alch.cost = 3
-	alch.hp = 60
-	alch.skill_name = "Concoction"
-	alch.description = "Explosives leave Acid Pools."
-	available_champions.append(alch)
+	# 3. SORCERER (Replaces Alchemist)
+	var sorc = ChampionData.new()
+	sorc.id = "sorcerer"
+	sorc.display_name = "Sorcerer"
+	sorc.role = "Mage"
+	sorc.icon = sorcerer_face # Or your new Sorcerer face
+	sorc.cost = 3
+	sorc.hp = 60
+	# CHANGE: Load the SCENE
+	sorc.unit_scene = preload("res://scenes/champions/Sorcerer.tscn") 
+	available_champions.append(sorc)
 
 # --- 2. SHOP LOGIC ---
 func generate_shop_items():
