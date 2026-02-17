@@ -8,4 +8,5 @@ speed = 400.0
 damage = 20
 
 [node name="Sprite2D" parent="." index="0" unique_id=1035598040]
+scale = Vector2(0.03, 0.03)
 texture = ExtResource("2_uq70w")

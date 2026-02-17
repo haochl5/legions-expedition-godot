@@ -7,4 +7,5 @@
 speed = 600.0
 
 [node name="Sprite2D" parent="." index="0" unique_id=1035598040]
+rotation = 0.7853982
 texture = ExtResource("2_wo2vr")

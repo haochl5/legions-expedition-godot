@@ -18,36 +18,68 @@ var facing_dir: int = 0  # 0:Down, 1:Up, 2:Left, 3:Right
 var is_attacking: bool = false
 var speed: int = 150
 
-# --- SETUP (Called when spawning) ---
-func setup(new_data: ChampionData, level: int):
+var player: Node2D 
+
+# --- UPDATED SETUP ---
+# We now accept 'new_player' so we know who to follow!
+func setup(new_data: ChampionData, level: int, new_player: Node2D):
 	data = new_data
 	star_level = level
+	player = new_player # Store the reference
 	
-	# Calculate Stats
+	# ... (Existing Stats Calculation) ...
 	var multiplier = 1.0 + ((star_level - 1) * 0.5)
 	current_hp = data.hp * multiplier
-	
-	# Scale Visuals
 	scale = Vector2.ONE * 4.0 * (1.0 + (0.2 * (star_level - 1)))
 
-# --- PHYSICS LOOP ---
+# --- UPDATED PHYSICS ---
 func _physics_process(_delta):
-	# 1. If attacking, freeze movement
-	if is_attacking:
-		return 
+	if is_attacking: return
 
-	# 2. Movement Logic
-	var move_vec = Vector2.ZERO
+	# 1. AI: Find a target if we don't have one
+	if target == null or not is_instance_valid(target):
+		target = find_nearest_enemy()
+
+	# 2. MOVEMENT DECISION
+	var desired_velocity = Vector2.ZERO
+	
 	if target and is_instance_valid(target):
-		move_vec = global_position.direction_to(target.global_position)
-		velocity = move_vec * speed
-		move_and_slide()
-	else:
-		velocity = Vector2.ZERO
+		# STATE A: Chase Enemy
+		# (Note: Children like Ranger/Squire might stop earlier to attack)
+		desired_velocity = global_position.direction_to(target.global_position) * speed
 
-	# 3. Update Direction & Visuals
+	elif player and is_instance_valid(player):
+		# STATE B: Follow Commander
+		# Only move if we are far away (prevents stacking directly on top of player)
+		var dist_to_player = global_position.distance_to(player.global_position)
+		if dist_to_player > 120.0: # "Leash" distance
+			desired_velocity = global_position.direction_to(player.global_position) * speed
+
+	# 3. APPLY MOVEMENT
+	velocity = desired_velocity
+	move_and_slide()
+
+	# 4. VISUALS
 	update_facing_direction()
 	update_visuals()
+
+# --- NEW HELPER FUNCTION ---
+func find_nearest_enemy():
+	var enemies = get_tree().get_nodes_in_group("enemy")
+	if enemies.is_empty():
+		return null
+		
+	var nearest_enemy = null
+	var shortest_dist = INF # Infinite
+	
+	for enemy in enemies:
+		var dist = global_position.distance_to(enemy.global_position)
+		if dist < shortest_dist:
+			shortest_dist = dist
+			nearest_enemy = enemy
+			
+	return nearest_enemy
+	
 
 # --- DIRECTION LOGIC ---
 func update_facing_direction():

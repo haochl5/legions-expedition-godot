@@ -26,7 +26,7 @@ func spawn_unit(data: ChampionData, level: int):
 	var offset = Vector2(randf_range(-40, 40), randf_range(-40, 40))
 	new_unit.global_position = player.global_position + offset
 	
-	new_unit.setup(data, level)
+	new_unit.setup(data, level, player)
 	squad_roster.append(new_unit)
 
 
