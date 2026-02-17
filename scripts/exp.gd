@@ -35,17 +35,17 @@ func start_magnetize(target: Node2D):
 	player = target
 
 func _on_area_entered(area):
-	# Magnet the gold to the Commander
+	# Magnet the exp to the Commander
 	if area.name == "MagnetArea":
 		start_magnetize(area.get_parent())
 	
-	# Collect the gold and release the gold after the Commander touches it
+	# Collect the exp and release the exp after the Commander touches it
 	elif area.name == "Commander":
 		collect(area)
 
 func collect(collector):
 	if collector.has_method("add_exp"):
-		collector.add_gold(exp_value)
+		collector.add_exp(exp_value)
 	
 	var tween = create_tween()
 	tween.set_parallel(true)

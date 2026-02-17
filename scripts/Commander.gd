@@ -10,8 +10,8 @@ const DASH_DURATION = 0.15
 const DASH_COOLDOWN = 2.0
 
 # Health
-const MAX_HP = 10
-var hp = MAX_HP
+var max_hp = 10
+var hp = max_hp
 
 # Invincibility after being hit
 const INVINCIBILITY_TIME = 1.0
@@ -47,7 +47,7 @@ signal gold_changed(new_amount)
 # EXP
 var current_exp: int = 0
 var level: int = 1
-var exp_to_level_up: int = 30
+var exp_to_level_up: int = 50
 signal leveled_up(new_level)
 
 @onready var physics_body = $StaticBody2D
@@ -194,7 +194,7 @@ func die():
 
 func start(pos):
 	position = pos
-	hp = MAX_HP
+	hp = max_hp
 	is_invincible = false
 	invincibility_timer = 0.0
 	$AnimatedSprite2D.visible = true

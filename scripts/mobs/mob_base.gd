@@ -80,24 +80,25 @@ func flash_red():
 func drop_items():
 	drop_gold()
 	drop_exp()
-	
+
 func drop_exp():
 	if not exp_scene:
 		return
-
+	
 	for i in range(exp_drop_count):
-		var exp = exp_scene.instantiate()
+		var exp_instance = exp_scene.instantiate()
 		
 		var random_offset = Vector2(
 			randf_range(-exp_drop_spread_radius, exp_drop_spread_radius),
 			randf_range(-exp_drop_spread_radius, exp_drop_spread_radius)
 		)
 		
-		exp.global_position = global_position + random_offset
-		exp.exp_value = exp_drop_value
+		exp_instance.global_position = global_position + random_offset
 		
-		get_parent().add_child(exp)
-	
+		# Pass the specific value each gem is worth
+		exp_instance.exp_value = exp_drop_value
+		
+		get_parent().add_child(exp_instance)
 	
 func drop_gold():
 	if not coin_scene:
