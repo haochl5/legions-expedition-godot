@@ -7,7 +7,7 @@ on:
     branches: [ "main", "dev" ]
 
 env:
-  GODOT_VERSION: 4.5.1
+  GODOT_VERSION: 4.6.1
   EXPORT_NAME: legions-expedition
 
 jobs:
@@ -15,12 +15,12 @@ jobs:
     name: Windows Export
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:4.5.1
+      image: barichello/godot-ci:4.6.1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          lfs: true # Important if you have large game assets later
+          lfs: true
 
       - name: Setup
         run: |
@@ -30,7 +30,6 @@ jobs:
       - name: Windows Build
         run: |
           mkdir -p build/windows
-          # "Windows Desktop" must match the name of the preset in your export_presets.cfg
           godot --headless --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
 
       - name: Upload Artifact
@@ -43,7 +42,7 @@ jobs:
     name: Web Export
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:4.5.1
+      image: barichello/godot-ci:4.6.1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,11 +55,37 @@ jobs:
       - name: Web Build
         run: |
           mkdir -p build/web
-          # "Web" must match the name of the preset in your export_presets.cfg
           godot --headless --export-release "Web" build/web/index.html
+
+      - name: Inject coi-serviceworker
+        run: |
+          curl -sL https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker/coi-serviceworker.js \
+               -o build/web/coi-serviceworker.js
+          sed -i 's|<head>|<head>\n  <script src="coi-serviceworker.js"></script>|' build/web/index.html
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Web Build
           path: build/web
+
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    needs: export-web
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - name: Download Web Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Web Build
+          path: build/web
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/web
+          publish_branch: gh-pages
