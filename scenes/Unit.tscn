@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ysf15n2ryn0y" path="res://icon.svg" id="1_h85lg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fqlnf"]
-radius = 65.06919
+radius = 3.5
 
 [sub_resource type="Animation" id="Animation_fqlnf"]
 length = 0.001
@@ -218,9 +218,13 @@ _data = {
 &"WalkUp": SubResource("Animation_pjl3l")
 }
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_aa524"]
+radius = 20.0
+
 [node name="Unit" type="CharacterBody2D" unique_id=1630320502]
-collision_layer = 4
-collision_mask = 2
+y_sort_enabled = true
+collision_layer = 16
+collision_mask = 17
 script = ExtResource("1_fqlnf")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1998268396]
@@ -229,9 +233,15 @@ hframes = 4
 vframes = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1023991330]
-position = Vector2(-1, 0)
 shape = SubResource("CircleShape2D_fqlnf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=317799067]
 root_node = NodePath("../CollisionShape2D")
 libraries/ = SubResource("AnimationLibrary_ikoli")
+
+[node name="ComfortZone" type="Area2D" parent="." unique_id=1343822269]
+collision_layer = 16
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ComfortZone" unique_id=469914372]
+shape = SubResource("CircleShape2D_aa524")

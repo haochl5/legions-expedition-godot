@@ -11,6 +11,8 @@ const R_SPECIAL = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Chara
 # (Double check capitalization: is it magic_orb.tscn or MagicOrb.tscn?)
 const PROJECTILE_SCENE = preload("res://scenes/Projectiles/magic_orb.tscn")
 
+var attack_counter: int = 0
+
 func _ready():
 	# --- 2. SETUP PARENT VARIABLES ---
 	# We assign our specific textures to the slots in Unit.gd
@@ -29,75 +31,48 @@ func _ready():
 
 # --- 3. ATTACK LOGIC ---
 func attack():
-	if is_attacking: return
+	# ... (Standard start logic) ...
 	is_attacking = true
 	
-	# A. VISUALS: Force the Attack Texture (1x4 Strip)
-	$AnimationPlayer.stop() # Stop walking
+	# Visuals ...
 	
-	$Sprite2D.texture = tex_attack
-	$Sprite2D.hframes = 4
-	$Sprite2D.vframes = 1
-	$Sprite2D.frame = facing_dir # Uses the direction variable from Unit.gd!
-	
-	# B. TIMING: Windup (0.3 seconds)
+	# Windup
 	await get_tree().create_timer(0.3).timeout
 	
-	# C. ACTION: Fire!
-	fire_projectile()
+	attack_counter += 1
+	var is_special_turn = false
 	
-	# D. TIMING: Cooldown (0.2 seconds)
-	await get_tree().create_timer(0.2).timeout
+	if attack_counter >= 3:
+		attack_counter = 0
+		is_special_turn = true
+		
+	fire_orb(is_special_turn)
 	
-	# E. RESET: Go back to normal behavior
+	# Cooldown
+	await get_tree().create_timer(0.5).timeout
 	is_attacking = false
 
-func fire_projectile():
-	if not PROJECTILE_SCENE:
-		print("Error: No Projectile Scene assigned in Sorcerer.gd!")
-		return
+func fire_orb(is_special: bool):
+	if not PROJECTILE_SCENE: return
 
 	var orb = PROJECTILE_SCENE.instantiate()
 	get_parent().add_child(orb)
-	
-	# Start at Sorcerer's position
 	orb.global_position = global_position
 	
-	# AIMING LOGIC
-	var shot_dir = Vector2.RIGHT # Default
-	
+	# Aiming
+	var dir = Vector2.RIGHT
 	if target and is_instance_valid(target):
-		# 1. Aim at the enemy
-		shot_dir = (target.global_position - global_position).normalized()
-	else:
-		# 2. Fallback: If target is dead, shoot where we are facing
-		match facing_dir:
-			0: shot_dir = Vector2.DOWN
-			1: shot_dir = Vector2.UP
-			2: shot_dir = Vector2.LEFT
-			3: shot_dir = Vector2.RIGHT
+		dir = (target.global_position - global_position).normalized()
 	
-	# 3. Apply the math to the Orb
-	orb.direction = shot_dir        # Tells the script where to move
-	orb.rotation = shot_dir.angle() # Rotates the sprite visuals
-
-# --- 4. SPECIAL SKILL (Optional) ---
-func cast_special():
-	if is_attacking: return
-	is_attacking = true
+	orb.direction = dir
+	orb.rotation = dir.angle()
 	
-	$AnimationPlayer.stop()
-	
-	# Special is a Single Frame (1x1)
-	$Sprite2D.texture = tex_special
-	$Sprite2D.hframes = 1
-	$Sprite2D.vframes = 1
-	$Sprite2D.frame = 0
-	
-	# Hold the pose for 1 second
-	await get_tree().create_timer(1.0).timeout
-	
-	is_attacking = false
+	# --- THE SPECIAL SAUCE ---
+	if is_special:
+		orb.is_explosive = true
+		orb.modulate = Color(1, 0.2, 0.2) # Red Orb
+		orb.scale = Vector2(1.5, 1.5)     # Big Orb
+		orb.speed = 400 # Slower, heavier orb
 	
 func _physics_process(delta):
 	if is_attacking: return

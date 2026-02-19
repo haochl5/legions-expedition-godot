@@ -17,14 +17,22 @@ func _on_unit_bought(unit_data: ChampionData):
 	check_for_merge(unit_data.id)
 
 func spawn_unit(data: ChampionData, level: int):
-	# --- CRITICAL CHANGE HERE ---
-	# We instantiate the SPECIFIC scene from the card data (e.g., Sorcerer.tscn)
 	var new_unit = data.unit_scene.instantiate() 
-	
 	get_parent().add_child(new_unit)
 	
-	var offset = Vector2(randf_range(-40, 40), randf_range(-40, 40))
-	new_unit.global_position = player.global_position + offset
+	# --- NEW DEPLOYMENT LOGIC ---
+	# 1. Pick a random angle (0 to 360 degrees)
+	var angle = randf() * TAU 
+	
+	# 2. Pick a random distance (e.g., between 60px and 120px away)
+	# This ensures they don't spawn ON the player, but stay close.
+	var distance = randf_range(60.0, 120.0)
+	
+	# 3. Calculate the offset vector
+	var spawn_offset = Vector2(cos(angle), sin(angle)) * distance
+	
+	# 4. Apply
+	new_unit.global_position = player.global_position + spawn_offset
 	
 	new_unit.setup(data, level, player)
 	squad_roster.append(new_unit)

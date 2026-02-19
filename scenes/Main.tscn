@@ -15,7 +15,8 @@ _data = {
 }
 point_count = 5
 
-[node name="Main" type="Node" unique_id=1901518659]
+[node name="Main" type="Node2D" unique_id=1448049761]
+y_sort_enabled = true
 script = ExtResource("1_rvslj")
 
 [node name="GridBackground" parent="." unique_id=1365587525 instance=ExtResource("3_rarhs")]
