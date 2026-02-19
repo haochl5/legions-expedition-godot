@@ -56,7 +56,8 @@ func _physics_process(delta):
 	movement_pattern(delta)
 	
 func _on_screen_exited():
-	queue_free()
+	# Mob should keep following the player outside the screen
+	pass
 	
 func take_damage(damage_amount: int):
 	hp -= damage_amount

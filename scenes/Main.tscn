@@ -11,7 +11,7 @@
 
 [sub_resource type="Curve2D" id="Curve2D_rvslj"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 128, 312, 0, 0, 0, 0, 384, 320, 0, 0, 0, 0, 384, 504, 0, 0, 0, 0, 128, 504, 0, 0, 0, 0, 128, 312)
+"points": PackedVector2Array(0, 0, 0, 0, -546, -304, 0, 0, 0, 0, 550, -312, 0, 0, 0, 0, 550, 304, 0, 0, 0, 0, -546, 304, 0, 0, 0, 0, -546, -304)
 }
 point_count = 5
 
@@ -22,6 +22,14 @@ script = ExtResource("1_rvslj")
 [node name="GridBackground" parent="." unique_id=1365587525 instance=ExtResource("3_rarhs")]
 
 [node name="Commander" parent="." unique_id=547804967 instance=ExtResource("1_elqb8")]
+
+[node name="MobPath" type="Path2D" parent="Commander" unique_id=1742900561]
+position = Vector2(2, 0)
+curve = SubResource("Curve2D_rvslj")
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="Commander/MobPath" unique_id=1750953879]
+position = Vector2(-546, -304)
+rotation = -0.0072991406
 
 [node name="Bullet" parent="." unique_id=972359357 instance=ExtResource("5_vcsgt")]
 
@@ -34,13 +42,6 @@ one_shot = true
 
 [node name="StartPosition" type="Marker2D" parent="." unique_id=782387401]
 position = Vector2(240, 450)
-
-[node name="MobPath" type="Path2D" parent="." unique_id=1742900561]
-curve = SubResource("Curve2D_rvslj")
-
-[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=1750953879]
-position = Vector2(128, 312)
-rotation = 0.031239834
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=996040357]
 

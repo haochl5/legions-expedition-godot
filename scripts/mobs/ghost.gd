@@ -7,7 +7,7 @@ func setup_animation():
 	sprite.play("movement")
 
 func setup_behavior():
-	speed = 150
+	speed = 100
 
 func movement_pattern(delta: float):
 	if target == null:
