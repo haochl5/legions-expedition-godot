@@ -11,7 +11,7 @@ func _process(delta: float) -> void:
 func update_hp(current_hp: int, max_hp: int):
 	$HPContainer/HPBar.max_value = max_hp
 	$HPContainer/HPBar.value = current_hp
-	$HPContainer/HPLabel.text = "HP: " + str(current_hp) + "/ 10"
+	$HPContainer/HPLabel.text = "HP: " + str(current_hp) + "/" + str(max_hp)
 
 func update_gold(current_gold: int):
 	$GoldLabel.text = str(current_gold) + " G"

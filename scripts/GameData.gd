@@ -4,6 +4,11 @@ extends Node
 const WAVE_TIME = 25
 const WORLD_SIZE = 3000
 
+
+signal gold_changed(new_amount)
+signal exp_changed(current, max)
+signal leveled_up(new_level)
+
 # The "Database" of all units
 # We use a Dictionary so we can look them up by key string "squire", "ranger", etc.
 var CHAMPS = {
@@ -47,7 +52,30 @@ var CHAMPS = {
 	}
 }
 
-# Player State (Gold, Wave, etc.)
+
+# Player State
 var gold: int = 0
-var wave: int = 1
-var current_squad: Array = [] # Will hold the units the player has bought
+var current_exp: int = 0
+var level: int = 1
+var exp_to_level_up: int = 50
+
+# Logic
+func add_gold(amount: int):
+	gold += amount
+	gold_changed.emit(gold)
+
+func add_exp(amount: int):
+	current_exp += amount
+	
+	# Check for level up loop (in case you get huge XP at once)
+	while current_exp >= exp_to_level_up:
+		current_exp -= exp_to_level_up
+		level_up()
+	
+	exp_changed.emit(current_exp, exp_to_level_up)
+
+func level_up():
+	level += 1
+	# Increase difficulty
+	exp_to_level_up = int(exp_to_level_up * 1.2) + 20
+	leveled_up.emit(level)

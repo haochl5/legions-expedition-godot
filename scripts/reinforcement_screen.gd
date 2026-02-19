@@ -8,7 +8,6 @@ signal unit_purchased(unit_data: ChampionData)
 signal wave_started
 
 # State
-var gold: int = 10 # Starting gold for testing
 var available_champions: Array[ChampionData] = []
 
 # UI References
@@ -17,8 +16,6 @@ var available_champions: Array[ChampionData] = []
 
 func _ready():
 	_init_champion_database()
-	update_ui()
-	generate_shop_items()
 
 # --- 1. DATA INITIALIZATION (The 3 Champions) ---
 func _init_champion_database():
@@ -81,8 +78,8 @@ func generate_shop_items():
 		card_instance.card_clicked.connect(_on_card_clicked)
 
 func _on_card_clicked(data: ChampionData, card_ref: Control):
-	if gold >= data.cost:
-		gold -= data.cost
+	if GameData.gold >= data.cost:
+		GameData.gold -= data.cost
 		
 		# Visual feedback (Hide card effectively "buying" it)
 		# In Godot, usually better to disable or replace with "Sold" label
@@ -97,8 +94,8 @@ func _on_card_clicked(data: ChampionData, card_ref: Control):
 		print("Not enough gold!")
 
 func _on_reroll_pressed():
-	if gold >= 2:
-		gold -= 2
+	if GameData.gold >= 2:
+		GameData.gold -= 2
 		generate_shop_items()
 		update_ui()
 
@@ -107,7 +104,11 @@ func _on_deploy_pressed():
 	self.visible = false # Hide shop
 
 func update_ui():
-	bank_label.text = "BANK: %d g" % gold
+	bank_label.text = "BANK: %d g" % GameData.gold
+	
+func on_shop_opened():
+	update_ui()
+	generate_shop_items()
 
 # Connect Buttons via Editor or _ready
 func _on_reroll_btn_down():

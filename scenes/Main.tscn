@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://dhdmpiip6op6t" path="res://scenes/Projectiles/Bullet.tscn" id="5_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://dm82kvnejq8ys" path="res://scenes/UI.tscn" id="6_c01mt"]
 [ext_resource type="Script" uid="uid://djhvnww3w8no4" path="res://scripts/SquadManager.gd" id="7_nxtc6"]
-[ext_resource type="PackedScene" uid="uid://52sfw5gytgx6" path="res://scenes/Unit.tscn" id="8_q8u5g"]
 [ext_resource type="PackedScene" uid="uid://dugrjvededq2o" path="res://scenes/ReinforcementScreen.tscn" id="9_lhr70"]
 [ext_resource type="Script" uid="uid://bl1xvv4obsedm" path="res://scripts/MobSpawner.gd" id="9_q8u5g"]
 
@@ -54,7 +53,6 @@ visible = false
 script = ExtResource("7_nxtc6")
 reinforcement_screen = NodePath("../CanvasLayer/Control")
 player = NodePath("../Commander")
-unit_scene = ExtResource("8_q8u5g")
 
 [node name="MobSpawner" type="Node" parent="." unique_id=547164164]
 script = ExtResource("9_q8u5g")

@@ -12,6 +12,7 @@ extends Node
 func _ready() -> void:
 	# Connect the shop's deploy button to unpause the game
 	reinforcement_screen.wave_started.connect(_on_wave_started)
+	GameData.leveled_up.connect(_on_level_up)
 	mob_spawner.set_wave_config([
 		{"type": "bear", "weight": 0.5},
 		{"type": "ghost", "weight": 0.8},
@@ -22,10 +23,15 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	$CanvasLayer/UI.update_hp($Commander.hp, $Commander.max_hp)
-	$CanvasLayer/UI.update_gold($Commander.gold)
-	$CanvasLayer/UI.update_exp($Commander.current_exp, $Commander.exp_to_level_up)
-	$CanvasLayer/UI.update_level($Commander.level)
+	# Update UI from GameData (Source of Truth)
+	$CanvasLayer/UI.update_gold(GameData.gold)
+	$CanvasLayer/UI.update_exp(GameData.current_exp, GameData.exp_to_level_up)
+	$CanvasLayer/UI.update_level(GameData.level)
+	
+	# HP is usually still on the Commander because it's physical, 
+	# but you can move that too if you want stats to persist between runs!
+	if has_node("Commander"):
+		$CanvasLayer/UI.update_hp($Commander.hp, $Commander.max_hp)
 
 func game_over() -> void:
 	$MobTimer.stop()
@@ -53,15 +59,6 @@ func _on_start_timer_timeout() -> void:
 	
 # --- SHOP LOGIC ---
 
-func open_shop():
-	# 1. Pause the game world
-	get_tree().paused = true
-	
-	# 2. Show the shop
-	reinforcement_screen.visible = true
-	
-	# 3. Tell the shop to generate new random cards
-	reinforcement_screen.generate_shop_items()
 
 func _on_wave_started():
 	# Unpause the game world when "Deploy" is clicked
@@ -71,3 +68,14 @@ func _on_wave_started():
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_focus_next"): # Usually the 'Tab' key
 		open_shop()
+		
+func _on_level_up(new_level: int):
+	print("Level Up! Opening Shop...")
+	open_shop()
+	
+func open_shop():
+	get_tree().paused = true
+	reinforcement_screen.visible = true
+	
+	# Refresh the shop UI with the correct Global Gold
+	reinforcement_screen.on_shop_opened()
