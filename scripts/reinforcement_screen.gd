@@ -14,6 +14,8 @@ var available_champions: Array[ChampionData] = []
 @onready var bank_label = $VBoxContainer/BankLabel
 @onready var cards_container = $VBoxContainer/CardsContainer
 
+
+
 func _ready():
 	_init_champion_database()
 

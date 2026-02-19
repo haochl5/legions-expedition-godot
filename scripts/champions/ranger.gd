@@ -10,6 +10,8 @@ const ARROW_SCENE = preload("res://scenes/projectiles/arrow.tscn")
 
 var attack_range = 250.0 # Ranged distance
 
+var attack_counter: int = 0
+
 func _ready():
 	tex_idle = R_IDLE
 	tex_walk = R_WALK
@@ -29,36 +31,43 @@ func _physics_process(delta):
 
 func attack():
 	is_attacking = true
+	# ... (Visuals code same as before) ...
 	
-	# 1. Visuals
-	$AnimationPlayer.stop()
-	$Sprite2D.texture = tex_attack
-	$Sprite2D.hframes = 4
-	$Sprite2D.vframes = 1
-	$Sprite2D.frame = facing_dir
-	
-	# 2. Windup
+	# Windup
 	await get_tree().create_timer(0.3).timeout
 	
-	# 3. Shoot Arrow
-	fire_arrow()
-	
-	# 4. Cooldown
+	attack_counter += 1
+	if attack_counter >= 3:
+		attack_counter = 0
+		fire_special_shotgun()
+	else:
+		fire_normal_arrow()
+		
+	# Cooldown
 	await get_tree().create_timer(0.4).timeout
 	is_attacking = false
 
-func fire_arrow():
+func fire_normal_arrow():
+	if target and is_instance_valid(target):
+		var dir = (target.global_position - global_position).normalized()
+		spawn_arrow(dir)
+	else:
+		# Fallback if target died during windup
+		spawn_arrow(Vector2.RIGHT)
+
+func fire_special_shotgun():
+	if not target or not is_instance_valid(target): return
+	
+	var center_dir = (target.global_position - global_position).normalized()
+	
+	# Fire 3 arrows: Center, -15 degrees, +15 degrees
+	spawn_arrow(center_dir) 
+	spawn_arrow(center_dir.rotated(deg_to_rad(-15)))
+	spawn_arrow(center_dir.rotated(deg_to_rad(15)))
+
+func spawn_arrow(dir: Vector2):
 	var arrow = ARROW_SCENE.instantiate()
 	get_parent().add_child(arrow)
 	arrow.global_position = global_position
-	
-	# Aim Logic
-	if target and is_instance_valid(target):
-		var dir = (target.global_position - global_position).normalized()
-		arrow.direction = dir
-		arrow.rotation = dir.angle()
-	else:
-		# Fallback aim
-		var dirs = [Vector2.DOWN, Vector2.UP, Vector2.LEFT, Vector2.RIGHT]
-		arrow.direction = dirs[facing_dir]
-		arrow.rotation = arrow.direction.angle()
+	arrow.direction = dir
+	arrow.rotation = dir.angle()
