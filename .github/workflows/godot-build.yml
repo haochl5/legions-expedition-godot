@@ -71,9 +71,8 @@ jobs:
 
       - name: Inject coi-serviceworker
         run: |
-          apt-get install -y -qq curl
-          curl -sL https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker/coi-serviceworker.js \
-               -o build/web/coi-serviceworker.js
+          wget -q https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker/coi-serviceworker.js \
+               -O build/web/coi-serviceworker.js
           sed -i 's|<head>|<head>\n  <script src="coi-serviceworker.js"></script>|' build/web/index.html
 
       - name: Upload Artifact
