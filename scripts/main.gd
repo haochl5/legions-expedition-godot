@@ -42,12 +42,12 @@ func new_game():
 
 func _on_mob_timer_timeout() -> void:
 	# random spown position
-	var mob_spawn_location = $MobPath/MobSpawnLocation
+	var mob_spawn_location = $Commander/MobPath/MobSpawnLocation
 	mob_spawn_location.progress_ratio = randf()
 	
 	# use mobspawner to generate a mob
 	var mob = mob_spawner.spawn_random_mob(
-		mob_spawn_location.position + Vector2(100, 0),
+		mob_spawn_location.global_position + Vector2(100, 0),
 		$Commander
 	)
 	
