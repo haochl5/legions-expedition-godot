@@ -7,6 +7,8 @@ extends Node
 # --- NODES --- 
 # Grab a reference to the screen you just dragged in
 @onready var reinforcement_screen = $CanvasLayer/Control
+@onready var title_screen = $CanvasLayer/TitleScreen
+@onready var game_over_screen = $CanvasLayer/GameOverScreen
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
