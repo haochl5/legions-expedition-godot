@@ -1,5 +1,13 @@
 [gd_scene format=3 uid="uid://dn0hx12gvbjmq"]
 
+[ext_resource type="Script" uid="uid://caf57x8kvjtu8" path="res://scripts/game_over_screen.gd" id="1_iwahs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iwahs"]
+bg_color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_61w2s"]
+bg_color = Color(0.82912016, 0.82912016, 0.82912016, 1)
+
 [node name="GameOverScreen" type="Control" unique_id=1717744705]
 layout_mode = 3
 anchors_preset = 15
@@ -7,13 +15,45 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_iwahs")
 
-[node name="GameOver" type="Label" parent="." unique_id=355579155]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="ColorRect" type="ColorRect" parent="." unique_id=265530809]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.061549038, 0.080567755, 0.080567755, 1)
 
-[node name="RestartButton" type="Button" parent="." unique_id=171722510]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1794681872]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=772651936]
+layout_mode = 2
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=355579155]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Game Over"
+horizontal_alignment = 1
+
+[node name="GameOverStatus" type="Label" parent="CenterContainer/VBoxContainer" unique_id=139580501]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "PlaceHolder"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=171722510]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_iwahs")
+theme_override_styles/hover = SubResource("StyleBoxFlat_61w2s")
+text = "Restart"

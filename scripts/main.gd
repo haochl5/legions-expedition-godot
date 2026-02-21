@@ -21,7 +21,28 @@ func _ready() -> void:
 		{"type": "mushroom", "weight": 0.8},
 		
 	])
+	title_screen.start_game.connect(_on_start_game)
+	game_over_screen.restart_game.connect(_on_restart_game)
+	title_screen_ready()
+	
+func title_screen_ready():
+	get_tree().paused = true
+	title_screen.show()
+	game_over_screen.hide()
+	
+func _on_start_game():
+	title_screen.hide()
+	get_tree().paused = false
 	new_game()
+
+func game_over_screen_ready():
+	get_tree().paused = true
+	game_over_screen.final_gold_level(GameData.gold, GameData.level)
+	game_over_screen.show()
+
+func _on_restart_game():
+	get_tree().paused = false
+	get_tree().reload_current_scene()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
