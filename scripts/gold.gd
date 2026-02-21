@@ -11,7 +11,6 @@ var is_magnetized: bool = false
 
 func _ready():
 	area_entered.connect(_on_area_entered) 
-	print("Gold spawned with value: ", gold_value)
 	
 	if sprite:
 		sprite.play("gold") 
