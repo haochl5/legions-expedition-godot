@@ -14,4 +14,4 @@ func _on_restart_button_pressed():
 	restart_game.emit()
 
 func final_gold_level(gold: int, level: int):
-	$GameOverStatus.text = "Gold: %d\nLevel: %d" % [gold, level]
+	$CenterContainer/VBoxContainer/GameOverStatus.text = "Gold: %d\nLevel: %d" % [gold, level]

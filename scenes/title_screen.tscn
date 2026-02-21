@@ -9,6 +9,7 @@ bg_color = Color(0.19735733, 0.19735733, 0.19735733, 1)
 bg_color = Color(0, 0, 0, 1)
 
 [node name="TitleScreen" type="Control" unique_id=794328610]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -49,3 +50,5 @@ theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("StyleBoxFlat_fgkus")
 theme_override_styles/hover = SubResource("StyleBoxFlat_sa3yf")
 text = "Start Game"
+
+[connection signal="pressed" from="TitleScreenContainer/TitleVBoxContainer/StartButton" to="." method="_on_start_button_pressed"]

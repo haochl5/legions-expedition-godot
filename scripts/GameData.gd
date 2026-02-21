@@ -79,3 +79,9 @@ func level_up():
 	# Increase difficulty
 	exp_to_level_up = int(exp_to_level_up * 1.2) + 20
 	leveled_up.emit(level)
+
+func reset_gamedata():
+	gold = 0
+	current_exp = 0
+	level = 1
+	exp_to_level_up = 50
