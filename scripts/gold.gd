@@ -1,7 +1,7 @@
 class_name Coin
 extends Area2D
 
-@export var gold_value: int = 10
+@export var gold_value: int = 1
 @export var magnet_speed: float = 300.0
 
 var player: Node2D = null
@@ -11,6 +11,7 @@ var is_magnetized: bool = false
 
 func _ready():
 	area_entered.connect(_on_area_entered) 
+	print("Gold spawned with value: ", gold_value)
 	
 	if sprite:
 		sprite.play("gold") 
