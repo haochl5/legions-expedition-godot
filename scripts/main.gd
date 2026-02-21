@@ -7,6 +7,9 @@ extends Node
 # --- NODES --- 
 # Grab a reference to the screen you just dragged in
 @onready var reinforcement_screen = $CanvasLayer/Control
+@onready var title_screen = $CanvasLayer/TitleScreen
+@onready var game_over_screen = $CanvasLayer/GameOverScreen
+@onready var ingame_UI = $CanvasLayer/UI
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -19,22 +22,50 @@ func _ready() -> void:
 		{"type": "mushroom", "weight": 0.8},
 		
 	])
+	title_screen.start_game.connect(_on_start_game)
+	game_over_screen.restart_game.connect(_on_restart_game)
+	title_screen_ready()
+	
+func title_screen_ready():
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	get_tree().paused = true
+	title_screen.show()
+	game_over_screen.hide()
+	ingame_UI.hide()
+	
+func _on_start_game():
+	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	title_screen.hide()
+	ingame_UI.show()
+	get_tree().paused = false
 	new_game()
+	
+func game_over():
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	$MobTimer.stop()
+	game_over_screen_ready()
+
+func game_over_screen_ready():
+	get_tree().paused = true
+	game_over_screen.final_gold_level(GameData.gold, GameData.level)
+	game_over_screen.show()
+
+func _on_restart_game():
+	GameData.reset_gamedata()
+	get_tree().paused = false
+	get_tree().reload_current_scene()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	# Update UI from GameData (Source of Truth)
-	$CanvasLayer/UI.update_gold(GameData.gold)
-	$CanvasLayer/UI.update_exp(GameData.current_exp, GameData.exp_to_level_up)
-	$CanvasLayer/UI.update_level(GameData.level)
+	ingame_UI.update_gold(GameData.gold)
+	ingame_UI.update_exp(GameData.current_exp, GameData.exp_to_level_up)
+	ingame_UI.update_level(GameData.level)
 	
 	# HP is usually still on the Commander because it's physical, 
 	# but you can move that too if you want stats to persist between runs!
 	if has_node("Commander"):
-		$CanvasLayer/UI.update_hp($Commander.hp, $Commander.max_hp)
-
-func game_over() -> void:
-	$MobTimer.stop()
+		ingame_UI.update_hp($Commander.hp, $Commander.max_hp)
 
 func new_game():
 	$Commander.start($StartPosition.position)

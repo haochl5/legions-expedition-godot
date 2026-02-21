@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://cqe3irr8h1126"]
+
+[ext_resource type="Script" uid="uid://ufddxx2bxye7" path="res://scripts/title_screen.gd" id="1_fgkus"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fgkus"]
+bg_color = Color(0.19735733, 0.19735733, 0.19735733, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sa3yf"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="TitleScreen" type="Control" unique_id=794328610]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fgkus")
+
+[node name="TitleScreenBackGround" type="ColorRect" parent="." unique_id=312604292]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5019608, 0.5019608, 0.5019608, 1)
+
+[node name="TitleScreenContainer" type="CenterContainer" parent="." unique_id=1385831751]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleVBoxContainer" type="VBoxContainer" parent="TitleScreenContainer" unique_id=836103991]
+layout_mode = 2
+
+[node name="GameTitle" type="Label" parent="TitleScreenContainer/TitleVBoxContainer" unique_id=1164087298]
+layout_mode = 2
+theme_override_font_sizes/font_size = 37
+text = "Legion's Expedition v.Alpha"
+
+[node name="StartButton" type="Button" parent="TitleScreenContainer/TitleVBoxContainer" unique_id=1253502888]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBoxFlat_fgkus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_sa3yf")
+text = "Start Game"
+
+[connection signal="pressed" from="TitleScreenContainer/TitleVBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
