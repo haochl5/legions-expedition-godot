@@ -22,6 +22,11 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameData="*res://scripts/GameData.gd"
+Talo="*uid://cf5txmco4tia4"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/talo/plugin.cfg")
 
 [input]
 

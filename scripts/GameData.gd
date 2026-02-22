@@ -59,9 +59,13 @@ var current_exp: int = 0
 var level: int = 1
 var exp_to_level_up: int = 50
 
+# Talo tracking
+var total_gold_collected: int = 0
+
 # Logic
 func add_gold(amount: int):
 	gold += amount
+	total_gold_collected += amount
 	gold_changed.emit(gold)
 
 func add_exp(amount: int):
@@ -85,3 +89,4 @@ func reset_gamedata():
 	current_exp = 0
 	level = 1
 	exp_to_level_up = 50
+	total_gold_collected = 0

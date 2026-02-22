@@ -1,7 +1,7 @@
 class_name Coin
 extends Area2D
 
-@export var gold_value: int = 10
+@export var gold_value: int = 1
 @export var magnet_speed: float = 300.0
 
 var player: Node2D = null

@@ -114,7 +114,7 @@ func drop_gold():
 		)
 		
 		coin.global_position = global_position + random_offset
-		coin.gold_value = gold_drop_value
+		#coin.gold_value = gold_drop_value
 		
 		get_parent().add_child(coin)
 
