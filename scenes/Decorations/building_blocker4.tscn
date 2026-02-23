@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://b65ev85b1r3ot"]
+
+[ext_resource type="Texture2D" uid="uid://ba8wevms5sed5" path="res://assets/Ninja Adventure - Asset Pack/Backgrounds/Tilesets/TilesetVillageAbandoned.png" id="1_d627f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d627f"]
+radius = 26.019224
+
+[node name="building_blocker" type="StaticBody2D" unique_id=255848528]
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1016075399]
+texture = ExtResource("1_d627f")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1167202962]
+position = Vector2(2, 6)
+shape = SubResource("CircleShape2D_d627f")

@@ -61,7 +61,7 @@ func _move_fast():
 	
 	var distance_to_target = global_position.distance_to(target.global_position)
 	
-	if distance_to_target > 5:
+	if distance_to_target > 15:
 		var direction = (target.global_position - global_position).normalized()
 		velocity = direction * speed
 		_update_animation(direction)

@@ -226,6 +226,7 @@ y_sort_enabled = true
 collision_layer = 4
 collision_mask = 15
 script = ExtResource("1_fqlnf")
+move_speed = 100.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1998268396]
 texture = ExtResource("1_h85lg")
