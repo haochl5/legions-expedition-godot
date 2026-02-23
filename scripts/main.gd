@@ -15,11 +15,7 @@ extends Node
 var _game_start_time: float = 0.0
 
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	
-	# for Talo
-	await _init_player()
-	
+func _ready() -> void:	
 	# Connect the shop's deploy button to unpause the game
 	reinforcement_screen.wave_started.connect(_on_wave_started)
 	GameData.leveled_up.connect(_on_level_up)
@@ -32,6 +28,9 @@ func _ready() -> void:
 	title_screen.start_game.connect(_on_start_game)
 	game_over_screen.restart_game.connect(_on_restart_game)
 	title_screen_ready()
+	
+	# for Talo
+	await _init_player()
 	
 	
 func _init_player() -> void:
@@ -53,9 +52,9 @@ func _init_player() -> void:
 func title_screen_ready():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().paused = true
-	title_screen.show()
 	game_over_screen.hide()
 	ingame_UI.hide()
+	title_screen.show()
 	
 func _on_start_game():
 	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
