@@ -7,7 +7,9 @@ func setup_animation():
 	sprite.play("movement")
 
 func setup_behavior():
-	speed = 100
+	speed = 150
+	# TODO: set damage to mobs, not 1 dmg for every hit
+	damage = 1
 
 func movement_pattern(delta: float):
 	if target == null:

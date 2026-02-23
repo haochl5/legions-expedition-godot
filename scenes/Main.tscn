@@ -39,7 +39,7 @@ rotation = -0.0072991406
 wait_time = 2.0
 
 [node name="StartTimer" type="Timer" parent="." unique_id=1433707992]
-wait_time = 0.5
+wait_time = 0.2
 one_shot = true
 
 [node name="StartPosition" type="Marker2D" parent="." unique_id=782387401]
