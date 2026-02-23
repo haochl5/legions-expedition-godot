@@ -106,16 +106,24 @@ func get_comfort_push() -> Vector2:
 	
 	for area in neighbors:
 		var neighbor_unit = area.get_parent() 
+		
+		# --- THE FIX: SAFETY CHECKS ---
+		# 1. Skip if the parent isn't a 2D node (prevents the Window crash!)
+		# 2. Skip if the unit is accidentally detecting itself
+		if not neighbor_unit is Node2D or neighbor_unit == self:
+			continue
+			
 		var vector_to_me = global_position - neighbor_unit.global_position
 		var dist = vector_to_me.length()
 		
-		# --- THE NEW CHECK ---
 		# Only push if we are strictly closer than the threshold
-		if dist < OVERLAP_THRESHOLD:
-			# We normalize to ensure the direction is clean
-			# (Optional: multiply by (OVERLAP_THRESHOLD - dist) to push harder when closer)
+		# (And ensure dist > 0 so we don't divide by zero if perfectly stacked)
+		if dist < OVERLAP_THRESHOLD and dist > 0:
 			total_push += vector_to_me.normalized()
 			
+	if total_push == Vector2.ZERO:
+		return Vector2.ZERO
+		
 	return total_push.normalized()
 # --- HELPER FUNCTION ---
 func find_nearest_enemy():

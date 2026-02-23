@@ -14,14 +14,19 @@ func movement_pattern(delta: float):
 	if target == null:
 		return
 	
-	# Check the distance to the Commander
 	var distance_to_target = global_position.distance_to(target.global_position)
 	
-	# Set rotation so the mob faces the player
+	# 1. CALCULATE THE DIRECTION FIRST!
+	var direction = (target.global_position - global_position).normalized()
+	
+	# 2. Now we can safely use 'direction' to flip the sprite
 	if direction.x > 0:
 		sprite.flip_h = false
 	elif direction.x < 0:
 		sprite.flip_h = true
-	
-	# Set velocity
-	velocity = direction * speed
+		
+	# 3. Apply the velocity (keeping a tiny stopping distance prevents jitter!)
+	if distance_to_target > 5.0:
+		velocity = direction * speed
+	else:
+		velocity = Vector2.ZERO

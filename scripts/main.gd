@@ -26,6 +26,7 @@ var _game_start_time: float = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:	
+	title_screen_ready()
 	# Connect the shop's deploy button to unpause the game
 	reinforcement_screen.wave_started.connect(_on_wave_started)
 	GameData.leveled_up.connect(_on_level_up)

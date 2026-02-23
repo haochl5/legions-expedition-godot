@@ -240,8 +240,8 @@ root_node = NodePath("../CollisionShape2D")
 libraries/ = SubResource("AnimationLibrary_ikoli")
 
 [node name="ComfortZone" type="Area2D" parent="." unique_id=1343822269]
-collision_layer = 16
-collision_mask = 16
+collision_layer = 0
+collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ComfortZone" unique_id=469914372]
 shape = SubResource("CircleShape2D_aa524")
