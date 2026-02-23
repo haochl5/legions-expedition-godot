@@ -3,9 +3,9 @@ extends Area2D
 signal hit
 
 # Movement parameters
-var base_speed: float = 200  
-var current_speed: float = 200
-const DASH_SPEED = 700
+var base_speed: float = 80  
+var current_speed: float = 80
+const DASH_SPEED = 500
 const DASH_DURATION = 0.15
 const DASH_COOLDOWN = 2.0
 

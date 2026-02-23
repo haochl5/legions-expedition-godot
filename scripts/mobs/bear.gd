@@ -12,8 +12,8 @@ var current_state: State = State.SLOW
 var state_timer: float = 0.0
 var slow_direction: Vector2 = Vector2.ZERO
 
-const SLOW_SPEED = 50.0
-const FAST_SPEED = 180.0
+const SLOW_SPEED = 25
+const FAST_SPEED = 80
 const STATE_CHANGE_INTERVAL = 2.0  # switch state ever two second
 
 func setup_animation():
@@ -51,23 +51,21 @@ func _switch_state():
 		_choose_random_direction()
 
 func _move_slow():
-	velocity = slow_direction * speed
-	
+	var desired_velocity = slow_direction * speed
+	velocity = velocity.lerp(desired_velocity, 0.05) # Bears turn very slow!
 	_update_animation(slow_direction)
 
 func _move_fast():
-	if target == null:
-		return
-	
+	if target == null: return
 	var distance_to_target = global_position.distance_to(target.global_position)
 	
 	if distance_to_target > 15:
 		var direction = (target.global_position - global_position).normalized()
-		velocity = direction * speed
+		var desired_velocity = direction * speed
+		velocity = velocity.lerp(desired_velocity, 0.1)
 		_update_animation(direction)
 	else:
-		# Stop moving when close enough to attack
-		velocity = Vector2.ZERO
+		velocity = velocity.lerp(Vector2.ZERO, 0.2)
 
 func _choose_random_direction():
 	var random_angle = randf_range(0, 2 * PI)

@@ -16,7 +16,7 @@ var tex_special: Texture2D # 1x1 Single Frame
 # --- STATE VARIABLES ---
 var facing_dir: int = 0  # 0:Down, 1:Up, 2:Left, 3:Right
 var is_attacking: bool = false
-var speed: int = 150
+var speed: int = 70
 
 var player: Node2D
 
