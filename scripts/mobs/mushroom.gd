@@ -2,9 +2,9 @@
 class_name MushroomMob
 extends MobBase
 
-@export var chase_speed: float = 220.0
-@export var holding_speed: float = 160
-@export var slow_radius: float = 140.0  # slow down radius
+@export var chase_speed: float = 200.0
+@export var holding_speed: float = 150
+@export var slow_radius: float = 120.0  # slow down radius
 @export var slow_factor: float = 0.5   # slow down factor
 
 var affected_units: Array = []
