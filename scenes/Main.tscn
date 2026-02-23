@@ -939,7 +939,7 @@ sources/2 = SubResource("TileSetAtlasSource_bb450")
 
 [sub_resource type="Curve2D" id="Curve2D_rvslj"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, -546, -304, 0, 0, 0, 0, 550, -312, 0, 0, 0, 0, 550, 304, 0, 0, 0, 0, -546, 304, 0, 0, 0, 0, -546, -304)
+"points": PackedVector2Array(0, 0, 0, 0, -594, -344, 0, 0, 0, 0, 590, -344, 0, 0, 0, 0, 598, 336, 0, 0, 0, 0, -594, 336, 0, 0, 0, 0, -594, -344)
 }
 point_count = 5
 
@@ -970,17 +970,25 @@ position = Vector2(2, 0)
 curve = SubResource("Curve2D_rvslj")
 
 [node name="MobSpawnLocation" type="PathFollow2D" parent="Commander/MobPath" unique_id=1750953879]
-position = Vector2(-546, -304)
-rotation = -0.0072991406
+position = Vector2(-594, -344)
 
 [node name="Bullet" parent="." unique_id=972359357 instance=ExtResource("5_vcsgt")]
 
 [node name="MobTimer" type="Timer" parent="." unique_id=1820607704]
-wait_time = 2.0
+wait_time = 15.0
 
 [node name="StartTimer" type="Timer" parent="." unique_id=1433707992]
-wait_time = 0.5
+wait_time = 0.2
 one_shot = true
+
+[node name="GhostTimer" type="Timer" parent="." unique_id=1634256001]
+wait_time = 4.5
+
+[node name="BearTimer" type="Timer" parent="." unique_id=435212886]
+wait_time = 20.0
+
+[node name="MushroomTimer" type="Timer" parent="." unique_id=1576291629]
+wait_time = 15.0
 
 [node name="StartPosition" type="Marker2D" parent="." unique_id=782387401]
 position = Vector2(240, 450)
@@ -1008,3 +1016,6 @@ script = ExtResource("9_q8u5g")
 [connection signal="hit" from="Commander" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
 [connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
+[connection signal="timeout" from="GhostTimer" to="." method="_on_ghost_timer_timeout"]
+[connection signal="timeout" from="BearTimer" to="." method="_on_bear_timer_timeout"]
+[connection signal="timeout" from="MushroomTimer" to="." method="_on_mushroom_timer_timeout"]

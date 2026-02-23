@@ -12,8 +12,8 @@ var current_state: State = State.SLOW
 var state_timer: float = 0.0
 var slow_direction: Vector2 = Vector2.ZERO
 
-const SLOW_SPEED = 30.0
-const FAST_SPEED = 80.0
+const SLOW_SPEED = 50.0
+const FAST_SPEED = 180.0
 const STATE_CHANGE_INTERVAL = 2.0  # switch state ever two second
 
 func setup_animation():

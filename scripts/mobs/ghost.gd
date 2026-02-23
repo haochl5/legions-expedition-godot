@@ -17,16 +17,11 @@ func movement_pattern(delta: float):
 	# Check the distance to the Commander
 	var distance_to_target = global_position.distance_to(target.global_position)
 	
-	# Only move if further away than the attack radius (e.g., 40 pixels)
-	if distance_to_target > 5:
-		# Direction toward the Player
-		var direction = (target.global_position - global_position).normalized()
-		
-		# Set rotation so the mob faces the player
-		rotation = direction.angle()
-		
-		# Set velocity
-		velocity = direction * speed
-	else:
-		# We reached the Commander, stop pushing!
-		velocity = Vector2.ZERO
+	# Set rotation so the mob faces the player
+	if direction.x > 0:
+		sprite.flip_h = false
+	elif direction.x < 0:
+		sprite.flip_h = true
+	
+	# Set velocity
+	velocity = direction * speed

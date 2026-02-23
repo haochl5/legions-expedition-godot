@@ -43,7 +43,9 @@ animations = [{
 
 [node name="Mob" unique_id=1251889614 instance=ExtResource("1_ynhbu")]
 script = ExtResource("2_w5ttn")
-slow_radius = 80.0
+chase_speed = 200.0
+holding_speed = 150.0
+slow_radius = 120.0
 slow_factor = 0.5
 gold_drop_count = 1
 exp_scene = ExtResource("3_7bfd0")

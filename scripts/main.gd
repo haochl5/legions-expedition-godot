@@ -25,29 +25,26 @@ var num_blockers = 150
 var _game_start_time: float = 0.0
 
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	
-	title_screen_ready()
-	
-	# Generate the world right when the scene loads!
+func _ready() -> void:	
+	# Connect the shop's deploy button to unpause the game
+	reinforcement_screen.wave_started.connect(_on_wave_started)
+	GameData.leveled_up.connect(_on_level_up)
+	mob_spawner.set_wave_config([
+		{"type": "bear", "weight": 0.2},
+		{"type": "ghost", "weight": 0.2},
+		{"type": "mushroom", "weight": 0.6},
+		
+	])
+	title_screen.start_game.connect(_on_start_game)
+	game_over_screen.restart_game.connect(_on_restart_game)
+  
+  # Generate the world right when the scene loads!
 	generate_ground()
 	spawn_blockers()
 	setup_boundaries()
 	
 	# for Talo
 	await _init_player()
-	
-	# Connect the shop's deploy button to unpause the game
-	reinforcement_screen.wave_started.connect(_on_wave_started)
-	GameData.leveled_up.connect(_on_level_up)
-	mob_spawner.set_wave_config([
-		{"type": "bear", "weight": 0.5},
-		{"type": "ghost", "weight": 0.8},
-		{"type": "mushroom", "weight": 0.8},
-		
-	])
-	title_screen.start_game.connect(_on_start_game)
-	game_over_screen.restart_game.connect(_on_restart_game)
 	
 	
 func _init_player() -> void:
@@ -69,9 +66,9 @@ func _init_player() -> void:
 func title_screen_ready():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().paused = true
-	title_screen.show()
 	game_over_screen.hide()
 	ingame_UI.hide()
+	title_screen.show()
 	
 func _on_start_game():
 	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
@@ -120,20 +117,40 @@ func new_game():
 
 func _on_mob_timer_timeout() -> void:
 	# random spown position
-	var mob_spawn_location = $Commander/MobPath/MobSpawnLocation
-	mob_spawn_location.progress_ratio = randf()
+	var mob_spawn_location = get_mob_spawn_position()
 	
 	# use mobspawner to generate a mob
 	var mob = mob_spawner.spawn_random_mob(
-		mob_spawn_location.global_position + Vector2(100, 0),
+		mob_spawn_location + Vector2(100, 0),
 		$Commander
 	)
 	
 	# add to scene
 	add_child(mob)
 
+func _on_ghost_timer_timeout() -> void:
+	var mob_spawn_location = get_mob_spawn_position()
+	mob_spawner.spawn_cluster("ghost", mob_spawn_location, $Commander, randi_range(1, 5))
+
+func _on_bear_timer_timeout() -> void:
+	var mob_spawn_location = get_mob_spawn_position()
+	mob_spawner.spawn_cluster("bear", mob_spawn_location, $Commander)
+
+func _on_mushroom_timer_timeout() -> void:
+	var mob_spawn_location = get_mob_spawn_position()
+	mob_spawner.spawn_cluster("bear", mob_spawn_location, $Commander, randi_range(1, 2))
+
+func get_mob_spawn_position():
+	var mob_spawn_location = $Commander/MobPath/MobSpawnLocation
+	mob_spawn_location.progress_ratio = randf()
+	return mob_spawn_location.global_position
+
 func _on_start_timer_timeout() -> void:
 	$MobTimer.start()
+	
+	$GhostTimer.start()
+	$BearTimer.start()
+	$MushroomTimer.start()
 	
 # --- SHOP LOGIC ---
 func _on_wave_started():
