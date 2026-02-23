@@ -1,11 +1,11 @@
 # scripts/mob_base.gd
 class_name MobBase
-extends RigidBody2D
+extends CharacterBody2D
 
 # general attributes
 @export var max_hp: int = 30
 @export var speed: float = 150.0
-@export var damage: int = 10
+@export var damage: int = 1
 
 # gold logic
 @export var coin_scene: PackedScene
@@ -33,9 +33,7 @@ func _ready():
 	if screen_notifier:
 		screen_notifier.screen_exited.connect(_on_screen_exited)
 	
-	
-	body_entered.connect(_on_body_entered)
-	
+
 	setup_animation()
 	setup_behavior()
 	
@@ -54,6 +52,7 @@ func attack_pattern(target_node: Node2D):
 	
 func _physics_process(delta):
 	movement_pattern(delta)
+	move_and_slide()
 	
 func _on_screen_exited():
 	# Mob should keep following the player outside the screen
@@ -123,5 +122,3 @@ func drop_gold():
 func _process(delta: float) -> void:
 	pass
 	
-func _on_body_entered(body):
-	pass

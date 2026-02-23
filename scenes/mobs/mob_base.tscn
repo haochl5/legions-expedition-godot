@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d15peq0biagy4" path="res://scripts/mobs/bear.gd" id="1_ilhiv"]
 [ext_resource type="Texture2D" uid="uid://dxaxpuhee1qyp" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Spirit/SpriteSheet.png" id="2_bsing"]
-[ext_resource type="PackedScene" uid="uid://dbq5amkdhq4w8" path="res://scenes/Gold.tscn" id="2_lfvhh"]
+[ext_resource type="PackedScene" uid="uid://ue4gg8h6fxcs" path="res://scenes/Gold.tscn" id="2_lfvhh"]
 [ext_resource type="Texture2D" uid="uid://cvwl8jy47yf7w" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Bear/SpriteSheet.png" id="2_qtdc4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lfvhh"]
@@ -176,15 +176,14 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_ebxvl"]
 radius = 23.0
 
-[node name="Mob" type="RigidBody2D" unique_id=1251889614 groups=["enemy"]]
-collision_mask = 0
-gravity_scale = 0.0
+[node name="Mob" type="CharacterBody2D" unique_id=405302456 groups=["enemy"]]
+collision_layer = 8
+collision_mask = 15
 script = ExtResource("1_ilhiv")
 coin_scene = ExtResource("2_lfvhh")
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=685656536]
-scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_1lgw5")
 animation = &"movement"
 centered = false

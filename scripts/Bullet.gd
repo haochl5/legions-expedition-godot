@@ -2,7 +2,7 @@ class_name Projectile
 extends Area2D
 
 # 1. CONSTANTS -> EXPORTS
-@export var speed: float = 800.0
+@export var speed: float = 200
 @export var damage: int = 10
 @export var lifetime: float = 3.0
 
@@ -24,6 +24,7 @@ func _physics_process(delta):
 		queue_free()
 
 func _on_body_entered(body):
+	# 1. Did we hit an enemy?
 	if body.is_in_group("enemy"):
 		# CASE A: EXPLOSION (Sorcerer Special)
 		if is_explosive:
@@ -35,7 +36,9 @@ func _on_body_entered(body):
 		if body.has_method("take_damage"):
 			body.take_damage(damage)
 			
-		queue_free()
+	# 2. Destroy the bullet unconditionally!
+	# (Because this is pushed back to the left margin, it runs for enemies AND trees)
+	queue_free()
 
 func explode():
 	# 1. Visual Feedback (Scale up and fade out)

@@ -7,11 +7,12 @@
 radius = 8.0
 
 [node name="Bullet" type="Area2D" unique_id=345806133]
+collision_layer = 16
+collision_mask = 9
 script = ExtResource("1_p1sfj")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1035598040]
 modulate = Color(1, 0.92156863, 0.23137255, 1)
-scale = Vector2(2, 2)
 texture = ExtResource("2_p1sfj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=669034383]

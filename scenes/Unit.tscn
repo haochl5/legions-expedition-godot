@@ -223,8 +223,8 @@ radius = 20.0
 
 [node name="Unit" type="CharacterBody2D" unique_id=1630320502]
 y_sort_enabled = true
-collision_layer = 16
-collision_mask = 17
+collision_layer = 4
+collision_mask = 15
 script = ExtResource("1_fqlnf")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1998268396]

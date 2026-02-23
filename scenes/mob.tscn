@@ -92,13 +92,13 @@ radius = 16.234608
 
 [node name="Mob" type="RigidBody2D" unique_id=1251889614 groups=["enemy"]]
 position = Vector2(-24, -10)
+collision_layer = 2
 collision_mask = 0
 gravity_scale = 0.0
 script = SubResource("GDScript_4are2")
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=685656536]
-scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_1lgw5")
 animation = &"movement"
 frame_progress = 0.7975492
