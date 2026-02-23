@@ -2,7 +2,9 @@
 class_name MushroomMob
 extends MobBase
 
-@export var slow_radius: float = 80.0  # slow down radius
+@export var chase_speed: float = 200.0
+@export var holding_speed: float = 150
+@export var slow_radius: float = 120.0  # slow down radius
 @export var slow_factor: float = 0.5   # slow down factor
 
 var affected_units: Array = []
@@ -14,9 +16,10 @@ func setup_animation():
 	sprite.play("mushroom_idle")
 
 func setup_behavior():
-	max_hp = 10
+	max_hp = 20
 	hp = max_hp
-	speed = 0.0
+	# Move fast toward player, move slow once player is within the slow are range
+	speed = chase_speed
 	damage = 0
 	
 	# create slow down area
@@ -75,7 +78,29 @@ func _setup_slow_area():
 	
 
 func movement_pattern(delta: float):
-	linear_velocity = Vector2.ZERO
+	if target == null:
+		return
+	
+	# Direction toward the Player
+	var vector = target.global_position - global_position
+	var distance = vector.length()
+	var direction = vector.normalized()
+	
+	# pattern: if commander is within the slow radius, move slowly, keep slowing player down
+	# if outside, move fast to reach the player
+	if distance <= slow_radius:
+		speed = holding_speed
+	else:
+		speed = chase_speed
+	
+	# Set rotation so the mob faces the player
+	if direction.x > 0:
+		sprite.flip_h = false
+	elif direction.x < 0:
+		sprite.flip_h = true
+	
+	# Set velocity
+	linear_velocity = direction * speed
 
 func _on_slow_area_entered(body):
 	
@@ -101,7 +126,7 @@ func _on_slow_area_exited(body):
 
 func die():
 	for unit in affected_units:
-		if unit.has_method("remove_slow"):
+		if is_instance_valid(unit) and unit.has_method("remove_slow"):
 			unit.remove_slow()
 	
 	affected_units.clear()

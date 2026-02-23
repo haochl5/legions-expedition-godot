@@ -7,7 +7,9 @@ func setup_animation():
 	sprite.play("movement")
 
 func setup_behavior():
-	speed = 100
+	speed = 80
+	# TODO: set damage to mobs, not 1 dmg for every hit
+	damage = 1
 
 func movement_pattern(delta: float):
 	if target == null:
@@ -17,7 +19,10 @@ func movement_pattern(delta: float):
 	var direction = (target.global_position - global_position).normalized()
 	
 	# Set rotation so the mob faces the player
-	rotation = direction.angle()
+	if direction.x > 0:
+		sprite.flip_h = false
+	elif direction.x < 0:
+		sprite.flip_h = true
 	
 	# Set velocity
 	linear_velocity = direction * speed
