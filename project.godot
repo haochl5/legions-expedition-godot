@@ -62,7 +62,12 @@ dash={
 
 [layer_names]
 
-2d_physics/layer_5="Units"
+2d_physics/layer_1="Obstacles"
+2d_physics/layer_2="Player"
+2d_physics/layer_3="Units"
+2d_physics/layer_4="Mobs"
+2d_physics/layer_5="Player Attacks"
+2d_physics/layer_6="Pickups"
 
 [rendering]
 

@@ -40,7 +40,6 @@ func setup(new_data: ChampionData, level: int, new_player: Node2D):
 	
 	var multiplier = 1.0 + ((star_level - 1) * 0.5)
 	current_hp = data.hp * multiplier
-	scale = Vector2.ONE * 4.0 * (1.0 + (0.2 * (star_level - 1)))
 
 func _physics_process(_delta):
 	if is_attacking: return
@@ -50,44 +49,48 @@ func _physics_process(_delta):
 		target = find_nearest_enemy()
 
 	var desired_velocity = Vector2.ZERO
+	var dist_to_player = 0.0
+	
+	if player and is_instance_valid(player):
+		dist_to_player = global_position.distance_to(player.global_position)
 	
 	# --- BEHAVIOR SELECTION ---
 	
-	# CASE A: Fighting (Ignore comfort, just get in range!)
-	if target and is_instance_valid(target):
-		var dir = global_position.direction_to(target.global_position)
+	# CASE A: The Leash (Player walked too far away, drop everything and follow!)
+	if player and is_instance_valid(player) and dist_to_player > 300:
+		target = null # Forget the enemy, the boss is leaving!
+		var dir = global_position.direction_to(player.global_position)
 		desired_velocity = dir * speed
 
-	# CASE B: Following Commander (The "Polite" Mode)
-	elif player and is_instance_valid(player):
-		var dist_to_player = global_position.distance_to(player.global_position)
+	# CASE B: Fighting (Only if target is valid and we haven't been leashed)
+	elif target and is_instance_valid(target):
+		var dist_to_target = global_position.distance_to(target.global_position)
 		
-		# 1. If we are FAR, run to the Commander
-		if dist_to_player > 300:
+		# If the enemy runs too far away, drop aggro so we don't chase them forever
+		if dist_to_target > 400:
+			target = null
+		else:
+			var dir = global_position.direction_to(target.global_position)
+			desired_velocity = dir * speed
+
+	# CASE C: Following Commander (The "Polite" Mode)
+	elif player and is_instance_valid(player):
+		if dist_to_player > 50:
 			var dir = global_position.direction_to(player.global_position)
 			desired_velocity = dir * speed
 			
 		else:
-			# Default state: Stand completely still (Statue Mode)
 			desired_velocity = Vector2.ZERO
-			
-			# Calculate the push
 			var push = get_comfort_push()
-			
-			# Only move if the push is meaningful (i.e., we are actually overlapping)
 			if push != Vector2.ZERO:
 				desired_velocity = push * comfort_force
 
 	# --- PHYSICS APPLICATION ---
-	
-	# Apply velocity (Lerp for smoothness)
 	velocity = velocity.lerp(desired_velocity, friction)
 
-	# Deadzone to stop micro-jitters when settled
 	if velocity.length() < 5.0:
 		velocity = Vector2.ZERO
 		
-	# Hard Collisions handle the rest (preventing actual overlap)
 	move_and_slide()
 	
 	update_facing_direction()
@@ -125,12 +128,13 @@ func find_nearest_enemy():
 	
 	for enemy in enemies:
 		var dist = global_position.distance_to(enemy.global_position)
-		if dist < shortest_dist:
+		
+		# Only aggro if they are actually nearby (e.g., within 250 pixels)
+		if dist < shortest_dist and dist < 250:
 			shortest_dist = dist
 			nearest_enemy = enemy
 			
 	return nearest_enemy
-	
 
 # --- DIRECTION LOGIC ---
 func update_facing_direction():

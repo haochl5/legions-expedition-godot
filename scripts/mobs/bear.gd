@@ -22,7 +22,7 @@ func setup_animation():
 func setup_behavior():
 	max_hp = 60  
 	hp = max_hp
-	damage = 50
+	damage = 2
 	speed = SLOW_SPEED  
 	
 	_choose_random_direction()
@@ -51,7 +51,7 @@ func _switch_state():
 		_choose_random_direction()
 
 func _move_slow():
-	linear_velocity = slow_direction * speed
+	velocity = slow_direction * speed
 	
 	_update_animation(slow_direction)
 
@@ -59,10 +59,15 @@ func _move_fast():
 	if target == null:
 		return
 	
-	var direction = (target.global_position - global_position).normalized()
-	linear_velocity = direction * speed
+	var distance_to_target = global_position.distance_to(target.global_position)
 	
-	_update_animation(direction)
+	if distance_to_target > 5:
+		var direction = (target.global_position - global_position).normalized()
+		velocity = direction * speed
+		_update_animation(direction)
+	else:
+		# Stop moving when close enough to attack
+		velocity = Vector2.ZERO
 
 func _choose_random_direction():
 	var random_angle = randf_range(0, 2 * PI)
@@ -82,7 +87,3 @@ func _update_animation(direction: Vector2):
 			sprite.play("bear_down")
 		else:
 			sprite.play("bear_up")
-
-func _on_body_entered(body):
-	if body == target:  
-		body.take_damage(damage)

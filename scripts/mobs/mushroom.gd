@@ -40,7 +40,7 @@ func _setup_slow_area():
 	# create a area2d node
 	slow_area = Area2D.new()
 	slow_area.collision_layer = 0
-	slow_area.collision_mask = 1
+	slow_area.collision_mask = 2
 	add_child(slow_area)
 	
 	# cicle shape collsion detection
@@ -75,7 +75,7 @@ func _setup_slow_area():
 	
 
 func movement_pattern(delta: float):
-	linear_velocity = Vector2.ZERO
+	velocity = Vector2.ZERO
 
 func _on_slow_area_entered(body):
 	

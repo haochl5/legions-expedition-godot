@@ -8,7 +8,6 @@ const R_ATTACK = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Charac
 const R_SPECIAL = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SorcererOrange/SeparateAnim/Special1.png")
 
 # We need a projectile scene to shoot!
-# (Double check capitalization: is it magic_orb.tscn or MagicOrb.tscn?)
 const PROJECTILE_SCENE = preload("res://scenes/Projectiles/magic_orb.tscn")
 
 var attack_counter: int = 0

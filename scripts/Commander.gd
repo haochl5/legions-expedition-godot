@@ -5,7 +5,7 @@ signal hit
 # Movement parameters
 var base_speed: float = 400.0  
 var current_speed: float = 400.0 
-const DASH_SPEED = 1200.0
+const DASH_SPEED = 1000
 const DASH_DURATION = 0.15
 const DASH_COOLDOWN = 2.0
 
@@ -20,7 +20,7 @@ var invincibility_timer = 0.0
 
 # Shooting parameters
 const SHOOT_COOLDOWN = 0.5    # shooting interval
-const BULLET_OFFSET = 40.0     # Bullet generation offset distance
+const BULLET_OFFSET = 20     # Bullet generation offset distance
 
 var bullet_scene = preload("res://scenes/Projectiles/Bullet.tscn")
 
@@ -78,6 +78,14 @@ func _process(delta):
 			$AnimatedSprite2D.visible = true
 		else:
 			$AnimatedSprite2D.visible = int(invincibility_timer * 10) % 2 == 0
+
+	if not is_invincible:
+		# Get a list of every physics body currently inside our Area2D
+		var overlapping = get_overlapping_bodies()
+		for body in overlapping:
+			if body.is_in_group("enemy"):
+				take_damage(body.damage)
+				break # Take damage from one enemy, become invincible, and stop checking
 	
 	# dash cooldown
 	if dash_cooldown_timer > 0:
@@ -160,9 +168,10 @@ func shoot():
 
 
 func _on_body_entered(body: Node2D) -> void:
-	# Take damage only when it collided with the mob
+	# Take damage only when collided with a mob
 	if body.is_in_group("enemy"):
-		take_damage(1)
+		# We dynamically pull the "damage" variable from the mob we touched!
+		take_damage(body.damage)
 
 func take_damage(damage: int):
 	if is_invincible:

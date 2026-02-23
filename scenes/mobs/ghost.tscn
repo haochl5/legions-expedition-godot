@@ -6,6 +6,13 @@
 
 [node name="Mob" unique_id=1251889614 instance=ExtResource("1_d4xx5")]
 script = ExtResource("2_xk3ph")
+max_hp = 30
+speed = 150.0
+damage = 10
 gold_drop_count = 2
+gold_drop_value = 10
+drop_spread_radius = 30.0
 exp_scene = ExtResource("3_skyw5")
 exp_drop_count = 4
+exp_drop_value = 5
+exp_drop_spread_radius = 30.0
