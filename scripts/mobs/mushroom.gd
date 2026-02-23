@@ -2,9 +2,9 @@
 class_name MushroomMob
 extends MobBase
 
-@export var chase_speed: float = 200.0
-@export var holding_speed: float = 150
-@export var slow_radius: float = 120.0  # slow down radius
+@export var chase_speed: float = 70
+@export var holding_speed: float = 35
+@export var slow_radius: float = 30  # slow down radius
 @export var slow_factor: float = 0.5   # slow down factor
 
 var affected_units: Array = []
@@ -61,10 +61,13 @@ func _setup_slow_area():
 	
 	# visualize cicle
 	var slow_down_circle = Line2D.new()
-	slow_down_circle.width = 3.0
+	slow_down_circle.width = 5.0 # Increased from 3.0 to make it thicker!
 	slow_down_circle.default_color = Color(1, 0.8, 0, 0.5) 
-	slow_down_circle.z_index = -10 
-	slow_down_circle.z_as_relative = false  
+	
+	# THE FIX: Change this to 0 or 1 so it renders on top of the grass!
+	slow_down_circle.z_index = 0 
+	
+	slow_down_circle.z_as_relative = false
 	
 	var points = PackedVector2Array()
 	for i in range(33):
@@ -100,7 +103,9 @@ func movement_pattern(delta: float):
 		sprite.flip_h = true
 	
 	# Set velocity
-	velocity = direction * speed
+	# Set velocity smoothly
+	var desired_velocity = direction * speed
+	velocity = velocity.lerp(desired_velocity, 0.1)
 
 func _on_slow_area_entered(body):
 	

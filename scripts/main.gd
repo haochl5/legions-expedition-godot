@@ -1,9 +1,11 @@
 extends Node
 
 # --- MAP GENERATION EXPORTS ---
-@export var tree_scene: PackedScene
-@export var rock_scene: PackedScene
-@export var building_scene: PackedScene
+# --- MAP GENERATION EXPORTS ---
+@export var tree_scenes: Array[PackedScene]
+@export var rock_scenes: Array[PackedScene]
+@export var building_scenes: Array[PackedScene]
+@export var statue_scene: PackedScene
 
 @onready var grid_background = $GridBackground
 @onready var dirt_layer = $DirtLayer
@@ -215,61 +217,110 @@ func generate_ground():
 	dirt_layer.set_cells_terrain_connect(dirt_cells, 0, 0)
 
 func spawn_blockers():
-	if not tree_scene or not rock_scene or not building_scene:
-		print("WARNING: Blocker scenes are not assigned in the Main Inspector!")
-		return
-		
-	var valid_positions: Array[Vector2] = []
-	var min_distance = 120.0 # How far apart obstacles must be (tweak this!)
-	var safe_spawn_radius = 400.0 # How big the empty circle around the player is
+	# Instead of just storing positions, we store a Dictionary with all info!
+	var placed_objects: Array[Dictionary] = []
+	
+	# --- DISTANCE RULES ---
+	var min_distance = 70.0 # Absolute minimum distance to prevent physical overlap
+	var same_building_min_distance = 250.0 # How far away identical buildings must be
+	var safe_spawn_radius = 80
 	var spawn_point = $StartPosition.position
-		
-	for i in range(num_blockers):
-		var blocker_instance
-		var rand_type = randf()
-		
-		if rand_type < 0.5:
-			blocker_instance = tree_scene.instantiate()
-		elif rand_type < 0.8:
-			blocker_instance = rock_scene.instantiate()
-		else:
-			blocker_instance = building_scene.instantiate()
-			
+	
+	# --- CLUSTER MAP ---
+	var cluster_noise = FastNoiseLite.new()
+	cluster_noise.seed = randi()
+	cluster_noise.frequency = 0.025 # Creates distinct "islands" of obstacles
+	
+	# Dropped from 800 to 400 to heavily reduce overall map density
+	var total_to_spawn = 300
+	
+	for i in range(total_to_spawn):
 		var spawn_pos = Vector2.ZERO
 		var is_valid_position = false
 		var attempts = 0
 		
-		# Try up to 15 times to find a valid spot for this blocker
-		while not is_valid_position and attempts < 15:
-			var margin = 64
-			var spawn_x = randf_range(-world_size / 2 + margin, world_size / 2 - margin)
-			var spawn_y = randf_range(-world_size / 2 + margin, world_size / 2 - margin)
-			spawn_pos = Vector2(spawn_x, spawn_y)
+		# Variables to hold our choice before we place it
+		var scene_to_instantiate = null
+		var is_building = false
+		var resource_path = ""
+		
+		# Try up to 30 times to find a valid spot
+		while not is_valid_position and attempts < 30:
+			var margin = 100
+			spawn_pos = Vector2(
+				randf_range(-world_size / 2 + margin, world_size / 2 - margin),
+				randf_range(-world_size / 2 + margin, world_size / 2 - margin)
+			)
 			
-			is_valid_position = true
-			
-			# 1. Check Player Spawn Safe Zone
+			# 1. Safe Zone Check
 			if spawn_pos.distance_to(spawn_point) < safe_spawn_radius:
-				is_valid_position = false
 				attempts += 1
 				continue
 				
-			# 2. Check Overlap with previously placed blockers
-			for pos in valid_positions:
-				if spawn_pos.distance_to(pos) < min_distance:
+			# 2. CLUSTER CHECK (This forces everything to group together!)
+			var n_val = cluster_noise.get_noise_2d(spawn_pos.x, spawn_pos.y)
+			if n_val < 0.15: 
+				# If noise is low, it's a Meadow. Force it to be empty!
+				attempts += 1
+				continue
+				
+			# 3. PRE-SELECT THE OBJECT
+			# Since we are in a valid cluster, pick what we want to place here
+			var rand = randf()
+			if rand < 0.15 and building_scenes.size() > 0:       # 15% Buildings
+				scene_to_instantiate = building_scenes.pick_random()
+				is_building = true
+			elif rand < 0.20 and statue_scene != null:           # 5% Statues
+				scene_to_instantiate = statue_scene
+			elif rand < 0.85 and tree_scenes.size() > 0:         # 65% Trees
+				scene_to_instantiate = tree_scenes.pick_random()
+			elif rock_scenes.size() > 0:                         # 15% Rocks
+				scene_to_instantiate = rock_scenes.pick_random()
+			else:
+				attempts += 1
+				continue
+				
+			# Grab the unique file path so we can identify exact duplicates
+			resource_path = scene_to_instantiate.resource_path
+			is_valid_position = true
+			
+			# 4. PROXIMITY & DUPLICATE CHECKS
+			for placed in placed_objects:
+				var dist = spawn_pos.distance_to(placed["pos"])
+				
+				# Rule A: Prevent clipping for everything
+				if dist < min_distance:
 					is_valid_position = false
 					break
+					
+				# Rule B: Allow different buildings to be close, but ban identical ones!
+				if is_building and placed["is_building"]:
+					if dist < same_building_min_distance and resource_path == placed["path"]:
+						is_valid_position = false
+						break 
 			
 			attempts += 1
 			
-		# If we found a good spot after trying, place it!
-		if is_valid_position:
-			valid_positions.append(spawn_pos)
+		# --- SPAWN LOGIC ---
+		if is_valid_position and scene_to_instantiate != null:
+			var blocker_instance = scene_to_instantiate.instantiate()
+			
+			# Save all the data into our dictionary list
+			placed_objects.append({
+				"pos": spawn_pos,
+				"path": resource_path,
+				"is_building": is_building
+			})
+			
 			blocker_instance.position = spawn_pos
+			
+			# Add subtle random scaling to organic things
+			if not is_building and not blocker_instance.name.contains("Statue"):
+				var random_scale = randf_range(0.85, 1.15)
+				blocker_instance.scale = Vector2(random_scale, random_scale)
+				
 			add_child(blocker_instance)
-		else:
-			# If we couldn't find a spot after 15 tries (map is getting full), delete it
-			blocker_instance.queue_free()
+			
 
 func setup_boundaries():
 	var boundary_body = StaticBody2D.new()

@@ -7,7 +7,7 @@ func setup_animation():
 	sprite.play("movement")
 
 func setup_behavior():
-	speed = 100
+	speed = 40
 	damage = 1
 
 func movement_pattern(delta: float):
@@ -26,7 +26,9 @@ func movement_pattern(delta: float):
 		sprite.flip_h = true
 		
 	# 3. Apply the velocity (keeping a tiny stopping distance prevents jitter!)
+	# 3. Apply the velocity smoothly using lerp!
 	if distance_to_target > 5.0:
-		velocity = direction * speed
+		var desired_velocity = direction * speed
+		velocity = velocity.lerp(desired_velocity, 0.1) # 0.1 is the "turn speed"
 	else:
-		velocity = Vector2.ZERO
+		velocity = velocity.lerp(Vector2.ZERO, 0.2)

@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cb03umbkd4p3x"]
+
+[ext_resource type="Texture2D" uid="uid://bar4rt456x3p0" path="res://assets/Ninja Adventure - Asset Pack/Backgrounds/Tilesets/TilesetNature.png" id="1_bh6qa"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y825r"]
+radius = 14.0
+
+[node name="RockBlocker" type="StaticBody2D" unique_id=457495638]
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=648824740]
+texture = ExtResource("1_bh6qa")
+region_enabled = true
+region_rect = Rect2(336, 224, 32, 48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1528943112]
+position = Vector2(1, 12)
+shape = SubResource("CircleShape2D_y825r")

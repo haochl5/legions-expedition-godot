@@ -2,20 +2,27 @@
 
 [ext_resource type="PackedScene" uid="uid://c4hnjbti1u5md" path="res://scenes/Commander.tscn" id="1_elqb8"]
 [ext_resource type="Script" uid="uid://28k3b60vtk1q" path="res://scripts/main.gd" id="1_rvslj"]
-[ext_resource type="PackedScene" uid="uid://cqd64g7ycojtg" path="res://Decorations/tree_blocker.tscn" id="2_cvmbd"]
-[ext_resource type="PackedScene" uid="uid://bkylpy2c14mqx" path="res://Decorations/rock_blocker.tscn" id="3_ft6cd"]
+[ext_resource type="PackedScene" uid="uid://cqd64g7ycojtg" path="res://scenes/Decorations/threeTree_blocker.tscn" id="2_cvmbd"]
+[ext_resource type="PackedScene" uid="uid://bkylpy2c14mqx" path="res://scenes/Decorations/rock_blocker.tscn" id="3_ft6cd"]
 [ext_resource type="Texture2D" uid="uid://fvp3dbnex71f" path="res://assets/Ninja Adventure - Asset Pack/Backgrounds/Tilesets/TilesetField.png" id="3_qmy6f"]
 [ext_resource type="PackedScene" uid="uid://c7a417v843a7d" path="res://scenes/grid_background.tscn" id="3_rarhs"]
-[ext_resource type="PackedScene" uid="uid://dw4tl8ysvrxep" path="res://Decorations/building_blocker.tscn" id="4_bb450"]
+[ext_resource type="PackedScene" uid="uid://d2ybxwq1re5fu" path="res://scenes/Decorations/tree_blocker.tscn" id="3_yxlcp"]
+[ext_resource type="PackedScene" uid="uid://dw4tl8ysvrxep" path="res://scenes/Decorations/building_blocker.tscn" id="4_bb450"]
 [ext_resource type="Texture2D" uid="uid://bqmq6bmy0omhy" path="res://assets/Ninja Adventure - Asset Pack/Backgrounds/Tilesets/TilesetFloor.png" id="4_mwfav"]
 [ext_resource type="Texture2D" uid="uid://bar4rt456x3p0" path="res://assets/Ninja Adventure - Asset Pack/Backgrounds/Tilesets/TilesetNature.png" id="5_3p2gp"]
+[ext_resource type="PackedScene" uid="uid://cb03umbkd4p3x" path="res://scenes/Decorations/rock_blocker2.tscn" id="5_ebg2g"]
 [ext_resource type="PackedScene" uid="uid://cqe3irr8h1126" path="res://scenes/title_screen.tscn" id="5_lhr70"]
 [ext_resource type="PackedScene" uid="uid://dhdmpiip6op6t" path="res://scenes/Projectiles/Bullet.tscn" id="5_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://dm82kvnejq8ys" path="res://scenes/UI.tscn" id="6_c01mt"]
+[ext_resource type="PackedScene" uid="uid://c22o6p7wjfgpx" path="res://scenes/Decorations/building_blocker2.tscn" id="7_2ofn6"]
 [ext_resource type="Script" uid="uid://djhvnww3w8no4" path="res://scripts/SquadManager.gd" id="7_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://dn0hx12gvbjmq" path="res://scenes/game_over_screen.tscn" id="8_wp0k4"]
+[ext_resource type="PackedScene" uid="uid://beaxrgirc20d4" path="res://scenes/Decorations/building_blocker3.tscn" id="8_xa025"]
+[ext_resource type="PackedScene" uid="uid://b65ev85b1r3ot" path="res://scenes/Decorations/building_blocker4.tscn" id="9_36rkl"]
 [ext_resource type="PackedScene" uid="uid://dugrjvededq2o" path="res://scenes/ReinforcementScreen.tscn" id="9_lhr70"]
 [ext_resource type="Script" uid="uid://bl1xvv4obsedm" path="res://scripts/MobSpawner.gd" id="9_q8u5g"]
+[ext_resource type="PackedScene" uid="uid://dfftu6upf8jl5" path="res://scenes/Decorations/statue_blocker.tscn" id="10_fs0b5"]
+[ext_resource type="Texture2D" uid="uid://c48eo60vjidxu" path="res://assets/Ninja Adventure - Asset Pack/Backgrounds/Animated/Plant/SpriteSheet16x16.png" id="15_ebg2g"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cvmbd"]
 texture = ExtResource("3_qmy6f")
@@ -932,10 +939,20 @@ texture = ExtResource("5_3p2gp")
 10:20/0 = 0
 11:20/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ebg2g"]
+texture = ExtResource("15_ebg2g")
+0:0/animation_columns = 4
+0:0/animation_speed = 5.0
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_nfivy"]
 sources/0 = SubResource("TileSetAtlasSource_cvmbd")
 sources/1 = SubResource("TileSetAtlasSource_ft6cd")
 sources/2 = SubResource("TileSetAtlasSource_bb450")
+sources/3 = SubResource("TileSetAtlasSource_ebg2g")
 
 [sub_resource type="Curve2D" id="Curve2D_rvslj"]
 _data = {
@@ -946,9 +963,10 @@ point_count = 5
 [node name="Main" type="Node2D" unique_id=1111022055]
 y_sort_enabled = true
 script = ExtResource("1_rvslj")
-tree_scene = ExtResource("2_cvmbd")
-rock_scene = ExtResource("3_ft6cd")
-building_scene = ExtResource("4_bb450")
+tree_scenes = Array[PackedScene]([ExtResource("2_cvmbd"), ExtResource("3_yxlcp")])
+rock_scenes = Array[PackedScene]([ExtResource("3_ft6cd"), ExtResource("5_ebg2g")])
+building_scenes = Array[PackedScene]([ExtResource("4_bb450"), ExtResource("7_2ofn6"), ExtResource("8_xa025"), ExtResource("9_36rkl")])
+statue_scene = ExtResource("10_fs0b5")
 
 [node name="GridBackground" parent="." unique_id=1365587525 instance=ExtResource("3_rarhs")]
 z_index = -5

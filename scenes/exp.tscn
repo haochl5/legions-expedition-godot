@@ -40,7 +40,7 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hwmkj"]
-radius = 5.39
+radius = 1.44
 
 [node name="EXP" type="Area2D" unique_id=1641050900]
 collision_layer = 32
@@ -48,6 +48,7 @@ collision_mask = 2
 script = ExtResource("1_7gp3u")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=324663398]
+scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("SpriteFrames_g10jr")
 animation = &"EXP"
 

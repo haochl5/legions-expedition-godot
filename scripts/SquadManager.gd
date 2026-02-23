@@ -20,13 +20,12 @@ func spawn_unit(data: ChampionData, level: int):
 	var new_unit = data.unit_scene.instantiate() 
 	get_parent().add_child(new_unit)
 	
-	# --- NEW DEPLOYMENT LOGIC ---
 	# 1. Pick a random angle (0 to 360 degrees)
 	var angle = randf() * TAU 
 	
-	# 2. Pick a random distance (e.g., between 60px and 120px away)
-	# This ensures they don't spawn ON the player, but stay close.
-	var distance = randf_range(60.0, 120.0)
+	# 2. Pick a closer random distance (e.g., between 20px and 50px away)
+	# This keeps them right next to the Commander without overlapping perfectly.
+	var distance = randf_range(20.0, 50.0) 
 	
 	# 3. Calculate the offset vector
 	var spawn_offset = Vector2(cos(angle), sin(angle)) * distance
