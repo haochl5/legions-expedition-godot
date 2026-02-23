@@ -13,14 +13,14 @@ var state_timer: float = 0.0
 var slow_direction: Vector2 = Vector2.ZERO
 
 const SLOW_SPEED = 50.0
-const FAST_SPEED = 150.0
+const FAST_SPEED = 180.0
 const STATE_CHANGE_INTERVAL = 2.0  # switch state ever two second
 
 func setup_animation():
 	sprite.play("bear_down")
 
 func setup_behavior():
-	max_hp = 80  
+	max_hp = 60  
 	hp = max_hp
 	damage = 50
 	speed = SLOW_SPEED  

@@ -15,6 +15,7 @@ const MOB_TYPES = {
 	{"type": "bear", "weight": 0.5}
 	
 ]
+
 # generate a random mob
 func spawn_random_mob(position: Vector2, target: Node2D) -> MobBase:
 	var mob_type = _get_random_mob_type()
@@ -52,8 +53,11 @@ func _get_random_mob_type() -> String:
 func set_wave_config(configs):
 	wave_config = configs
 
-
-# spawner.set_wave_config([
-#     {"type": "ghost", "weight": 0.5},
-#     {"type": "slime", "weight": 0.5}
-# ])
+# New function to handle groups
+func spawn_cluster(type: String, position: Vector2, target: Node2D, count: int = 1):
+	for i in range(count):
+		# Add a small random offset so they don't overlap perfectly
+		var offset = Vector2(randf_range(-80, 80), randf_range(-80, 80))
+		var mob = spawn_mob(type, position + offset, target)
+		if mob:
+			get_parent().add_child(mob) # Adds to the Main scene
