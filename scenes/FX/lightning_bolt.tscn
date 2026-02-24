@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://ctjisre8ayoiy"]
+
+[ext_resource type="Texture2D" uid="uid://c8dmk3khp6khg" path="res://assets/Ninja Adventure - Asset Pack/FX/Environment/Raylight.png" id="1_buqvy"]
+[ext_resource type="Script" uid="uid://bgvgqv0bus451" path="res://scenes/FX/lightning_bolt.gd" id="1_nvg8u"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijlmn"]
+atlas = ExtResource("1_buqvy")
+region = Rect2(0, 0, 72, 102)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eodhs"]
+atlas = ExtResource("1_buqvy")
+region = Rect2(72, 0, 72, 102)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_scnrn"]
+atlas = ExtResource("1_buqvy")
+region = Rect2(144, 0, 72, 102)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mc35m"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijlmn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eodhs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_scnrn")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dhl4f"]
+
+[node name="lightning_bolt" type="Area2D" unique_id=1022567432]
+script = ExtResource("1_nvg8u")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=708158916]
+position = Vector2(28, -48)
+sprite_frames = SubResource("SpriteFrames_mc35m")
+frame = 2
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1792739986]
+shape = SubResource("RectangleShape2D_dhl4f")

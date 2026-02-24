@@ -1,7 +1,8 @@
 extends Node
 
 @export var reinforcement_screen: Control
-@export var player: Node2D 
+@export var player: Node2D
+@export var merge_fx_scene: PackedScene # <-- ADD THIS!
 
 # DELETE THIS LINE: You don't need a generic unit scene anymore!
 # @export var unit_scene: PackedScene 
@@ -10,11 +11,14 @@ var squad_roster: Array[Unit] = []
 
 func _ready():
 	if reinforcement_screen:
+		# Listen for purchases to spawn the units behind the scenes
 		reinforcement_screen.unit_purchased.connect(_on_unit_bought)
+		
+		# NEW: Listen for the deploy button to trigger the merges!
+		reinforcement_screen.wave_started.connect(process_all_merges)
 
 func _on_unit_bought(unit_data: ChampionData):
 	spawn_unit(unit_data, 1)
-	check_for_merge(unit_data.id)
 
 func spawn_unit(data: ChampionData, level: int):
 	var new_unit = data.unit_scene.instantiate() 
@@ -35,7 +39,20 @@ func spawn_unit(data: ChampionData, level: int):
 	
 	new_unit.setup(data, level, player)
 	squad_roster.append(new_unit)
+	return new_unit
 
+func process_all_merges():
+	# 1. Figure out which unique unit types we currently own
+	var unique_ids = []
+	for unit in squad_roster:
+		# Check if the unit is still valid (hasn't been deleted by a previous merge)
+		if is_instance_valid(unit) and not unique_ids.has(unit.data.id):
+			unique_ids.append(unit.data.id)
+			
+	# 2. Run the merge check for each type of unit
+	for id in unique_ids:
+		check_for_merge(id)
+		
 
 # --- THE MERGE LOGIC ---
 func check_for_merge(unit_id: String):
@@ -60,9 +77,23 @@ func check_for_merge(unit_id: String):
 			u.queue_free()        # Delete from world
 		merge_pos /= 3.0
 		
-		# Spawn the tier 2 unit
+		# Spawn the tier 2 unit AND save a reference to it
 		var upgrade_data = units_to_remove[0].data
-		spawn_unit(upgrade_data, 2)
+		var upgraded_unit = spawn_unit(upgrade_data, 2)
 		
-		# (Optional) Recursion: Check if we now have three 2-star units!
-		# check_for_merge_tier_2(unit_id)
+		# 1. Override the random player offset and move it directly to the merge center!
+		upgraded_unit.global_position = merge_pos
+		
+		# --- NEW: THE JUICY GROWTH TRANSITION ---
+		# Force it to start at normal size (1.0)
+		upgraded_unit.scale = Vector2(1.0, 1.0)
+		
+		# Create a tween to smoothly pop it up to 1.3x size over 0.4 seconds!
+		var tween = create_tween()
+		tween.tween_property(upgraded_unit, "scale", Vector2(1.3, 1.3), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		# ----------------------------------------
+		
+		# 2. Spawn the visual effect directly on the new unit
+		if merge_fx_scene:
+			var fx_instance = merge_fx_scene.instantiate()
+			upgraded_unit.add_child(fx_instance)
