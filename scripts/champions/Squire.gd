@@ -58,7 +58,7 @@ func perform_normal_attack():
 	# 3. Damage
 	if target and is_instance_valid(target):
 		var dist = global_position.distance_to(target.global_position)
-		if dist <= attack_range + 20: 
+		if dist <= attack_range: 
 			target.take_damage(damage)
 	
 	# 4. Cooldown

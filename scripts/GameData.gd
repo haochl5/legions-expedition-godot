@@ -54,7 +54,7 @@ var CHAMPS = {
 
 
 # Player State
-var gold: int = 0
+var gold: int = 3
 var current_exp: int = 0
 var level: int = 1
 var exp_to_level_up: int = 50
