@@ -80,9 +80,9 @@ jobs:
         run: |
           mkdir -p addons/talo/
           cat <<EOF > addons/talo/settings.cfg
-          [config]
           access_key="${{ secrets.TALO_API_KEY }}"
-          use_encryption=false
+          api_url="https://api.trytalo.com"
+          socket_url="wss://api.trytalo.com"
           cache_player_on_identify=false
           handle_tree_quit=true
           EOF
