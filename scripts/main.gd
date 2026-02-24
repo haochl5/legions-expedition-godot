@@ -79,10 +79,6 @@ func _init_player() -> void:
 		print("[Talo Debug] Success! Alias identified: ", Talo.current_alias.identifier)
 	else:
 		print("[Talo Debug] Failure: Talo.current_alias is still null after await")
-		
-	# Check for potential network/key issues
-	if Talo.identity == null:
-		print("[Talo Debug] Warning: Talo.identity is null. Check your API Key in settings.cfg")
 
 	print("Talo player ID: ", Talo.current_alias.identifier if Talo.current_alias else "FAILED")
 	

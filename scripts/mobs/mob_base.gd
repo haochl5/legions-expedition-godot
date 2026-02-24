@@ -12,6 +12,7 @@ extends CharacterBody2D
 @export var gold_drop_count: int = 3  
 @export var gold_drop_value: int = 10  
 @export var drop_spread_radius: float = 30.0 
+@export var coin_drop_chance: float = 0.3
 
 # exp logic
 @export var exp_scene: PackedScene
@@ -103,6 +104,13 @@ func drop_exp():
 func drop_gold():
 	if not coin_scene:
 		return
+		
+	# --- NEW: THE DICE ROLL ---
+	# randf() rolls a decimal between 0.0 and 1.0. 
+	# If it rolls higher than 0.3, we exit the function without dropping anything!
+	if randf() > coin_drop_chance:
+		return
+	# --------------------------
 	
 	for i in range(gold_drop_count):
 		var coin = coin_scene.instantiate()
