@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://dcihv82tngpvt"]
+
+[ext_resource type="Texture2D" uid="uid://jcba8gxksjqp" path="res://assets/Ninja Adventure - Asset Pack/FX/Magic/Boost/SpriteSheet.png" id="1_q67gm"]
+[ext_resource type="Script" uid="uid://bxywy2prxa0rw" path="res://scenes/FX/merge_fx.gd" id="2_o6ad7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o6ad7"]
+atlas = ExtResource("1_q67gm")
+region = Rect2(0, 0, 53, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f0r2p"]
+atlas = ExtResource("1_q67gm")
+region = Rect2(53, 0, 53, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rjwq0"]
+atlas = ExtResource("1_q67gm")
+region = Rect2(106, 0, 53, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vbh46"]
+atlas = ExtResource("1_q67gm")
+region = Rect2(159, 0, 53, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o0o1x"]
+atlas = ExtResource("1_q67gm")
+region = Rect2(212, 0, 53, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xfqke"]
+atlas = ExtResource("1_q67gm")
+region = Rect2(265, 0, 53, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dthqm"]
+atlas = ExtResource("1_q67gm")
+region = Rect2(318, 0, 53, 35)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_be3mv"]
+atlas = ExtResource("1_q67gm")
+region = Rect2(371, 0, 53, 35)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cpb35"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o6ad7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f0r2p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rjwq0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vbh46")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o0o1x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xfqke")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dthqm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_be3mv")
+}],
+"loop": false,
+"name": &"new_animation",
+"speed": 15.0
+}]
+
+[node name="MergeFX" type="AnimatedSprite2D" unique_id=923725279]
+sprite_frames = SubResource("SpriteFrames_cpb35")
+animation = &"new_animation"
+frame = 7
+frame_progress = 1.0
+script = ExtResource("2_o6ad7")

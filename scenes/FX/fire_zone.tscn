@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://d2kng808nofnf"]
+
+[ext_resource type="Script" uid="uid://c4ftpi3tffgmj" path="res://scenes/FX/fire_zone.gd" id="1_ctjyw"]
+[ext_resource type="Texture2D" uid="uid://bvo8vk432yd4x" path="res://assets/Ninja Adventure - Asset Pack/FX/Particle/Fire.png" id="1_xe8n2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ctjyw"]
+radius = 5.25
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c4go1"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(0, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w55qs"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(8, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_45edd"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(16, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2mp6l"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(24, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_giypo"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(32, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8xq8d"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(40, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0wrfs"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(48, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nneoq"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(56, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_62jc3"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(64, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dovq3"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(72, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x6rpj"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(80, 0, 8, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_saf3c"]
+atlas = ExtResource("1_xe8n2")
+region = Rect2(88, 0, 8, 12)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_enj5k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c4go1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w55qs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_45edd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2mp6l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_giypo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8xq8d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0wrfs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nneoq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_62jc3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dovq3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x6rpj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_saf3c")
+}],
+"loop": true,
+"name": &"new_animation",
+"speed": 15.0
+}]
+
+[node name="FireZone" type="Area2D" unique_id=1316113167]
+script = ExtResource("1_ctjyw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1250061296]
+position = Vector2(-1, 2)
+shape = SubResource("CircleShape2D_ctjyw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=523337114]
+sprite_frames = SubResource("SpriteFrames_enj5k")
+animation = &"new_animation"
+frame_progress = 0.18554153
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

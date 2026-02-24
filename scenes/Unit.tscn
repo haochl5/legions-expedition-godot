@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ysf15n2ryn0y" path="res://icon.svg" id="1_h85lg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fqlnf"]
-radius = 3.5
+radius = 5.75
 
 [sub_resource type="Animation" id="Animation_fqlnf"]
 length = 0.001
@@ -219,7 +219,7 @@ _data = {
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_aa524"]
-radius = 20.0
+radius = 6.65
 
 [node name="Unit" type="CharacterBody2D" unique_id=1630320502]
 y_sort_enabled = true
@@ -234,6 +234,7 @@ hframes = 4
 vframes = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1023991330]
+position = Vector2(0, 10)
 shape = SubResource("CircleShape2D_fqlnf")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=317799067]
@@ -245,4 +246,5 @@ collision_layer = 0
 collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ComfortZone" unique_id=469914372]
+position = Vector2(0, 9)
 shape = SubResource("CircleShape2D_aa524")

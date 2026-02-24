@@ -23,6 +23,7 @@
 [ext_resource type="Script" uid="uid://bl1xvv4obsedm" path="res://scripts/MobSpawner.gd" id="9_q8u5g"]
 [ext_resource type="PackedScene" uid="uid://dfftu6upf8jl5" path="res://scenes/Decorations/statue_blocker.tscn" id="10_fs0b5"]
 [ext_resource type="Texture2D" uid="uid://c48eo60vjidxu" path="res://assets/Ninja Adventure - Asset Pack/Backgrounds/Animated/Plant/SpriteSheet16x16.png" id="15_ebg2g"]
+[ext_resource type="PackedScene" uid="uid://dcihv82tngpvt" path="res://scenes/FX/merge_fx.tscn" id="23_2ofn6"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cvmbd"]
 texture = ExtResource("3_qmy6f")
@@ -1027,6 +1028,7 @@ visible = false
 script = ExtResource("7_nxtc6")
 reinforcement_screen = NodePath("../CanvasLayer/Control")
 player = NodePath("../Commander")
+merge_fx_scene = ExtResource("23_2ofn6")
 
 [node name="MobSpawner" type="Node" parent="." unique_id=547164164]
 script = ExtResource("9_q8u5g")

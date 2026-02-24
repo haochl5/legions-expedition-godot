@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://blppeakw3oxtn"]
+
+[ext_resource type="PackedScene" uid="uid://52sfw5gytgx6" path="res://scenes/Unit.tscn" id="1_k6ua2"]
+[ext_resource type="Script" uid="uid://dr0ogrpvxch2k" path="res://scripts/champions/pyromancer.gd" id="2_s2rd3"]
+
+[node name="Unit" unique_id=1630320502 instance=ExtResource("1_k6ua2")]
+script = ExtResource("2_s2rd3")
+move_speed = 150.0
