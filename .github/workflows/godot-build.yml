@@ -92,11 +92,11 @@ jobs:
           mkdir -p build/web
           godot --headless --export-release "Web" build/web/index.html
 
-      - name: Inject coi-serviceworker
-        run: |
-          wget -q https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker/coi-serviceworker.js \
-               -O build/web/coi-serviceworker.js
-          sed -i 's|<head>|<head>\n  <script src="coi-serviceworker.js"></script>|' build/web/index.html
+      # - name: Inject coi-serviceworker
+      #   run: |
+      #     wget -q https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker/coi-serviceworker.js \
+      #          -O build/web/coi-serviceworker.js
+      #     sed -i 's|<head>|<head>\n  <script src="coi-serviceworker.js"></script>|' build/web/index.html
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
