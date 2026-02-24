@@ -51,36 +51,19 @@ func _ready() -> void:
 	
 	
 func _init_player() -> void:
-	var final_id = ""
-	print("[Talo Debug] Starting player identification...")
-	
-	if OS.get_name() == "Web":
-		print("[Talo Debug] Platform detected: Web")
-		final_id = JavaScriptBridge.eval("localStorage.getItem('talo_player_id') || ''")
-		
-		if final_id == "":
-			final_id = "guest_" + str(randi()) + str(Time.get_ticks_msec())
-			JavaScriptBridge.eval("localStorage.setItem('talo_player_id', '%s')" % final_id)
-			print("[Talo Debug] Created new Web ID: ", final_id)
-		else:
-			print("[Talo Debug] Found existing Web ID: ", final_id)
-	else:
-		print("[Talo Debug] Platform detected: Desktop/Other")
-		final_id = Talo.players.generate_identifier()
-		print("[Talo Debug] Generated Desktop ID: ", final_id)
-	
-	print("[Talo Debug] Calling Talo.players.identify for ID: ", final_id)
-	
-	# Attempt identification
-	await Talo.players.identify("guest", final_id)
-	
-	# Check if Talo singleton is actually initialized
-	if Talo.current_alias:
-		print("[Talo Debug] Success! Alias identified: ", Talo.current_alias.identifier)
-	else:
-		print("[Talo Debug] Failure: Talo.current_alias is still null after await")
+	var final_id = "111111111" 
+	print("[Talo Debug] Hardcoded ID: ", final_id)
 
-	print("Talo player ID: ", Talo.current_alias.identifier if Talo.current_alias else "FAILED")
+	if Talo == null:
+		print("[Talo Debug] CRITICAL: Talo singleton is null!")
+		return
+
+	await Talo.players.identify("guest", final_id)
+
+	if Talo.current_alias != null:
+		print("[Talo Debug] Identity Success: ", Talo.current_alias.identifier)
+	else:
+		print("[Talo Debug] Identity Failed. Check API Key and Network.")
 	
 func title_screen_ready():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
