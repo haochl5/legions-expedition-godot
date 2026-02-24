@@ -54,13 +54,10 @@ func _init_player() -> void:
 	var final_id = ""
 	print("[Talo Debug] Starting player identification...")
 	
-	if "access_key" in Talo:
-		var key_len = Talo.access_key.length()
-		print("[Talo Debug] Access Key Length: ", key_len)
-		if key_len < 10:
-			print("[Talo Debug] ERROR: Access Key looks too short or empty!")
+	if Talo.settings and Talo.settings.get("access_key"):
+		print("[Talo Debug] Access Key found in settings! Length: ", Talo.settings.access_key.length())
 	else:
-		print("[Talo Debug] ERROR: 'access_key' property missing on Talo singleton!")
+		print("[Talo Debug] ERROR: Access Key missing in Talo.settings!")
 	
 	if OS.get_name() == "Web":
 		print("[Talo Debug] Platform detected: Web")
@@ -78,8 +75,6 @@ func _init_player() -> void:
 		print("[Talo Debug] Generated Desktop ID: ", final_id)
 	
 	print("[Talo Debug] Calling Talo.players.identify for ID: ", final_id)
-	
-	Talo.cache_player_on_identify = false
 	
 	# Attempt identification
 	await Talo.players.identify("guest", final_id)
