@@ -51,20 +51,18 @@ func _ready() -> void:
 	
 	
 func _init_player() -> void:
-	var saved_id = ""
-	
 	if OS.get_name() == "Web":
-		saved_id = JavaScriptBridge.eval("localStorage.getItem('talo_player_id') || ''")
-	
-	if saved_id != "":
+		var saved_id = JavaScriptBridge.eval("localStorage.getItem('talo_player_id') || ''")
+		
+		if saved_id == "":
+			saved_id = Talo.players.generate_identifier()
+			JavaScriptBridge.eval("localStorage.setItem('talo_player_id', '%s')" % saved_id)
+		
 		await Talo.players.identify("guest", saved_id)
 	else:
 		await Talo.players.identify("guest", Talo.players.generate_identifier())
-		if OS.get_name() == "Web":
-			var new_id = Talo.current_alias.identifier
-			JavaScriptBridge.eval("localStorage.setItem('talo_player_id', '%s')" % new_id)
 	
-	print("Talo player ID: ", Talo.current_alias.identifier)
+	print("Talo player ID: ", Talo.current_alias.identifier if Talo.current_alias else "FAILED")
 	
 func title_screen_ready():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
