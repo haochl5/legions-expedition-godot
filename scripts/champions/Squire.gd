@@ -73,8 +73,8 @@ func perform_whirlwind():
 	# 2. Damage ALL enemies around
 	var enemies = get_tree().get_nodes_in_group("enemy")
 	for enemy in enemies:
-		# Hitting everything within 100px
-		if global_position.distance_to(enemy.global_position) <= 30:
+		# Hitting everything within 50px
+		if global_position.distance_to(enemy.global_position) <= 50:
 			enemy.take_damage(damage * 2) # Double Damage!
 			
 	await get_tree().create_timer(0.4).timeout

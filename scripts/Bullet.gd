@@ -8,7 +8,7 @@ extends Area2D
 
 # 2. NEW: Explosion Stats (Disabled by default)
 @export var is_explosive: bool = false
-@export var explosion_radius: float = 120.0
+@export var explosion_radius: float = 50
 
 var direction: Vector2 = Vector2.RIGHT
 
@@ -45,7 +45,8 @@ func explode():
 	# We create a simple visual effect using the projectile's own sprite
 	# (In a real game, you would spawn an Explosion.tscn particle effect here)
 	var tween = create_tween()
-	tween.tween_property(self, "scale", Vector2(4, 4), 0.1)
+	# <--- Lowered scale from (4, 4) down to (2, 2) or (2.5, 2.5)
+	tween.tween_property(self, "scale", Vector2(2, 2), 0.1) 
 	tween.tween_property(self, "modulate:a", 0.0, 0.1)
 	
 	# 2. Area Damage Logic

@@ -15,7 +15,11 @@ func setup(data: ChampionData):
 	my_data = data
 	name_lbl.text = data.display_name
 	role_lbl.text = "%s | HP: %d" % [data.role, data.hp]
-	desc_lbl.text = "%s: %s" % [data.skill_name, data.description]
+	# Replace your old desc_lbl.text line with this:
+	if data.skill_name == "":
+		desc_lbl.text = data.description
+	else:
+		desc_lbl.text = "%s: %s" % [data.skill_name, data.description]
 	buy_btn.text = "%d Gold" % data.cost
 	
 	

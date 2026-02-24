@@ -26,6 +26,7 @@ layout_mode = 2
 
 [node name="DescLabel" type="Label" parent="VBoxContainer" unique_id=1444732677]
 layout_mode = 2
+autowrap_mode = 3
 
 [node name="BuyButton" type="Button" parent="VBoxContainer" unique_id=1794927950]
 layout_mode = 2

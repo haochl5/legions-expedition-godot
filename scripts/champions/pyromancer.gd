@@ -26,15 +26,27 @@ func attack():
 	$AnimationPlayer.stop()
 	$Sprite2D.texture = tex_attack
 	$Sprite2D.hframes = 4
+	$Sprite2D.vframes = 1 
 	$Sprite2D.frame = facing_dir
 	
 	await get_tree().create_timer(0.3).timeout # Windup
 	
 	if target and is_instance_valid(target):
-		var fire = FIRE_ZONE.instantiate()
-		get_parent().add_child(fire)
-		# Spawns exactly where the enemy is standing
-		fire.global_position = target.global_position 
+		# Create a 5-point cross pattern (Center, Right, Left, Down, Up)
+		# The "25" is the pixel distance between the fires. 
+		var fire_offsets = [
+			Vector2.ZERO,
+			Vector2(25, 0),
+			Vector2(-25, 0),
+			Vector2(0, 25),
+			Vector2(0, -25)
+		]
+		
+		# Loop through all 5 positions and spawn a fire at each one!
+		for offset in fire_offsets:
+			var fire = FIRE_ZONE.instantiate()
+			get_parent().add_child(fire)
+			fire.global_position = target.global_position + offset
 		
 	await get_tree().create_timer(1.2).timeout # Cooldown
 	is_attacking = false

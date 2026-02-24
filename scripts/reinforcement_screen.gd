@@ -21,47 +21,77 @@ func _ready():
 
 # --- 1. DATA INITIALIZATION (The 3 Champions) ---
 func _init_champion_database():
-	# In a real project, you would load these from .tres files.
-	# Here, we create them via code to match your request immediately.
-	# (Make sure this path matches exactly where you put it in your FileSystem!)
+	# Facesets for Tier 3
 	var knight_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Knight/Faceset.png")
 	var samurai_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/Faceset.png")
 	var sorcerer_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SorcererOrange/Faceset.png")
-	# 1. SQUIRE
+	
+	# Facesets for Tier 4 (Update these paths if needed!)
+	var monk_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Lion/Faceset.png")
+	var priest_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Tengu2/Faceset.png")
+	var ninja_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/RedGladiator/Faceset.png")
+
+	# --- TIER 3 CHAMPIONS (Cost 3) ---
 	var squire = ChampionData.new()
 	squire.id = "squire"
 	squire.display_name = "Squire"
 	squire.role = "Tank"
 	squire.icon = knight_face
 	squire.cost = 3
-	squire.hp = 120
-	# CHANGE: Load the SCENE, not the png
+	squire.description = "Melee tank. Every 4th hit unleashes a spinning AoE whirlwind."
 	squire.unit_scene = preload("res://scenes/champions/Squire.tscn") 
 	available_champions.append(squire)
 	
-	# 2. RANGER
 	var ranger = ChampionData.new()
 	ranger.id = "ranger"
 	ranger.display_name = "Ranger"
 	ranger.role = "DPS"
 	ranger.icon = samurai_face
 	ranger.cost = 3
-	ranger.hp = 60
-	# CHANGE: Load the SCENE
+	ranger.description = "Ranged attacker. Every 3rd shot fires a spread of 3 arrows."
 	ranger.unit_scene = preload("res://scenes/champions/Ranger.tscn") 
 	available_champions.append(ranger)
 
-	# 3. SORCERER (Replaces Alchemist)
 	var sorc = ChampionData.new()
 	sorc.id = "sorcerer"
 	sorc.display_name = "Sorcerer"
 	sorc.role = "Mage"
-	sorc.icon = sorcerer_face # Or your new Sorcerer face
+	sorc.icon = sorcerer_face
 	sorc.cost = 3
-	sorc.hp = 60
-	# CHANGE: Load the SCENE
+	sorc.description = "Magic user. Every 3rd attack fires a heavy explosive orb."
 	sorc.unit_scene = preload("res://scenes/champions/Sorcerer.tscn") 
 	available_champions.append(sorc)
+
+	# --- TIER 4 CHAMPIONS (Cost 4) ---
+	var pyro = ChampionData.new()
+	pyro.id = "pyromancer"
+	pyro.display_name = "Pyromancer"
+	pyro.role = "Mage"
+	pyro.icon = monk_face
+	pyro.cost = 4
+	pyro.description = "Spawns a persistent fire zone that rapidly burns enemies over time."
+	pyro.unit_scene = preload("res://scenes/champions/Pyromancer.tscn") 
+	available_champions.append(pyro)
+	
+	var storm = ChampionData.new()
+	storm.id = "stormcaster"
+	storm.display_name = "Stormcaster"
+	storm.role = "Mage"
+	storm.icon = priest_face
+	storm.cost = 4
+	storm.description = "Calls down instant, long-range lightning strikes from the sky."
+	storm.unit_scene = preload("res://scenes/champions/stormcaster.tscn") 
+	available_champions.append(storm)
+	
+	var assassin = ChampionData.new()
+	assassin.id = "assassin"
+	assassin.display_name = "Assassin"
+	assassin.role = "Melee"
+	assassin.icon = ninja_face
+	assassin.cost = 4
+	assassin.description = "Instantly dashes behind enemies for massive backstab damage."
+	assassin.unit_scene = preload("res://scenes/champions/assasin.tscn") 
+	available_champions.append(assassin)
 
 # --- 2. SHOP LOGIC ---
 func generate_shop_items():
@@ -72,7 +102,7 @@ func generate_shop_items():
 	# Create 3 new cards (simulating your random logic)
 	for i in range(3):
 		var card_instance = SHOP_CARD_SCENE.instantiate()
-		var random_champ = available_champions.pick_random()
+		var random_champ = get_random_champion()
 		cards_container.add_child(card_instance)
 		
 		# Setup data and connect signal
@@ -118,3 +148,22 @@ func _on_reroll_btn_down():
 
 func _on_deploy_btn_down():
 	_on_deploy_pressed()
+
+
+# --- CUSTOM RANDOM PICKER ---
+func get_random_champion() -> ChampionData:
+	var roll = randf() # Rolls a random decimal between 0.0 and 1.0
+	var target_cost = 3
+	
+	# 30% chance to roll a Tier 4 champion. 70% chance for Tier 3.
+	if roll > 0.70: 
+		target_cost = 4
+		
+	# Gather all champions that match the target cost
+	var valid_pool = available_champions.filter(func(champ): return champ.cost == target_cost)
+	
+	# Failsafe: if something goes wrong, just grab anyone
+	if valid_pool.is_empty():
+		return available_champions.pick_random()
+		
+	return valid_pool.pick_random()

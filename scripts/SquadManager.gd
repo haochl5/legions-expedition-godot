@@ -84,12 +84,16 @@ func check_for_merge(unit_id: String):
 		# 1. Override the random player offset and move it directly to the merge center!
 		upgraded_unit.global_position = merge_pos
 		
+		# --- NEW: THE JUICY GROWTH TRANSITION ---
+		# Force it to start at normal size (1.0)
+		upgraded_unit.scale = Vector2(1.0, 1.0)
+		
+		# Create a tween to smoothly pop it up to 1.3x size over 0.4 seconds!
+		var tween = create_tween()
+		tween.tween_property(upgraded_unit, "scale", Vector2(1.3, 1.3), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		# ----------------------------------------
+		
 		# 2. Spawn the visual effect directly on the new unit
 		if merge_fx_scene:
 			var fx_instance = merge_fx_scene.instantiate()
 			upgraded_unit.add_child(fx_instance)
-			# (Optional) Tweak this Vector2 if the sparkle isn't perfectly centered on their body
-			# fx_instance.position = Vector2(0, -10) 
-		
-		# (Optional) Recursion: Check if we now have three 2-star units!
-		# check_for_merge_tier_2(unit_id)

@@ -1,12 +1,12 @@
 extends Unit
 
 # UPDATE THESE PATHS!
-const R_IDLE = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Spirit/SeparateAnim/Idle.png")
-const R_WALK = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Spirit/SeparateAnim/Walk.png")
-const R_ATTACK = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Spirit/SeparateAnim/Attack.png")
+const R_IDLE = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Tengu2/SeparateAnim/Idle.png")
+const R_WALK = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Tengu2/SeparateAnim/Walk.png")
+const R_ATTACK = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Tengu2/SeparateAnim/Attack.png")
 
 const LIGHTNING_BOLT = preload("res://scenes/FX/lightning_bolt.tscn")
-var attack_range = 250.0 # Long range
+var attack_range = 100 # Long range
 
 func _ready():
 	tex_idle = R_IDLE; tex_walk = R_WALK; tex_attack = R_ATTACK
@@ -24,6 +24,7 @@ func attack():
 	$AnimationPlayer.stop()
 	$Sprite2D.texture = tex_attack
 	$Sprite2D.hframes = 4
+	$Sprite2D.vframes = 1
 	$Sprite2D.frame = facing_dir
 	
 	# Fast windup

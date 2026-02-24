@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bvo8vk432yd4x" path="res://assets/Ninja Adventure - Asset Pack/FX/Particle/Fire.png" id="1_xe8n2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ctjyw"]
-radius = 5.25
+radius = 13.31
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c4go1"]
 atlas = ExtResource("1_xe8n2")
@@ -99,6 +99,7 @@ animations = [{
 }]
 
 [node name="FireZone" type="Area2D" unique_id=1316113167]
+collision_mask = 8
 script = ExtResource("1_ctjyw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1250061296]
@@ -108,7 +109,7 @@ shape = SubResource("CircleShape2D_ctjyw")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=523337114]
 sprite_frames = SubResource("SpriteFrames_enj5k")
 animation = &"new_animation"
-frame_progress = 0.18554153
+frame_progress = 0.67673767
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

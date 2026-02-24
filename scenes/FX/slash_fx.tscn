@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cb1wrsjla45l4"]
+
+[ext_resource type="Texture2D" uid="uid://vgcopye6vllr" path="res://assets/Ninja Adventure - Asset Pack/FX/SlashFx/SlashCurved/SpriteSheet.png" id="1_ecgar"]
+[ext_resource type="Script" uid="uid://cuoxvfci7pcbf" path="res://scenes/FX/slash_fx.gd" id="2_hyvys"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hyvys"]
+atlas = ExtResource("1_ecgar")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqnb3"]
+atlas = ExtResource("1_ecgar")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ho5av"]
+atlas = ExtResource("1_ecgar")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_17uag"]
+atlas = ExtResource("1_ecgar")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hci56"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hyvys")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gqnb3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ho5av")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_17uag")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="SlashFX" type="AnimatedSprite2D" unique_id=1106153652]
+sprite_frames = SubResource("SpriteFrames_hci56")
+frame = 3
+frame_progress = 1.0
+script = ExtResource("2_hyvys")

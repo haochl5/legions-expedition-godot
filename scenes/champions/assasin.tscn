@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dahbpuhjqx0at"]
+
+[ext_resource type="PackedScene" uid="uid://52sfw5gytgx6" path="res://scenes/Unit.tscn" id="1_mgq77"]
+[ext_resource type="Script" uid="uid://13v73k3wc2oc" path="res://scripts/champions/assasin.gd" id="2_7t6x0"]
+
+[node name="Unit" unique_id=1630320502 instance=ExtResource("1_mgq77")]
+script = ExtResource("2_7t6x0")
+move_speed = 150.0
