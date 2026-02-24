@@ -60,17 +60,24 @@ func _on_screen_exited():
 	pass
 	
 func take_damage(damage_amount: int):
-	print("Boss hit! Damage: ", damage_amount, " HP left: ", hp)
+	# print("Mob hit! Damage: ", damage_amount, " HP left: ", hp)
 	hp -= damage_amount
 	hp = max(hp, 0)
 	
 	if hp <= 0:
 		die()
+		return # <--- ADD THIS! It prevents the dead mob from trying to run flash_red()
 		
 	flash_red()
 	
 func die():
-	call_deferred("drop_items")
+	# 1. Disable collision so it can't be hit twice by overlapping attacks
+	collision.set_deferred("disabled", true)
+	
+	# 2. Drop the items IMMEDIATELY while it still has a parent
+	drop_items()
+	
+	# 3. Tell the mob to delete itself
 	queue_free()
 	
 func flash_red():
