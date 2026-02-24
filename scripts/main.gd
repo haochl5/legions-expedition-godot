@@ -51,16 +51,17 @@ func _ready() -> void:
 	
 	
 func _init_player() -> void:
+	var final_id = ""
 	if OS.get_name() == "Web":
-		var saved_id = JavaScriptBridge.eval("localStorage.getItem('talo_player_id') || ''")
+		final_id = JavaScriptBridge.eval("localStorage.getItem('talo_player_id') || ''")
 		
-		if saved_id == "":
-			saved_id = Talo.players.generate_identifier()
-			JavaScriptBridge.eval("localStorage.setItem('talo_player_id', '%s')" % saved_id)
-		
-		await Talo.players.identify("guest", saved_id)
+		if final_id == "":
+			final_id = "guest_" + str(randi()) + str(Time.get_ticks_msec())
+			JavaScriptBridge.eval("localStorage.setItem('talo_player_id', '%s')" % final_id)
 	else:
-		await Talo.players.identify("guest", Talo.players.generate_identifier())
+		final_id = Talo.players.generate_identifier()
+	
+	await Talo.players.identify("guest", final_id)
 	
 	print("Talo player ID: ", Talo.current_alias.identifier if Talo.current_alias else "FAILED")
 	
