@@ -180,8 +180,19 @@ func _on_wave_started():
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_focus_next"): # Usually the 'Tab' key
 		open_shop()
-		
+	# --- DEBUG: PRESS 'F' TO SPAWN BOSS ---
+	if OS.is_debug_build() and event is InputEventKey:
+		if event.pressed and event.keycode == KEY_F:
+			print("[DEBUG] Forced Boss Spawn!")
+			var spawn_pos = get_mob_spawn_position()
+			# We force the call to spawn_mob directly from the dictionary
+			var boss = mob_spawner.spawn_mob("boss", spawn_pos, $Commander)
+			if boss:
+				add_child(boss)
+
 func _on_level_up(new_level: int):
+	var spawn_pos = get_mob_spawn_position()
+	mob_spawner.try_spawn_boss(new_level, spawn_pos, $Commander)
 	print("Level Up! Opening Shop...")
 	open_shop()
 	

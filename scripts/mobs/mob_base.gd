@@ -60,6 +60,7 @@ func _on_screen_exited():
 	pass
 	
 func take_damage(damage_amount: int):
+	print("Boss hit! Damage: ", damage_amount, " HP left: ", hp)
 	hp -= damage_amount
 	hp = max(hp, 0)
 	
