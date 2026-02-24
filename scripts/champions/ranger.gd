@@ -6,7 +6,7 @@ const R_WALK = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characte
 const R_ATTACK = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/SeparateAnim/Attack.png")
 const R_SPECIAL = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/SeparateAnim/Special1.png")
 
-const ARROW_SCENE = preload("res://scenes/projectiles/arrow.tscn")
+const ARROW_SCENE = preload("res://scenes/Projectiles/arrow.tscn")
 
 var attack_range = 250.0 # Ranged distance
 
