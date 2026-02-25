@@ -25,6 +25,12 @@ var num_blockers = 150
 
 # Talo
 var _game_start_time: float = 0.0
+var heartbeat_timer: float = 0.0
+const HEARTBEAT_INTERVAL: float = 60.0 # Save to Talo every 60 seconds
+
+
+var cluster_bonus: int = 0
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:	
@@ -103,7 +109,8 @@ func game_over():
 	# --- NEW: UPDATE PLAYER'S TOTAL TIME PROP ---
 	if Talo.current_alias:
 		# This updates a permanent property on the player in your Talo dashboard!
-		Talo.players.update_prop("total_session_seconds", str(total_session_duration))
+		Talo.current_player.set_prop("total_session_seconds", str(total_session_duration))
+		Talo.current_player.set_prop("highest_level_reached", str(GameData.highest_level_reached))
 	
 	await Talo.events.flush()
 	print("Talo flush done")
@@ -134,6 +141,24 @@ func _process(delta: float) -> void:
 	
 	if has_node("Commander"):
 		ingame_UI.update_hp($Commander.hp, $Commander.max_hp)
+		
+	# --- NEW: THE COMBINED TALO HEARTBEAT ---
+	# Only run the heartbeat if the player is logged in
+	if Talo.current_player:
+		heartbeat_timer += delta
+		
+		# Every 60 seconds...
+		if heartbeat_timer >= HEARTBEAT_INTERVAL:
+			heartbeat_timer = 0.0 # Reset the clock
+			
+			# 1. Update the Total Session Time (only if the game has actually started)
+			if GameData.session_start_time > 0:
+				var total_session_duration = int(Time.get_unix_time_from_system() - GameData.session_start_time)
+				Talo.current_player.set_prop("total_session_seconds", str(total_session_duration))
+			
+			# 2. Silently backup their absolute highest level reached!
+			Talo.current_player.set_prop("highest_level_reached", str(GameData.highest_level_reached))
+	# ----------------------------------------
 
 func new_game():
 	_game_start_time = Time.get_unix_time_from_system()
@@ -150,20 +175,22 @@ func _on_mob_timer_timeout() -> void:
 		$Commander
 	)
 	
-	# add to scene
+	# add to sceneww
 	add_child(mob)
 
 func _on_ghost_timer_timeout() -> void:
 	var mob_spawn_location = get_mob_spawn_position()
-	mob_spawner.spawn_cluster("ghost", mob_spawn_location, $Commander, randi_range(1, 5))
+	mob_spawner.spawn_cluster("ghost", mob_spawn_location, $Commander, randi_range(1, 5) + cluster_bonus)
 
 func _on_bear_timer_timeout() -> void:
 	var mob_spawn_location = get_mob_spawn_position()
-	mob_spawner.spawn_cluster("bear", mob_spawn_location, $Commander)
+	# Your old bear function didn't pass a count, which defaults to 1. 
+	# Let's pass the count so the bears scale up too!
+	mob_spawner.spawn_cluster("bear", mob_spawn_location, $Commander, 1 + cluster_bonus)
 
 func _on_mushroom_timer_timeout() -> void:
 	var mob_spawn_location = get_mob_spawn_position()
-	mob_spawner.spawn_cluster("bear", mob_spawn_location, $Commander, randi_range(1, 2))
+	mob_spawner.spawn_cluster("mushroom", mob_spawn_location, $Commander, randi_range(1, 2) + cluster_bonus)
 
 func get_mob_spawn_position():
 	var mob_spawn_location = $Commander/MobPath/MobSpawnLocation
@@ -199,6 +226,11 @@ func _unhandled_input(event):
 func _on_level_up(new_level: int):
 	var spawn_pos = get_mob_spawn_position()
 	mob_spawner.try_spawn_boss(new_level, spawn_pos, $Commander)
+	
+	# --- NEW: TRIGGER PROGRESSION ---
+	increase_difficulty(new_level)
+	# --------------------------------
+	
 	print("Level Up! Opening Shop...")
 	open_shop()
 	
@@ -381,3 +413,20 @@ func setup_boundaries():
 		collision.shape = rect
 		collision.position = wall["pos"]
 		boundary_body.add_child(collision)
+
+# 3. Add this brand new function anywhere in main.gd!
+func increase_difficulty(current_level: int):
+	# A. Spawn enemies faster
+	$MobTimer.wait_time = max(0.15, $MobTimer.wait_time * 0.95)
+	$GhostTimer.wait_time = max(0.5, $GhostTimer.wait_time * 0.95)
+	$BearTimer.wait_time = max(1.5, $BearTimer.wait_time * 0.95)
+	$MushroomTimer.wait_time = max(1.0, $MushroomTimer.wait_time * 0.95)
+	
+	# B. --- NEW: Scale Mob Health ---
+	# Mobs get 10% more HP every level
+	mob_spawner.health_multiplier = 1.0 + (current_level * 0.1)
+	
+	# C. Increase cluster sizes every 3 levels
+	if current_level % 3 == 0:
+		cluster_bonus += 1
+		print("[Difficulty Up] HP Multiplier: ", mob_spawner.health_multiplier, " | Cluster Bonus: ", cluster_bonus)

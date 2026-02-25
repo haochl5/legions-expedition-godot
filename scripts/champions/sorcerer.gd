@@ -77,7 +77,7 @@ func _physics_process(delta):
 	if is_attacking: return
 
 	# Sorcerer Range (e.g., 200px)
-	if target and is_instance_valid(target) and global_position.distance_to(target.global_position) <= 200:
+	if target and is_instance_valid(target) and global_position.distance_to(target.global_position) <= 150:
 		attack()
 	else:
 		super(delta)
