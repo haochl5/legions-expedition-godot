@@ -14,8 +14,6 @@ var available_champions: Array[ChampionData] = []
 @onready var bank_label = $VBoxContainer/BankLabel
 @onready var cards_container = $VBoxContainer/CardsContainer
 
-
-
 func _ready():
 	_init_champion_database()
 
@@ -113,7 +111,10 @@ func _on_card_clicked(data: ChampionData, card_ref: Control):
 	if GameData.gold >= data.cost:
 		GameData.gold -= data.cost
 		
-		Talo.events.track("buy_champion", {
+		GameData.gold_spent_in_game += data.cost
+		
+		Talo.events.track(
+			"buy_champion", {
 			"champion_id": data.id,
 			"cost": str(data.cost),
 			"current_level": str(GameData.level)

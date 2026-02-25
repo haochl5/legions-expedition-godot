@@ -102,7 +102,8 @@ func game_over():
 		killer_name = $Commander.last_attacker
 	Talo.events.track("game_over", {
 		"duration_seconds": str(duration),
-		"gold_collected": str(GameData.total_gold_collected),
+		"total_gold_collected": str(GameData.total_gold_collected),
+		"gold_spent_in_game": str(GameData.gold_spent_in_game),
 		"level_reached": str(GameData.level),
 		"killed_by": killer_name
 	})
