@@ -119,6 +119,7 @@ func _on_card_clicked(data: ChampionData, card_ref: Control):
 			"cost": str(data.cost),
 			"current_level": str(GameData.level)
 		})
+		await Talo.events.flush()
 		
 		# Visual feedback (Hide card effectively "buying" it)
 		# In Godot, usually better to disable or replace with "Sold" label
@@ -157,6 +158,8 @@ func _on_reroll_pressed():
 		Talo.events.track("shop_reroll", {
 			"current_level": str(GameData.level)
 		})
+		
+		await Talo.events.flush()
 		
 		generate_shop_items()
 		update_ui()

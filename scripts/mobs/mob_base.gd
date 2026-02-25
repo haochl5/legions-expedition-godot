@@ -28,6 +28,8 @@ var target: Node2D
 @onready var collision: CollisionShape2D = $CollisionShape2D
 @onready var screen_notifier: VisibleOnScreenNotifier2D = $VisibleOnScreenNotifier2D
 
+var mob_name: String = "Enemy" # Default name
+
 func _ready():
 	hp = max_hp
 	

@@ -20,6 +20,7 @@ func setup_animation():
 	sprite.play("bear_down")
 
 func setup_behavior():
+	mob_name = "Bear"
 	max_hp = 60  
 	hp = max_hp
 	damage = 2

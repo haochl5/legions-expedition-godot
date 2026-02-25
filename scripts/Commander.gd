@@ -170,10 +170,10 @@ func shoot():
 
 
 func _on_body_entered(body: Node2D) -> void:
-	# Take damage only when collided with a mob
-	if body.is_in_group("enemy"):
-		# We dynamically pull the "damage" variable from the mob we touched!
-		take_damage(body.damage, body.name)
+	if body.is_in_group("mobs"): # Ensure this matches your mob group name
+		# Use the custom mob_name property if it exists
+		var killer_name = body.get("mob_name") if body.get("mob_name") else body.name
+		take_damage(body.damage, killer_name)
 
 func take_damage(damage: int, attacker_name: String = "Unknown"):
 	if is_invincible:
