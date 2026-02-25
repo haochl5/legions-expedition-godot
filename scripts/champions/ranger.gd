@@ -8,7 +8,7 @@ const R_SPECIAL = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Chara
 
 const ARROW_SCENE = preload("res://scenes/Projectiles/arrow.tscn")
 
-var attack_range = 250.0 # Ranged distance
+var attack_range = 150 # Ranged distance
 
 var attack_counter: int = 0
 

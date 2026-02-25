@@ -26,6 +26,11 @@ func setup_behavior():
 	_setup_slow_area()
 
 func _setup_slow_area():
+	
+	# --- ADD THIS CHECK AT THE VERY TOP ---
+	if has_node("SlowAreaNode"): # Give it a unique name to check against
+		return 
+	# ---------------------------------------
 	# calculate the sprite centered offset
 	var sprite_center_offset = Vector2.ZERO
 	
@@ -42,6 +47,7 @@ func _setup_slow_area():
 	
 	# create a area2d node
 	slow_area = Area2D.new()
+	slow_area.name = "SlowAreaNode"
 	slow_area.collision_layer = 0
 	slow_area.collision_mask = 2
 	add_child(slow_area)
@@ -84,28 +90,43 @@ func movement_pattern(delta: float):
 	if target == null:
 		return
 	
-	# Direction toward the Player
+	# 1. Basic Movement Logic
 	var vector = target.global_position - global_position
 	var distance = vector.length()
 	var direction = vector.normalized()
 	
-	# pattern: if commander is within the slow radius, move slowly, keep slowing player down
-	# if outside, move fast to reach the player
 	if distance <= slow_radius:
 		speed = holding_speed
 	else:
 		speed = chase_speed
 	
-	# Set rotation so the mob faces the player
 	if direction.x > 0:
 		sprite.flip_h = false
 	elif direction.x < 0:
 		sprite.flip_h = true
 	
-	# Set velocity
-	# Set velocity smoothly
 	var desired_velocity = direction * speed
-	velocity = velocity.lerp(desired_velocity, 0.1)
+
+	# 2. THE FIX: ADD SEPARATION FORCE
+	# This prevents the "blob" by pushing away from nearby mobs
+	var separation_force = Vector2.ZERO
+	var neighbor_radius = 25.0 # How much "personal space" each mushroom wants
+	
+	# Get all mobs currently in the game
+	var mobs = get_tree().get_nodes_in_group("mobs") 
+	
+	for mob in mobs:
+		if mob != self and is_instance_valid(mob):
+			var dist_to_mob = global_position.distance_to(mob.global_position)
+			if dist_to_mob < neighbor_radius:
+				# Calculate a push vector away from the neighbor
+				# The closer they are, the harder they push away
+				var push_dir = (global_position - mob.global_position).normalized()
+				separation_force += push_dir * (neighbor_radius - dist_to_mob)
+
+	# 3. Apply Velocity with the Push Force included
+	# We multiply separation by a strength factor (e.g., 2.0) to make it effective
+	velocity = velocity.lerp(desired_velocity + (separation_force * 2.0), 0.1)
 
 func _on_slow_area_entered(body):
 	

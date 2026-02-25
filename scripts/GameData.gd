@@ -62,6 +62,7 @@ var exp_to_level_up: int = 50
 # Talo tracking
 var total_gold_collected: int = 0
 var session_start_time: float = 0.0
+var highest_level_reached: int = 1
 
 # Logic
 func add_gold(amount: int):
@@ -81,6 +82,11 @@ func add_exp(amount: int):
 
 func level_up():
 	level += 1
+	
+	# Keep the all-time high score updated
+	if level > highest_level_reached:
+		highest_level_reached = level
+
 	# Increase difficulty
 	exp_to_level_up = int(exp_to_level_up * 1.2) + 20
 	leveled_up.emit(level)

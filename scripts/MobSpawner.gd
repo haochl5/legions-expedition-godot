@@ -18,6 +18,7 @@ const MOB_TYPES = {
 # --- NEW: Boss Tracking Variables ---
 @export var boss_interval: int = 5 # Spawn every 5 levels (5, 10, 15...)
 var last_boss_level: int = 0
+var health_multiplier: float = 1.0
 
 
 # generate a random mob
@@ -32,6 +33,13 @@ func spawn_mob(type: String, position: Vector2, target: Node2D) -> MobBase:
 		return null
 	
 	var mob: MobBase = MOB_TYPES[type].instantiate()
+	
+	# --- NEW: Scale Health ---
+	# We call setup_behavior() early so the mob sets its base HP, 
+	# then we multiply it before it enters the game world.
+	mob.max_hp = int(mob.max_hp * health_multiplier)
+	mob.hp = mob.max_hp
+	
 	mob.global_position = position
 	mob.target = target
 	
@@ -58,26 +66,35 @@ func set_wave_config(configs):
 	wave_config = configs
 
 # New function to handle groups
+# Update spawn_cluster to use wider offsets
 func spawn_cluster(type: String, position: Vector2, target: Node2D, count: int = 1):
 	for i in range(count):
-		# Add a small random offset so they don't overlap perfectly
-		var offset = Vector2(randf_range(-80, 80), randf_range(-80, 80))
+		# INCREASED OFFSET: changed from 80 to 150 to prevent overlapping blobs
+		var offset = Vector2(randf_range(-150, 150), randf_range(-150, 150))
 		var mob = spawn_mob(type, position + offset, target)
 		if mob:
-			get_parent().add_child(mob) # Adds to the Main scene
+			get_parent().add_child(mob)
 
 # ==========================================d
 # --- NEW: BOSS SPAWNING LOGIC ---
 # ==========================================
 
+# Update boss spawning to spawn +1 boss per interval
 func try_spawn_boss(current_level: int, position: Vector2, target: Node2D):
-	# 1. Check if we are at or above the threshold
-	# 2. Check if the current level is a multiple of our interval
-	# 3. Ensure we haven't already spawned a boss for THIS specific level
 	if current_level >= boss_interval and current_level % boss_interval == 0:
 		if last_boss_level != current_level:
-			var boss = spawn_mob("boss", position, target)
-			if boss:
-				get_parent().call_deferred("add_child", boss)
-				last_boss_level = current_level
-				print("BOSS SPAWNED at Level: ", current_level)
+			# --- NEW: BOSS SCALING ---
+			# Level 5 = 1 Boss, Level 10 = 2 Bosses, Level 15 = 3 Bosses
+			var boss_count = current_level / boss_interval
+			
+			for i in range(boss_count):
+				# Bosses need even more space (250px) because they are physically larger
+				var offset = Vector2(randf_range(-250, 250), randf_range(-250, 250))
+				var boss = spawn_mob("boss", position + offset, target)
+				if boss:
+					# Since we already called setup_behavior inside spawn_mob, 
+					# bosses also get the health_multiplier automatically!
+					get_parent().call_deferred("add_child", boss)
+					
+			last_boss_level = current_level
+			print("WAVE ", current_level, ": ", boss_count, " BOSSES SPAWNED!")
