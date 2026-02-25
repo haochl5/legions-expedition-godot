@@ -130,6 +130,7 @@ func _on_restart_game():
 		"level_reached": str(GameData.level),
 		"gold_banked": str(GameData.gold)
 	})
+	await Talo.events.flush()
 	GameData.reset_gamedata()
 	get_tree().paused = false
 	get_tree().reload_current_scene()

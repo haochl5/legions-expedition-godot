@@ -16,6 +16,7 @@ func setup_animation():
 	sprite.play("mushroom_idle")
 
 func setup_behavior():
+	mob_name = "Mushroom"
 	max_hp = 20
 	hp = max_hp
 	# Move fast toward player, move slow once player is within the slow are range

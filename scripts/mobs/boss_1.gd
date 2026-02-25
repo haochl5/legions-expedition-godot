@@ -9,6 +9,7 @@ var boss_damage = 3
 var cooldown_timer = 0.0
 
 func setup_behavior():
+	mob_name = "Samurai Boss"
 	max_hp = 500
 	hp = max_hp
 	speed = 30

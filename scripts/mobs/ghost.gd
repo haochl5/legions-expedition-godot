@@ -7,6 +7,7 @@ func setup_animation():
 	sprite.play("movement")
 
 func setup_behavior():
+	mob_name = "Ghost"
 	speed = 40
 	damage = 1
 
