@@ -43,6 +43,8 @@ var slow_stacks: int = 0
 # gold logic
 signal gold_changed(new_amount)
 
+var last_attacker: String = "Unknown"
+
 
 @onready var physics_body = $StaticBody2D
 @onready var magnet_area: Area2D = $MagnetArea
@@ -171,14 +173,17 @@ func _on_body_entered(body: Node2D) -> void:
 	# Take damage only when collided with a mob
 	if body.is_in_group("enemy"):
 		# We dynamically pull the "damage" variable from the mob we touched!
-		take_damage(body.damage)
+		take_damage(body.damage, body.name)
 
-func take_damage(damage: int):
+func take_damage(damage: int, attacker_name: String = "Unknown"):
 	if is_invincible:
 		return
 	
 	hp -= damage
 	hp = max(hp, 0)
+	
+	# Remember who actually managed to hurt the Commander!
+	last_attacker = attacker_name 
 	
 	if hp <= 0:
 		die()

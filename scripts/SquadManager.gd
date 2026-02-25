@@ -66,6 +66,14 @@ func check_for_merge(unit_id: String):
 	if matching_units.size() >= 3:
 		print("MERGE HAPPENING: ", unit_id)
 		
+		# --- NEW: TALO TRACKING ---
+		Talo.events.track("champion_merged", {
+			"champion_id": unit_id,
+			"new_tier": "2",
+			"current_level": str(GameData.level) # Helpful to see when in the run they get the merge!
+		})
+		# --------------------------
+		
 		# Grab the first 3
 		var units_to_remove = matching_units.slice(0, 3)
 		

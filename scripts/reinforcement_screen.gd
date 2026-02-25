@@ -113,6 +113,12 @@ func _on_card_clicked(data: ChampionData, card_ref: Control):
 	if GameData.gold >= data.cost:
 		GameData.gold -= data.cost
 		
+		Talo.events.track("buy_champion", {
+			"champion_id": data.id,
+			"cost": str(data.cost),
+			"current_level": str(GameData.level)
+		})
+		
 		# Visual feedback (Hide card effectively "buying" it)
 		# In Godot, usually better to disable or replace with "Sold" label
 		card_ref.modulate.a = 0.5
@@ -128,6 +134,29 @@ func _on_card_clicked(data: ChampionData, card_ref: Control):
 func _on_reroll_pressed():
 	if GameData.gold >= 2:
 		GameData.gold -= 2
+		
+		# --- NEW: TALO TRACKING (Ignored Cards) ---
+		# Loop through all the current cards before deleting them
+		for child in cards_container.get_children():
+			var buy_btn = child.get_node("VBoxContainer/BuyButton")
+			
+			# If the button isn't disabled, it means the player didn't buy it!
+			if not buy_btn.disabled:
+				# We safely grab the champion's ID from 'my_data'
+				var champ_id = "unknown"
+				if "my_data" in child and child.my_data:
+					champ_id = child.my_data.id
+					
+				Talo.events.track("shop_card_skipped", {
+					"champion_id": champ_id,
+					"current_level": str(GameData.level)
+				})
+		# ------------------------------------------
+		
+		Talo.events.track("shop_reroll", {
+			"current_level": str(GameData.level)
+		})
+		
 		generate_shop_items()
 		update_ui()
 

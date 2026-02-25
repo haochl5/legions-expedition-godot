@@ -61,6 +61,7 @@ var exp_to_level_up: int = 50
 
 # Talo tracking
 var total_gold_collected: int = 0
+var session_start_time: float = 0.0
 
 # Logic
 func add_gold(amount: int):

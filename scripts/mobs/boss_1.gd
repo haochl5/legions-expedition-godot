@@ -61,7 +61,7 @@ func start_attack():
 	if target and is_instance_valid(target):
 		if global_position.distance_to(target.global_position) <= attack_range + 20.0: 
 			if target.has_method("take_damage"):
-				target.take_damage(boss_damage)
+				target.take_damage(boss_damage, "Samurai Boss")
 
 # --- OVERRIDES ---
 
