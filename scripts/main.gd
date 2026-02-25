@@ -105,6 +105,7 @@ func game_over():
 		"total_gold_collected": str(GameData.total_gold_collected),
 		"gold_spent_in_game": str(GameData.gold_spent_in_game),
 		"level_reached": str(GameData.level),
+		"time_taken_per_level": str(GameData.time_taken_per_level),
 		"killed_by": killer_name
 	})
 	# --- NEW: UPDATE PLAYER'S TOTAL TIME PROP ---
