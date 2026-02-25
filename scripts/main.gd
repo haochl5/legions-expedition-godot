@@ -70,10 +70,7 @@ func _init_player() -> void:
 	
 	# Attempt identification
 	await Talo.players.identify("guest", final_id)
-	
-	
-	await Talo.players.identify("guest", final_id)
-	
+
 	# --- NEW: START THE SESSION CLOCK ---
 	GameData.session_start_time = Time.get_unix_time_from_system()
 	
