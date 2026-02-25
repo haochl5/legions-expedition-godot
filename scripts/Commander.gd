@@ -227,7 +227,9 @@ func _on_magnet_area_entered(area):
 		area.start_magnetize(self)
 
 func add_gold(amount: int):
-	GameData.gold += amount
+	#GameData.gold += amount
+	#total_gold_collected += amount
+	GameData.add_gold(amount)
 	emit_signal("gold_changed", GameData.gold)
 
 func add_exp(amount: int):
