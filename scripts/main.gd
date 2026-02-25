@@ -66,6 +66,11 @@ func _init_player() -> void:
 	await Talo.players.identify("guest", final_id)
 	
 	
+	await Talo.players.identify("guest", final_id)
+	
+	# --- NEW: START THE SESSION CLOCK ---
+	GameData.session_start_time = Time.get_unix_time_from_system()
+	
 func title_screen_ready():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().paused = true
@@ -85,12 +90,22 @@ func _on_start_game():
 	
 func game_over():
 	var duration = int(Time.get_unix_time_from_system() - _game_start_time)
+	var total_session_duration = int(Time.get_unix_time_from_system() - GameData.session_start_time)
+	var killer_name = "Unknown"
+	if has_node("Commander"):
+		killer_name = $Commander.last_attacker
 	Talo.events.track("game_over", {
 		"duration_seconds": str(duration),
 		"gold_collected": str(GameData.total_gold_collected),
-		"level_reached": str(GameData.level)
+		"level_reached": str(GameData.level),
+		"killed_by": killer_name
 	})
-	await Talo.events.flush()  
+	# --- NEW: UPDATE PLAYER'S TOTAL TIME PROP ---
+	if Talo.current_alias:
+		# This updates a permanent property on the player in your Talo dashboard!
+		Talo.players.update_prop("total_session_seconds", str(total_session_duration))
+	
+	await Talo.events.flush()
 	print("Talo flush done")
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	$MobTimer.stop()
@@ -102,6 +117,10 @@ func game_over_screen_ready():
 	game_over_screen.show()
 
 func _on_restart_game():
+	Talo.events.track("restart_game", {
+		"level_reached": str(GameData.level),
+		"gold_banked": str(GameData.gold)
+	})
 	GameData.reset_gamedata()
 	get_tree().paused = false
 	get_tree().reload_current_scene()

@@ -107,7 +107,7 @@ func drop_exp():
 		# Pass the specific value each gem is worth
 		exp_instance.exp_value = exp_drop_value
 		
-		get_parent().add_child(exp_instance)
+		get_parent().call_deferred("add_child", exp_instance)
 	
 func drop_gold():
 	if not coin_scene:
@@ -131,7 +131,7 @@ func drop_gold():
 		coin.global_position = global_position + random_offset
 		#coin.gold_value = gold_drop_value
 		
-		get_parent().add_child(coin)
+		get_parent().call_deferred("add_child", coin)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

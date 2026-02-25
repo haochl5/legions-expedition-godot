@@ -78,6 +78,6 @@ func try_spawn_boss(current_level: int, position: Vector2, target: Node2D):
 		if last_boss_level != current_level:
 			var boss = spawn_mob("boss", position, target)
 			if boss:
-				get_parent().add_child(boss)
+				get_parent().call_deferred("add_child", boss)
 				last_boss_level = current_level
 				print("BOSS SPAWNED at Level: ", current_level)
