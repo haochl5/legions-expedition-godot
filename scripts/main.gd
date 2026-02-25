@@ -95,7 +95,10 @@ func title_screen_ready():
 	title_screen.show()
 	
 func _on_start_game():
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	# Only confine the mouse if we are NOT playing on the web
+	if not OS.has_feature("web"):
+		Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+		
 	title_screen.hide()
 	ingame_UI.show()
 	get_tree().paused = false
