@@ -29,7 +29,7 @@ func _on_body_entered(body):
 		# CASE A: EXPLOSION (Sorcerer Special)
 		if is_explosive:
 			explode()
-			queue_free()
+			call_deferred("queue_free") # <--- CHANGED HERE
 			return # Stop here so we don't hit the single target twice
 			
 		# CASE B: STANDARD HIT (Ranger/Normal Sorcerer)
@@ -38,7 +38,7 @@ func _on_body_entered(body):
 			
 	# 2. Destroy the bullet unconditionally!
 	# (Because this is pushed back to the left margin, it runs for enemies AND trees)
-	queue_free()
+	call_deferred("queue_free") # <--- CHANGED HERE
 
 func explode():
 	# 1. Visual Feedback (Scale up and fade out)
