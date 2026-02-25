@@ -10,14 +10,21 @@ extends Area2D
 @export var is_explosive: bool = false
 @export var explosion_radius: float = 50
 
+# Bullet Rotation
+@export var rotation_speed: float = 40.0 # Radians per second
+
 var direction: Vector2 = Vector2.RIGHT
 
 func _ready():
+	rotation = direction.angle()
+	
 	if not body_entered.is_connected(_on_body_entered):
 		body_entered.connect(_on_body_entered)
 
 func _physics_process(delta):
 	position += direction * speed * delta
+	
+	rotation += rotation_speed * delta
 	
 	lifetime -= delta
 	if lifetime <= 0:

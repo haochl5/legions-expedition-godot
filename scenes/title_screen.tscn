@@ -8,6 +8,9 @@ bg_color = Color(0.19735733, 0.19735733, 0.19735733, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sa3yf"]
 bg_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s4lrb"]
+bg_color = Color(0, 0, 0, 1)
+
 [node name="TitleScreen" type="Control" unique_id=794328610]
 process_mode = 3
 layout_mode = 3
@@ -41,7 +44,7 @@ layout_mode = 2
 [node name="GameTitle" type="Label" parent="TitleScreenContainer/TitleVBoxContainer" unique_id=1164087298]
 layout_mode = 2
 theme_override_font_sizes/font_size = 37
-text = "Legion's Expedition v.Alpha"
+text = "Legion's Expedition v.0.0.1"
 
 [node name="StartButton" type="Button" parent="TitleScreenContainer/TitleVBoxContainer" unique_id=1253502888]
 custom_minimum_size = Vector2(0, 50)
@@ -50,5 +53,14 @@ theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("StyleBoxFlat_fgkus")
 theme_override_styles/hover = SubResource("StyleBoxFlat_sa3yf")
 text = "Start Game"
+
+[node name="ControlTutorial" type="Label" parent="TitleScreenContainer/TitleVBoxContainer" unique_id=21979562]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_s4lrb")
+text = "WASD to move
+Left click to shoot
+SPACE to dash"
+horizontal_alignment = 1
 
 [connection signal="pressed" from="TitleScreenContainer/TitleVBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
