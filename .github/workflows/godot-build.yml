@@ -124,3 +124,40 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build/web
           publish_branch: gh-pages
+  
+  deploy-itch:
+    name: Deploy to itch.io
+    needs: [export-windows, export-web]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Windows Build
+          path: build/windows
+
+      - name: Download Web Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Web Build
+          path: build/web
+
+      - name: Publish Windows Build to itch.io
+        uses: yeslayla/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
+          CHANNEL: windows
+          ITCH_GAME: legions-expedition
+          ITCH_USER: dneee6
+          PACKAGE: build/windows
+
+      - name: Publish Web Build to itch.io
+        uses: yeslayla/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
+          CHANNEL: html
+          ITCH_GAME: legions-expedition
+          ITCH_USER: dneee6
+          PACKAGE: build/web
+          publish_branch: gh-pages
