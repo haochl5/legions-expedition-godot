@@ -31,7 +31,7 @@ jobs:
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/4.6.1.stable ~/.local/share/godot/export_templates/4.6.1.stable
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
 
       - name: Inject Talo Config
         run: |
@@ -62,32 +62,47 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:     
+        with:
           lfs: true
+
+      - name: Cache Godot Import
+        uses: actions/cache@v4
+        with:
+          path: .godot/
+          key: godot-import-web-${{ hashFiles('**/*.import', 'project.godot') }}
+
       - name: Setup
         run: |
-          mkdir -v -p ~/.local/share/godot/templates
-          mv /root/.local/share/godot/templates/4.6.1.stable ~/.local/share/godot/templates/4.6.1.stable
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+
+      - name: Inject Talo Config
+        run: |
+          mkdir -p addons/talo/
+          cat <<EOF > addons/talo/settings.cfg
+          access_key="${{ secrets.TALO_API_KEY }}"
+          api_url="https://api.trytalo.com"
+          socket_url="wss://api.trytalo.com"
+          cache_player_on_identify=false
+          handle_tree_quit=true
+          EOF
+
       - name: Web Build
-        run: |           
-          mkdir -v -p build/web
-          godot -v --export "HTML5" ./build/web/index.html
-      - name: Upload Artifacts
+        run: |
+          mkdir -p build/web
+          godot --headless --export-release "Web" build/web/index.html
+
+      # - name: Inject coi-serviceworker
+      #   run: |
+      #     wget -q https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker/coi-serviceworker.js \
+      #          -O build/web/coi-serviceworker.js
+      #     sed -i 's|<head>|<head>\n  <script src="coi-serviceworker.js"></script>|' build/web/index.html
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: web
+          name: Web Build
           path: build/web
-      - name: Install rsync 📚         
-        run: |           
-          apt-get update && apt-get install -y rsync
-      - name: Publish to itch.io
-        uses: yeslayla/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
-          CHANNEL: web
-          ITCH_GAME: Legion's Expedition
-          ITCH_USER: YeonjunKo
-          PACKAGE: build/web
 
   deploy-pages:
     name: Deploy to GitHub Pages
