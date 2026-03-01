@@ -160,3 +160,4 @@ jobs:
           ITCH_GAME: legions-expedition
           ITCH_USER: dneee6
           PACKAGE: build/web
+          publish_branch: gh-pages
