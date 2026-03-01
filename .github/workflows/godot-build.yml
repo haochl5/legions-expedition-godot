@@ -144,21 +144,19 @@ jobs:
           path: build/web
 
       - name: Publish Windows Build to itch.io
-        uses: manleydev/butler-publish-github-action@v1.0.3
+        uses: yeslayla/butler-publish-itchio-action@master
         env:
-          BUTLER_API_KEY: ${{ secrets.ITCH_IO_API_KEY }}
-        with:
-          channel: 'windows'
-          itch_game: 'legions-expedition'
-          itch_user: 'dneee6'
-          package: 'build/windows'
+          BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
+          CHANNEL: windows
+          ITCH_GAME: legions-expedition
+          ITCH_USER: dneee6
+          PACKAGE: build/windows
 
       - name: Publish Web Build to itch.io
-        uses: manleydev/butler-publish-github-action@v1.0.3
+        uses: yeslayla/butler-publish-itchio-action@master
         env:
-          BUTLER_API_KEY: ${{ secrets.ITCH_IO_API_KEY }}
-        with:
-          channel: 'html'
-          itch_game: 'legions-expedition'
-          itch_user: 'dneee6'
-          package: 'build/web'
+          BUTLER_CREDENTIALS: ${{ secrets.ITCH_IO_API_KEY }}
+          CHANNEL: html
+          ITCH_GAME: legions-expedition
+          ITCH_USER: dneee6
+          PACKAGE: build/web
