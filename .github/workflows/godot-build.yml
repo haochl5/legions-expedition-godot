@@ -31,7 +31,7 @@ jobs:
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mv /root/.local/share/godot/export_templates/4.6.1.stable ~/.local/share/godot/export_templates/4.6.1.stable
 
       - name: Inject Talo Config
         run: |
@@ -62,47 +62,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
+        with:     
           lfs: true
-
-      - name: Cache Godot Import
-        uses: actions/cache@v4
-        with:
-          path: .godot/
-          key: godot-import-web-${{ hashFiles('**/*.import', 'project.godot') }}
-
       - name: Setup
         run: |
-          mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
-
-      - name: Inject Talo Config
-        run: |
-          mkdir -p addons/talo/
-          cat <<EOF > addons/talo/settings.cfg
-          access_key="${{ secrets.TALO_API_KEY }}"
-          api_url="https://api.trytalo.com"
-          socket_url="wss://api.trytalo.com"
-          cache_player_on_identify=false
-          handle_tree_quit=true
-          EOF
-
+          mkdir -v -p ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/4.6.1.stable ~/.local/share/godot/templates/4.6.1.stable
       - name: Web Build
-        run: |
-          mkdir -p build/web
-          godot --headless --export-release "Web" build/web/index.html
-
-      # - name: Inject coi-serviceworker
-      #   run: |
-      #     wget -q https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker/coi-serviceworker.js \
-      #          -O build/web/coi-serviceworker.js
-      #     sed -i 's|<head>|<head>\n  <script src="coi-serviceworker.js"></script>|' build/web/index.html
-
-      - name: Upload Artifact
+        run: |           
+          mkdir -v -p build/web
+          godot -v --export "HTML5" ./build/web/index.html
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Web Build
+          name: web
           path: build/web
+      - name: Install rsync 📚         
+        run: |           
+          apt-get update && apt-get install -y rsync
+      - name: Publish to itch.io
+        uses: yeslayla/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          CHANNEL: web
+          ITCH_GAME: Legion's Expedition
+          ITCH_USER: YeonjunKo
+          PACKAGE: build/web
 
   deploy-pages:
     name: Deploy to GitHub Pages
@@ -124,41 +109,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build/web
           publish_branch: gh-pages
-  
-  deploy-itch:
-    name: Deploy to itch.io
-    needs: [export-windows, export-web]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Download Windows Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: Windows Build
-          path: build/windows
-
-      - name: Download Web Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: Web Build
-          path: build/web
-
-      - name: Publish Windows Build to itch.io
-        uses: manleydev/butler-publish-github-action@v1.0.3
-        env:
-          BUTLER_API_KEY: ${{ secrets.ITCH_IO_API_KEY }}
-        with:
-          channel: 'windows'
-          itch_game: 'legions-expedition'
-          itch_user: 'dneee6'
-          package: 'build/windows'
-
-      - name: Publish Web Build to itch.io
-        uses: manleydev/butler-publish-github-action@v1.0.3
-        env:
-          BUTLER_API_KEY: ${{ secrets.ITCH_IO_API_KEY }}
-        with:
-          channel: 'html'
-          itch_game: 'legions-expedition'
-          itch_user: 'dneee6'
-          package: 'build/web'
