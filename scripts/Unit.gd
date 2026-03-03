@@ -32,6 +32,11 @@ const OVERLAP_THRESHOLD = 100
 
 @export var friction: float = 0.15  # <--- NEW: Controls movement smoothness (0.1 = slippery, 0.5 = snappy)
 
+# taking damage
+var is_invincible: bool = false
+var invincibility_timer: float = 0.0
+const INVINCIBILITY_TIME = 0.6
+
 # --- UPDATED SETUP ---
 func setup(new_data: ChampionData, level: int, new_player: Node2D):
 	data = new_data
@@ -39,9 +44,34 @@ func setup(new_data: ChampionData, level: int, new_player: Node2D):
 	player = new_player 
 	
 	var multiplier = 1.0 + ((star_level - 1) * 0.5)
-	current_hp = data.hp * multiplier
+	current_hp = int(data.hp * multiplier)
+	print("champion spawned with hp = ", current_hp)
 
+func _ready():
+	if has_node("Hurtbox"):
+		$Hurtbox.body_entered.connect(_on_hurtbox_entered)
+	
+	
+func _on_hurtbox_entered(body: Node2D):
+	if is_invincible or current_hp <= 0:
+		return
+		
+	if body.is_in_group("enemy") or body is MobBase:
+		var damage_to_take = body.get("damage")
+		if damage_to_take == null:
+			damage_to_take = 1
+		print("Champion taking damage = ", damage_to_take)
+		take_damage(damage_to_take)
+		
 func _physics_process(_delta):
+	if is_invincible:
+		invincibility_timer -= _delta
+		if invincibility_timer <= 0:
+			is_invincible = false
+			$Sprite2D.visible = true
+		else:
+			$Sprite2D.visible = int(invincibility_timer * 10) % 2 == 0
+			
 	if is_attacking: return
 
 	# 1. AI: Find Target
@@ -189,9 +219,21 @@ func attack():
 	pass
 
 func take_damage(amount: int):
+	if is_invincible:
+		return
+		
 	current_hp -= amount
+	print(data.display_name, " hit, curr hp = ", current_hp)
+	
 	if current_hp <= 0:
+		print("champion died")
 		die()
+	else:
+		#is_invincible = true
+		#invincibility_timer = INVINCIBILITY_TIME
+		var tween = create_tween()
+		tween.tween_property($Sprite2D, "modulate", Color.RED, 0.1)
+		tween.tween_property($Sprite2D, "modulate", Color.WHITE, 0.1)
 
 func die():
 	queue_free()

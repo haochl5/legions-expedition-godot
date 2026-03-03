@@ -31,6 +31,7 @@ var target: Node2D
 var mob_name: String = "Enemy" # Default name
 
 func _ready():
+	add_to_group("enemy")
 	hp = max_hp
 	
 	if screen_notifier:

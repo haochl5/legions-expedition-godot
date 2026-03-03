@@ -11,6 +11,7 @@ var attack_range = 60.0 # Close range
 var attack_counter = 0
 
 func _ready():
+	super()
 	tex_idle = R_IDLE; tex_walk = R_WALK; tex_attack = R_ATTACK
 	$Sprite2D.texture = tex_idle
 

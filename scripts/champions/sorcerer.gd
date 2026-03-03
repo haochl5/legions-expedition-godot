@@ -13,6 +13,7 @@ const PROJECTILE_SCENE = preload("res://scenes/Projectiles/magic_orb.tscn")
 var attack_counter: int = 0
 
 func _ready():
+	super()
 	# --- 2. SETUP PARENT VARIABLES ---
 	# We assign our specific textures to the slots in Unit.gd
 	tex_idle = R_IDLE

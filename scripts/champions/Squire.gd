@@ -14,6 +14,7 @@ var special_trigger: int = 4 # Every 4th attack
 
 
 func _ready():
+	super()
 	# Setup Visuals
 	tex_idle = R_IDLE
 	tex_walk = R_WALK

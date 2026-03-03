@@ -9,6 +9,7 @@ const LIGHTNING_BOLT = preload("res://scenes/FX/lightning_bolt.tscn")
 var attack_range = 100 # Long range
 
 func _ready():
+	super()
 	tex_idle = R_IDLE; tex_walk = R_WALK; tex_attack = R_ATTACK
 	$Sprite2D.texture = tex_idle
 

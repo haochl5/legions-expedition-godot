@@ -13,6 +13,7 @@ var attack_range = 150 # Ranged distance
 var attack_counter: int = 0
 
 func _ready():
+	super()
 	tex_idle = R_IDLE
 	tex_walk = R_WALK
 	tex_attack = R_ATTACK

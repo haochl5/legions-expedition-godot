@@ -10,7 +10,7 @@ extends Resource
 
 @export_group("Stats")
 @export var cost: int = 3
-@export var hp: int = 100
+@export var hp: int = 15
 @export var damage: int = 10
 @export var attack_speed: float = 1.0
 

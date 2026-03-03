@@ -10,6 +10,7 @@ var attack_range = 40 # Short range dash trigger
 var backstab_damage = 20
 
 func _ready():
+	super()
 	tex_idle = R_IDLE; tex_walk = R_WALK; tex_attack = R_ATTACK
 	$Sprite2D.texture = tex_idle
 
