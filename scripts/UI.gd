@@ -22,3 +22,4 @@ func update_exp(current: int, maximum: int):
 
 func update_level(level: int):
 	$EXPContainer/LevelLabel.text = "Level: " + str(level)
+
