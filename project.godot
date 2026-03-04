@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+GameManager="*uid://dvrav81wwnw1v"
 GameData="*res://scripts/GameData.gd"
 Talo="*uid://cf5txmco4tia4"
 
