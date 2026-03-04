@@ -5,8 +5,8 @@ const MOB_TYPES = {
 	"ghost": preload("res://scenes/mobs/ghost.tscn"),
 	"bear": preload("res://scenes/mobs/bear.tscn"),
 	"mushroom": preload("res://scenes/mobs/mushroom.tscn"),
-	# --- NEW: Add the Boss! (Verify this path matches your files) ---
 	"boss": preload("res://scenes/mobs/boss1.tscn"),
+	"boss_bamboo": preload("res://scenes/mobs/boss_bamboo.tscn"),
 }
 
 # Current wave's mob configuration
@@ -15,9 +15,16 @@ const MOB_TYPES = {
 	{"type": "bear", "weight": 0.5}
 ]
 
-# --- NEW: Boss Tracking Variables ---
+# --- Boss Tracking Variables (Samurai boss) ---
 @export var boss_interval: int = 5 # Spawn every 5 levels (5, 10, 15...)
 var last_boss_level: int = 0
+
+# --- NEW: Bamboo Boss Tracking Variables ---
+@export var bamboo_boss_first_level: int = 1
+@export var bamboo_boss_interval: int = 7 # Spawn at 1, 7, 14, 21...
+var last_bamboo_boss_level: int = 0
+
+# Global scaling (applies to all mobs spawned via spawn_mob)
 var health_multiplier: float = 1.0
 
 
@@ -34,9 +41,7 @@ func spawn_mob(type: String, position: Vector2, target: Node2D) -> MobBase:
 	
 	var mob: MobBase = MOB_TYPES[type].instantiate()
 	
-	# --- NEW: Scale Health ---
-	# We call setup_behavior() early so the mob sets its base HP, 
-	# then we multiply it before it enters the game world.
+	# Scale Health (assumes mob already has max_hp set by its script/scene)
 	mob.max_hp = int(mob.max_hp * health_multiplier)
 	mob.hp = mob.max_hp
 	
@@ -65,8 +70,7 @@ func _get_random_mob_type() -> String:
 func set_wave_config(configs):
 	wave_config = configs
 
-# New function to handle groups
-# Update spawn_cluster to use wider offsets
+# Spawn a cluster of mobs with spacing
 func spawn_cluster(type: String, position: Vector2, target: Node2D, count: int = 1):
 	for i in range(count):
 		# INCREASED OFFSET: changed from 80 to 150 to prevent overlapping blobs
@@ -75,26 +79,49 @@ func spawn_cluster(type: String, position: Vector2, target: Node2D, count: int =
 		if mob:
 			get_parent().add_child(mob)
 
-# ==========================================d
-# --- NEW: BOSS SPAWNING LOGIC ---
+# ==========================================
+# BOSS SPAWNING LOGIC
+# - Samurai boss: level 5,10,15... count = level/5
+# - Bamboo boss:  level 1,7,14...  count = level/7 (but level 1 => 1 for testing)
 # ==========================================
 
-# Update boss spawning to spawn +1 boss per interval
 func try_spawn_boss(current_level: int, position: Vector2, target: Node2D):
+	# -------------------------
+	# 1) Samurai Boss (existing)
+	# -------------------------
 	if current_level >= boss_interval and current_level % boss_interval == 0:
 		if last_boss_level != current_level:
-			# --- NEW: BOSS SCALING ---
-			# Level 5 = 1 Boss, Level 10 = 2 Bosses, Level 15 = 3 Bosses
-			var boss_count = current_level / boss_interval
+			# Level 5 = 1, Level 10 = 2, Level 15 = 3 ...
+			var boss_count: int = current_level / boss_interval
 			
 			for i in range(boss_count):
-				# Bosses need even more space (250px) because they are physically larger
 				var offset = Vector2(randf_range(-250, 250), randf_range(-250, 250))
 				var boss = spawn_mob("boss", position + offset, target)
 				if boss:
-					# Since we already called setup_behavior inside spawn_mob, 
-					# bosses also get the health_multiplier automatically!
 					get_parent().call_deferred("add_child", boss)
-					
+			
 			last_boss_level = current_level
-			print("WAVE ", current_level, ": ", boss_count, " BOSSES SPAWNED!")
+			print("WAVE ", current_level, ": ", boss_count, " SAMURAI BOSSES SPAWNED!")
+
+	# -------------------------
+	# 2) Bamboo Boss (NEW)
+	# Spawn at level 1, 7, 14, 21...
+	# Count algorithm same style as samurai:
+	#   level 7 => 1, level 14 => 2, ...
+	# Special case:
+	#   level 1 => 1 (for testing)
+	# -------------------------
+	var should_spawn_bamboo := (current_level == bamboo_boss_first_level) or (current_level % bamboo_boss_interval == 0)
+	should_spawn_bamboo = true
+	print(should_spawn_bamboo)
+	if should_spawn_bamboo and last_bamboo_boss_level != current_level:
+		var bamboo_count: int = 30 if current_level == bamboo_boss_first_level else int(current_level / bamboo_boss_interval)
+		
+		for i in range(bamboo_count):
+			var offset = Vector2(randf_range(-250, 250), randf_range(-250, 250))
+			var bamboo = spawn_mob("boss_bamboo", position + offset, target)
+			if bamboo:
+				get_parent().call_deferred("add_child", bamboo)
+		
+		last_bamboo_boss_level = current_level
+		print("WAVE ", current_level, ": ", bamboo_count, " BAMBOO BOSSES SPAWNED!")
