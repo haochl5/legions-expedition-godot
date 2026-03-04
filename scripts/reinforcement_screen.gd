@@ -28,6 +28,9 @@ func _init_champion_database():
 	var monk_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Lion/Faceset.png")
 	var priest_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/Tengu2/Faceset.png")
 	var ninja_face = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/RedGladiator/Faceset.png")
+	
+	# Facesets for Lifepot
+	var lifepot_face = preload("res://assets/Ninja Adventure - Asset Pack/Items/Potion/LifePot.png")
 
 	# --- TIER 3 CHAMPIONS (Cost 3) ---
 	var squire = ChampionData.new()
@@ -90,6 +93,22 @@ func _init_champion_database():
 	assassin.description = "Instantly dashes behind enemies for massive backstab damage."
 	assassin.unit_scene = preload("res://scenes/champions/assasin.tscn") 
 	available_champions.append(assassin)
+	
+	# --- LIFEPOT (Cost 10) ---
+	# --- LIFEPOT (Cost 10) ---
+	var lifepot = ChampionData.new()
+	lifepot.id = "lifepot"
+	lifepot.display_name = "Life Pot"
+	lifepot.role = "Item"
+	lifepot.icon = lifepot_face
+	lifepot.cost = 10
+
+	# Use hp field as "heal amount" (because ShopCard already displays HP)
+	lifepot.hp = 3
+	lifepot.skill_name = "Heal"
+	lifepot.description = "Instantly heals the Commander by 3 HP."
+	lifepot.unit_scene = null # IMPORTANT: not a Champion scene
+	available_champions.append(lifepot)
 
 # --- 2. SHOP LOGIC ---
 func generate_shop_items():
@@ -185,18 +204,18 @@ func _on_deploy_btn_down():
 
 # --- CUSTOM RANDOM PICKER ---
 func get_random_champion() -> ChampionData:
-	var roll = randf() # Rolls a random decimal between 0.0 and 1.0
+	var roll = randf()
+	# 10% chance to show LifePot
+	if roll > 0.90:
+		var items = available_champions.filter(func(x): return x.id == "lifepot")
+		if not items.is_empty():
+			return items.pick_random()
+
 	var target_cost = 3
-	
-	# 30% chance to roll a Tier 4 champion. 70% chance for Tier 3.
-	if roll > 0.70: 
+	if roll > 0.70:
 		target_cost = 4
-		
-	# Gather all champions that match the target cost
+
 	var valid_pool = available_champions.filter(func(champ): return champ.cost == target_cost)
-	
-	# Failsafe: if something goes wrong, just grab anyone
 	if valid_pool.is_empty():
 		return available_champions.pick_random()
-		
 	return valid_pool.pick_random()
