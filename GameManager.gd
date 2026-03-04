@@ -9,8 +9,10 @@ func _ready():
 			player_group = js_group
 		else:
 			player_group = "A"
+			print("This group A, is assigned by default cause no ab-group in localstorage")
 	else:
 		player_group = "A"
+		print("This group A, is assigned by default cause no ab-group in localstorage, and you are not in web")
 	
 	print("Current Player Group: ", player_group)
 	
@@ -22,6 +24,6 @@ func _sync_to_talo():
 	if has_node("/root/Talo"):
 		var current_id = Talo.identity.get_id()
 		Talo.identity.identify(current_id, props)
-		print("Talo Sync Success: ", player_group)
+		print("Talo Sync Success: ", player_group, "player id =", current_id)
 	else:
 		push_warning("Talo Autoload not found!")
