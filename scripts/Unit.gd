@@ -74,7 +74,6 @@ func _on_hurtbox_entered(body: Node2D):
 		var damage_to_take = body.get("damage")
 		if damage_to_take == null:
 			damage_to_take = 1
-		print("Champion taking damage = ", damage_to_take)
 		take_damage(damage_to_take)
 		
 func _physics_process(_delta):
@@ -237,7 +236,6 @@ func take_damage(amount: int):
 		return
 		
 	current_hp -= amount
-	print(data.display_name, " hit, curr hp = ", current_hp)
 	
 	if current_hp <= 0:
 		print("champion died")
