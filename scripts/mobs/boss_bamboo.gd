@@ -20,7 +20,7 @@ var current_state: State = State.CHASE
 @export var step_delay: float = 0.06        # Delay between steps (controls wave speed)
 
 # --- Damage tuning for spikes ---
-@export var spike_damage: int = 3
+@export var spike_damage: int = 1
 
 # Drag & drop your bamboo_spike.tscn here in the Inspector (recommended).
 @export var bamboo_spike_scene: PackedScene
