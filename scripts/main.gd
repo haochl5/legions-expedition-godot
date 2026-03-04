@@ -57,9 +57,9 @@ func _ready() -> void:
 	if GameData.is_quick_restart:
 		_on_start_game() 
 	else:
+		title_screen_ready()
 		await _init_player()
 		GameData.sync_from_talo()
-		title_screen_ready()
 	
 	
 func _init_player() -> void:
