@@ -34,26 +34,32 @@ var cluster_bonus: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:	
-	title_screen_ready()
-	# Connect the shop's deploy button to unpause the game
+	ingame_UI.hide()
+	title_screen.hide()
+	# ----------------------------------------
+	
 	reinforcement_screen.wave_started.connect(_on_wave_started)
 	GameData.leveled_up.connect(_on_level_up)
 	mob_spawner.set_wave_config([
 		{"type": "bear", "weight": 0.2},
 		{"type": "ghost", "weight": 0.2},
 		{"type": "mushroom", "weight": 0.6},
-		
 	])
 	title_screen.start_game.connect(_on_start_game)
 	game_over_screen.restart_game.connect(_on_restart_game)
   
-  # Generate the world right when the scene loads!
 	generate_ground()
 	spawn_blockers()
 	setup_boundaries()
 	
-	# for Talo
-	await _init_player()
+	# Now the game waits for the server, but the screen is already hidden!
+	# THE CROSSROADS
+	if GameData.is_quick_restart:
+		_on_start_game() 
+	else:
+		await _init_player()
+		GameData.sync_from_talo()
+		title_screen_ready()
 	
 	
 func _init_player() -> void:
@@ -85,8 +91,10 @@ func _on_start_game():
 	# Only confine the mouse if we are NOT playing on the web
 	if not OS.has_feature("web"):
 		Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	
 		
 	title_screen.hide()
+	game_over_screen.hide()
 	ingame_UI.show()
 	get_tree().paused = false
 	new_game()
@@ -109,10 +117,15 @@ func game_over():
 	var total_session_duration = int(Time.get_unix_time_from_system() - GameData.session_start_time)
 	var final_killer = GameData.killer_name
 	
+	
+	
 	var elapsed_minutes = float(duration) / 60.0
 	var final_apm = 0
 	if elapsed_minutes > 0:
 		final_apm = int(GameData.total_actions / elapsed_minutes)
+	
+	GameData.meta_crystals += GameData.total_exp_collected
+	Talo.current_player.set_prop("total_meta_crystals", str(GameData.meta_crystals))
 	
 	Talo.events.track("game_over", {
 		"duration_seconds": str(duration),
@@ -121,7 +134,8 @@ func game_over():
 		"level_reached": str(GameData.level),
 		"time_taken_per_level": str(GameData.time_taken_per_level),
 		"killed_by": final_killer,
-		"actions_per_minute": str(final_apm)
+		"actions_per_minute": str(final_apm),
+		"meta_crystals_earned": str(GameData.total_exp_collected)
 	})
 	# --- NEW: UPDATE PLAYER'S TOTAL TIME PROP ---
 	if Talo.current_alias:
@@ -129,7 +143,7 @@ func game_over():
 		Talo.current_player.set_prop("total_session_seconds", str(total_session_duration))
 		Talo.current_player.set_prop("highest_level_reached", str(GameData.highest_level_reached))
 	
-	await Talo.events.flush()
+	Talo.events.flush()
 	print("Talo flush done")
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	$MobTimer.stop()
@@ -147,6 +161,7 @@ func _on_restart_game():
 	})
 	await Talo.events.flush()
 	GameData.reset_gamedata()
+	GameData.is_quick_restart = true
 	get_tree().paused = false
 	get_tree().reload_current_scene()
 
@@ -185,6 +200,11 @@ func _process(delta: float) -> void:
 			
 			# 3. Silently backup their absolute highest level reached!
 			Talo.current_player.set_prop("highest_level_reached", str(GameData.highest_level_reached))
+			
+			# --- NEW: Track who is currently hurting them! ---
+			# We use the killer_name variable, but label it "last_damaged_by" in Talo
+			Talo.current_player.set_prop("last_damaged_by", GameData.killer_name)
+			# -------------------------------------------------
 			
 			# 4. Save State at Exit
 			# Always save their current gold, even if they are in a menu!
@@ -452,17 +472,21 @@ func setup_boundaries():
 
 # 3. Add this brand new function anywhere in main.gd!
 func increase_difficulty(current_level: int):
-	# A. Spawn enemies faster
-	$MobTimer.wait_time = max(0.15, $MobTimer.wait_time * 0.95)
-	$GhostTimer.wait_time = max(0.5, $GhostTimer.wait_time * 0.95)
-	$BearTimer.wait_time = max(1.5, $BearTimer.wait_time * 0.95)
-	$MushroomTimer.wait_time = max(1.0, $MushroomTimer.wait_time * 0.95)
+	# A. Spawn enemies much faster (0.90 creates a steeper drop than 0.95)
+	$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * 0.90)
+	$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * 0.90)
+	$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * 0.90)
+	$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * 0.90)
 	
-	# B. --- NEW: Scale Mob Health ---
-	# Mobs get 10% more HP every level
-	mob_spawner.health_multiplier = 1.0 + (current_level * 0.1)
+	# B. Exponential Health Curve (Level 5 = ~2x HP, Level 15 = ~5x HP)
+	mob_spawner.health_multiplier = 1.0 + (current_level * 0.15) + (pow(current_level, 2) * 0.015)
 	
-	# C. Increase cluster sizes every 3 levels
-	if current_level % 3 == 0:
+	# C. Faster Swarm Growth
+	if current_level % 2 == 0:
 		cluster_bonus += 1
-		print("[Difficulty Up] HP Multiplier: ", mob_spawner.health_multiplier, " | Cluster Bonus: ", cluster_bonus)
+		
+	# D. --- NEW: Squeeze the Economy ---
+	# Drops 5% less often every level, capping at a strict 20% minimum chance
+	GameData.gold_drop_chance = max(0.20, 1.0 - (current_level * 0.05))
+	
+	print("[Difficulty Up] HP: ", snapped(mob_spawner.health_multiplier, 0.1), " | Gold Drop Chance: ", GameData.gold_drop_chance)

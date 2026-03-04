@@ -41,7 +41,7 @@ alignment = 1
 [node name="GameOverLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=355579155]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Game Over"
+text = "Run Completed"
 horizontal_alignment = 1
 
 [node name="GameOverStatus" type="Label" parent="CenterContainer/VBoxContainer" unique_id=139580501]
@@ -50,6 +50,22 @@ theme_override_font_sizes/font_size = 18
 text = "PlaceHolder"
 horizontal_alignment = 1
 
+[node name="Hseperator" type="Label" parent="CenterContainer/VBoxContainer" unique_id=501991763]
+layout_mode = 2
+
+[node name="CrystalLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=2119895871]
+layout_mode = 2
+text = "Meta Crystals: 0"
+
+[node name="HPUpgradeButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1225998427]
+layout_mode = 2
+text = "Upgrade Max HP"
+
+[node name="SpeedUpgradeButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1049639370]
+layout_mode = 2
+text = "Upgrade Speed
+"
+
 [node name="RestartButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=171722510]
 process_mode = 3
 custom_minimum_size = Vector2(0, 50)
@@ -57,6 +73,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_iwahs")
 theme_override_styles/hover = SubResource("StyleBoxFlat_61w2s")
-text = "Restart"
+text = "Start New Run
+"
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]

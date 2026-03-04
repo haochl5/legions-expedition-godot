@@ -1,6 +1,7 @@
 extends Area2D
 
-var tick_damage: int = 10 # How much damage per burn tick
+var tick_damage: int = 3 # How much damage per burn tick
+var damage_multiplier: float = 1.0
 var tick_rate: float = 0.5 # Apply damage every 0.5 seconds
 var time_since_last_tick: float = 0.0
 
@@ -21,7 +22,7 @@ func _physics_process(delta):
 		
 		for enemy in enemies_inside:
 			if is_instance_valid(enemy):
-				enemy.take_damage(tick_damage)
+				enemy.take_damage(tick_damage * damage_multiplier)
 
 func _on_body_entered(body):
 	if body.is_in_group("enemy"):

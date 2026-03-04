@@ -67,6 +67,14 @@ func fire_special_shotgun():
 
 func spawn_arrow(dir: Vector2):
 	var arrow = ARROW_SCENE.instantiate()
+	
+	# --- THE FIX: Pass the multiplier to the arrow! ---
+	arrow.set("damage_multiplier", damage_multiplier)
+	
+	# BONUS: Make Level 2 and 3 arrows physically larger and more intimidating!
+	arrow.scale = Vector2(damage_multiplier, damage_multiplier)
+	# --------------------------------------------------
+	
 	get_parent().add_child(arrow)
 	arrow.global_position = global_position
 	arrow.direction = dir
