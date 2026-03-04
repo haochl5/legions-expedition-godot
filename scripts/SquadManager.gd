@@ -88,8 +88,9 @@ func check_for_merge(unit_id: String):
 		
 		# Find all units of this specific ID and Tier
 		for unit in squad_roster:
-			if unit.data.id == unit_id and unit.star_level == current_tier:
-				matching_units.append(unit)
+			if is_instance_valid(unit) and not unit.is_queued_for_deletion():
+				if unit.data.id == unit_id and unit.star_level == current_tier:
+					matching_units.append(unit)
 		
 		# If we have 3 or more of this tier, merge them!
 		if matching_units.size() >= 3:

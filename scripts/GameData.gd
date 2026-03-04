@@ -138,7 +138,7 @@ func level_up():
 	leveled_up.emit(level)
 
 func reset_gamedata():
-	gold = 0
+	gold = 3
 	current_exp = 0
 	level = 1
 	exp_to_level_up = 50
