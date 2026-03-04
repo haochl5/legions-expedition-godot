@@ -67,6 +67,10 @@ var highest_level_reached: int = 1
 var level_start_time: float = 0.0
 var time_taken_per_level: Array[int] = [] 
 
+var killer_name: String = "Unknown"
+
+var total_actions: int = 0
+
 # Logic
 func add_gold(amount: int):
 	gold += amount
@@ -91,6 +95,13 @@ func level_up():
 	
 	level += 1
 	
+	if level == 15:
+		Talo.events.track("content_exhausted", {
+			"time_taken_seconds": str(int(Time.get_unix_time_from_system() - session_start_time))
+		})
+		# Flush immediately so we don't lose it!
+		await Talo.events.flush()
+	
 	# Keep the all-time high score updated
 	if level > highest_level_reached:
 		highest_level_reached = level
@@ -108,3 +119,5 @@ func reset_gamedata():
 	gold_spent_in_game = 0
 	time_taken_per_level.clear()
 	level_start_time = Time.get_unix_time_from_system()
+	killer_name = "Unknown"
+	total_actions = 0

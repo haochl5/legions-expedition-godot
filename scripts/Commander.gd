@@ -183,7 +183,7 @@ func take_damage(damage: int, attacker_name: String = "Unknown"):
 	hp = max(hp, 0)
 	
 	# Remember who actually managed to hurt the Commander!
-	last_attacker = attacker_name 
+	GameData.killer_name = attacker_name
 	
 	if hp <= 0:
 		die()
