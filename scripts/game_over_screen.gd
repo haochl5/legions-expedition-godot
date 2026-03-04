@@ -27,11 +27,15 @@ func _process(delta: float) -> void:
 
 func save_to_cloud():
 	if Talo.current_player:
+		# 1. Update the local memory
 		Talo.current_player.set_prop("meta_crystals", str(GameData.meta_crystals))
 		Talo.current_player.set_prop("upgrade_hp_level", str(GameData.upgrade_hp_level))
 		Talo.current_player.set_prop("upgrade_speed_level", str(GameData.upgrade_speed_level))
 		
-		# Flush immediately so they don't lose it if they close the browser!
+		# 2. THE FIX: Tell Talo to actually save the player profile to the server!
+		Talo.players.update() 
+		
+		# (We can keep flush here just in case you track purchase events later!)
 		Talo.events.flush()
 
 
