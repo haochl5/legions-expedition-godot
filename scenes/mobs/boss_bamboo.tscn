@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cbaw7koe1kc0h"]
+[gd_scene format=3 uid="uid://bkv1tjfb6vncv"]
 
 [ext_resource type="Script" uid="uid://53vnfwqxu3c0" path="res://scripts/mobs/boss_bamboo.gd" id="1_8ovj1"]
 [ext_resource type="Texture2D" uid="uid://725x4rocepd0" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/GiantBamboo/Attack.png" id="2_8ovj1"]
@@ -245,9 +245,8 @@ animations = [{
 "speed": 15.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8ovj1"]
-radius = 12.0
-height = 46.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_umv4o"]
+radius = 18.973665
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=460120251 groups=["enemy"]]
 collision_layer = 8
@@ -261,4 +260,4 @@ script = ExtResource("1_8ovj1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=569762729]
 position = Vector2(0, 7)
-shape = SubResource("CapsuleShape2D_8ovj1")
+shape = SubResource("CircleShape2D_umv4o")

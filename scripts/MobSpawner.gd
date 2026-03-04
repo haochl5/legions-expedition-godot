@@ -20,7 +20,7 @@ const MOB_TYPES = {
 var last_boss_level: int = 0
 
 # --- NEW: Bamboo Boss Tracking Variables ---
-@export var bamboo_boss_first_level: int = 1
+@export var bamboo_boss_first_level: int = 2
 @export var bamboo_boss_interval: int = 7 # Spawn at 1, 7, 14, 21...
 var last_bamboo_boss_level: int = 0
 
@@ -105,17 +105,13 @@ func try_spawn_boss(current_level: int, position: Vector2, target: Node2D):
 
 	# -------------------------
 	# 2) Bamboo Boss (NEW)
-	# Spawn at level 1, 7, 14, 21...
+	# Spawn at level  7, 14, 21...
 	# Count algorithm same style as samurai:
 	#   level 7 => 1, level 14 => 2, ...
-	# Special case:
-	#   level 1 => 1 (for testing)
 	# -------------------------
-	var should_spawn_bamboo := (current_level == bamboo_boss_first_level) or (current_level % bamboo_boss_interval == 0)
-	should_spawn_bamboo = true
-	print(should_spawn_bamboo)
-	if should_spawn_bamboo and last_bamboo_boss_level != current_level:
-		var bamboo_count: int = 30 if current_level == bamboo_boss_first_level else int(current_level / bamboo_boss_interval)
+	var should_spawn_bamboo := current_level % bamboo_boss_interval == 0
+	if should_spawn_bamboo:
+		var bamboo_count: int =  int(current_level / bamboo_boss_interval)
 		
 		for i in range(bamboo_count):
 			var offset = Vector2(randf_range(-250, 250), randf_range(-250, 250))

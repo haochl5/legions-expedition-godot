@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://cerph232cpjwn"]
+
+[ext_resource type="Script" uid="uid://vuo7krwkgqu5" path="res://scripts/bamboo_spike.gd" id="1_74jpv"]
+[ext_resource type="Texture2D" uid="uid://b3vkgs3sk2aa0" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Bamboo/SpriteSheet.png" id="2_rwdgg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hcnjl"]
+atlas = ExtResource("2_rwdgg")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7qaa4"]
+atlas = ExtResource("2_rwdgg")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_36dpq"]
+atlas = ExtResource("2_rwdgg")
+region = Rect2(0, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_efivt"]
+atlas = ExtResource("2_rwdgg")
+region = Rect2(0, 48, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_s0hyd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hcnjl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7qaa4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_36dpq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_efivt")
+}],
+"loop": false,
+"name": &"grow",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rwdgg"]
+radius = 6.0
+height = 20.0
+
+[node name="BambooSpike" type="Area2D" unique_id=691380047]
+collision_layer = 8
+collision_mask = 15
+script = ExtResource("1_74jpv")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1897133910]
+sprite_frames = SubResource("SpriteFrames_s0hyd")
+animation = &"grow"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=627475524]
+shape = SubResource("CapsuleShape2D_rwdgg")
