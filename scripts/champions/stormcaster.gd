@@ -28,11 +28,11 @@ func attack():
 	$Sprite2D.frame = facing_dir
 	
 	# Fast windup
-	await get_tree().create_timer(0.2).timeout 
+	await get_tree().create_timer(0.2 * attack_speed_modifier).timeout 
 	
 	if target and is_instance_valid(target):
-		# 1. Deal the damage instantly! (Adjust the 25 to whatever feels balanced)
-		target.take_damage(25)
+		# Deal the dynamic damage instantly!
+		target.take_damage(int(25 * damage_multiplier))
 		
 		# 2. Spawn the lightning strike effect
 		var bolt = LIGHTNING_BOLT.instantiate()
@@ -44,5 +44,5 @@ func attack():
 		# Notice we completely deleted all the direction, rotation, and speed math!
 		
 	# Cooldown
-	await get_tree().create_timer(0.8).timeout 
+	await get_tree().create_timer(0.8 * attack_speed_modifier).timeout 
 	is_attacking = false

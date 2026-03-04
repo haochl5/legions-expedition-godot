@@ -80,53 +80,57 @@ func process_all_merges():
 		
 
 # --- THE MERGE LOGIC ---
+# --- THE UPGRADED MERGE LOGIC ---
 func check_for_merge(unit_id: String):
-	# 1. Find all 1-star units of this specific type
-	var matching_units = []
-	for unit in squad_roster:
-		if unit.data.id == unit_id and unit.star_level == 1:
-			matching_units.append(unit)
-	
-	# 2. If we have 3 or more, merge them!
-	if matching_units.size() >= 3:
-		print("MERGE HAPPENING: ", unit_id)
+	# Loop through level 1, then level 2. (We don't check level 3, because it's the max!)
+	for current_tier in [1, 2]:
+		var matching_units = []
 		
-		# --- NEW: TALO TRACKING ---
-		Talo.events.track("champion_merged", {
-			"champion_id": unit_id,
-			"new_tier": "2",
-			"current_level": str(GameData.level) # Helpful to see when in the run they get the merge!
-		})
-		# --------------------------
+		# Find all units of this specific ID and Tier
+		for unit in squad_roster:
+			if unit.data.id == unit_id and unit.star_level == current_tier:
+				matching_units.append(unit)
 		
-		# Grab the first 3
-		var units_to_remove = matching_units.slice(0, 3)
-		
-		# Calculate the average position for the merge effect
-		var merge_pos = Vector2.ZERO
-		for u in units_to_remove:
-			merge_pos += u.global_position
-			squad_roster.erase(u) # Remove from array
-			u.queue_free()        # Delete from world
-		merge_pos /= 3.0
-		
-		# Spawn the tier 2 unit AND save a reference to it
-		var upgrade_data = units_to_remove[0].data
-		var upgraded_unit = spawn_unit(upgrade_data, 2)
-		
-		# 1. Override the random player offset and move it directly to the merge center!
-		upgraded_unit.global_position = merge_pos
-		
-		# --- NEW: THE JUICY GROWTH TRANSITION ---
-		# Force it to start at normal size (1.0)
-		upgraded_unit.scale = Vector2(1.0, 1.0)
-		
-		# Create a tween to smoothly pop it up to 1.3x size over 0.4 seconds!
-		var tween = create_tween()
-		tween.tween_property(upgraded_unit, "scale", Vector2(1.3, 1.3), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		# ----------------------------------------
-		
-		# 2. Spawn the visual effect directly on the new unit
-		if merge_fx_scene:
-			var fx_instance = merge_fx_scene.instantiate()
-			upgraded_unit.add_child(fx_instance)
+		# If we have 3 or more of this tier, merge them!
+		if matching_units.size() >= 3:
+			var new_tier = current_tier + 1
+			print("MERGE HAPPENING: ", unit_id, " TO TIER ", new_tier)
+			
+			Talo.events.track("champion_merged", {
+				"champion_id": unit_id,
+				"new_tier": str(new_tier),
+				"current_level": str(GameData.level) 
+			})
+			
+			# Grab the first 3
+			var units_to_remove = matching_units.slice(0, 3)
+			
+			# Calculate the average position for the merge center
+			var merge_pos = Vector2.ZERO
+			for u in units_to_remove:
+				merge_pos += u.global_position
+				squad_roster.erase(u) 
+				u.queue_free()        
+			merge_pos /= 3.0
+			
+			# Spawn the upgraded unit
+			var upgrade_data = units_to_remove[0].data
+			var upgraded_unit = spawn_unit(upgrade_data, new_tier)
+			upgraded_unit.global_position = merge_pos
+			
+			# Calculate dynamic scale: Tier 1 = 1.0, Tier 2 = 1.3, Tier 3 = 1.6
+			var target_scale = 1.0 + ((new_tier - 1) * 0.3)
+			upgraded_unit.scale = Vector2(1.0, 1.0) # Start normal size
+			
+			var tween = create_tween()
+			tween.tween_property(upgraded_unit, "scale", Vector2(target_scale, target_scale), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			
+			if merge_fx_scene:
+				var fx_instance = merge_fx_scene.instantiate()
+				upgraded_unit.add_child(fx_instance)
+				
+			# THE MAGIC RECURSIVE CALL: 
+			# If merging these three Level 1s just created our third Level 2, 
+			# we instantly call this function again to trigger the Level 3 merge!
+			check_for_merge(unit_id)
+			return # Exit the current loop since the recursive call handles the rest

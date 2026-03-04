@@ -55,10 +55,14 @@ func fire_orb(is_special: bool):
 	if not PROJECTILE_SCENE: return
 
 	var orb = PROJECTILE_SCENE.instantiate()
+	
+	# --- THE FIX: Pass the multiplier to the orb! ---
+	orb.set("damage_multiplier", damage_multiplier)
+	# ------------------------------------------------
+	
 	get_parent().add_child(orb)
 	orb.global_position = global_position
 	
-	# Aiming
 	var dir = Vector2.RIGHT
 	if target and is_instance_valid(target):
 		dir = (target.global_position - global_position).normalized()
@@ -66,13 +70,16 @@ func fire_orb(is_special: bool):
 	orb.direction = dir
 	orb.rotation = dir.angle()
 	
-	# --- THE SPECIAL SAUCE ---
 	if is_special:
 		orb.is_explosive = true
-		orb.modulate = Color(1, 0.2, 0.2) # Red Orb
-		orb.scale = Vector2(1.5, 1.5)     # Big Orb
-		orb.speed = 400 # Slower, heavier orb
-	
+		orb.modulate = Color(1, 0.2, 0.2) 
+		# Scale the massive special orb by the multiplier too!
+		orb.scale = Vector2(1.5 * damage_multiplier, 1.5 * damage_multiplier)
+		orb.speed = 400 
+	else:
+		# Scale the normal orbs
+		orb.scale = Vector2(damage_multiplier, damage_multiplier)
+
 func _physics_process(delta):
 	if is_attacking: return
 

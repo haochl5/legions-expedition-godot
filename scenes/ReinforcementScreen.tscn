@@ -63,6 +63,6 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[connection signal="pressed" from="VBoxContainer/Buttons/RerollBtn" to="." method="_on_reroll_btn_down"]
 [connection signal="pressed" from="VBoxContainer/Buttons/RerollBtn" to="." method="_on_reroll_btn_pressed"]
+[connection signal="pressed" from="VBoxContainer/Buttons/RerollBtn" to="." method="_on_reroll_btn_down"]
 [connection signal="pressed" from="VBoxContainer/Buttons/DeployBtn" to="." method="_on_deploy_btn_down"]

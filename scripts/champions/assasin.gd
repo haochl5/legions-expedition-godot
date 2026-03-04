@@ -30,23 +30,24 @@ func attack():
 	
 	if target and is_instance_valid(target):
 		var dir_to_enemy = (target.global_position - global_position).normalized()
-		# Dash 30 pixels BEHIND the target
 		var dash_target = target.global_position + (dir_to_enemy * 30.0)
 		
-		# 1. Instantly dash using Tween
+		# 1. Dash
 		var tween = create_tween()
-		tween.tween_property(self, "global_position", dash_target, 0.15).set_trans(Tween.TRANS_SINE)
+		# Speed up the dash animation based on tier!
+		tween.tween_property(self, "global_position", dash_target, 0.15 * attack_speed_modifier).set_trans(Tween.TRANS_SINE)
 		await tween.finished
 		
 		# 2. Strike!
 		if target and is_instance_valid(target):
-			target.take_damage(backstab_damage)
+			# --- THE FIX: Multiply the backstab damage! ---
+			target.take_damage(int(backstab_damage * damage_multiplier))
 			
-			# Spawn the yellow slash on the enemy!
 			var slash = SLASH_FX.instantiate()
 			get_parent().add_child(slash)
 			slash.global_position = target.global_position
 			slash.rotation = dir_to_enemy.angle() 
 			
-	await get_tree().create_timer(0.6).timeout # Cooldown
+	# --- THE FIX: Speed up the cooldown! ---
+	await get_tree().create_timer(0.6 * attack_speed_modifier).timeout 
 	is_attacking = false

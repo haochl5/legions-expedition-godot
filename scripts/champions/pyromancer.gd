@@ -29,24 +29,28 @@ func attack():
 	$Sprite2D.vframes = 1 
 	$Sprite2D.frame = facing_dir
 	
-	await get_tree().create_timer(0.3).timeout # Windup
+	# Windup scaled by tier
+	await get_tree().create_timer(0.3 * attack_speed_modifier).timeout 
 	
 	if target and is_instance_valid(target):
-		# Create a 5-point cross pattern (Center, Right, Left, Down, Up)
-		# The "25" is the pixel distance between the fires. 
 		var fire_offsets = [
-			Vector2.ZERO,
-			Vector2(25, 0),
-			Vector2(-25, 0),
-			Vector2(0, 25),
-			Vector2(0, -25)
+			Vector2.ZERO, Vector2(25, 0), Vector2(-25, 0), Vector2(0, 25), Vector2(0, -25)
 		]
 		
-		# Loop through all 5 positions and spawn a fire at each one!
 		for offset in fire_offsets:
 			var fire = FIRE_ZONE.instantiate()
+			
+			# --- THE FIX: Pass the multiplier to the fire! ---
+			# We use 'set' so it doesn't crash if your fire_zone.gd doesn't have the variable yet
+			fire.set("damage_multiplier", damage_multiplier)
+			
+			# BONUS: Let's make the Level 3 fire visually HUGE!
+			fire.scale = Vector2(damage_multiplier, damage_multiplier)
+			# -------------------------------------------------
+			
 			get_parent().add_child(fire)
 			fire.global_position = target.global_position + offset
 		
-	await get_tree().create_timer(1.2).timeout # Cooldown
+	# Cooldown scaled by tier
+	await get_tree().create_timer(1.2 * attack_speed_modifier).timeout 
 	is_attacking = false
