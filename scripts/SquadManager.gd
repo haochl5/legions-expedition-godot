@@ -18,7 +18,32 @@ func _ready():
 		reinforcement_screen.wave_started.connect(process_all_merges)
 
 func _on_unit_bought(unit_data: ChampionData):
+	# If this purchase is an Item (no unit scene), apply its effect immediately.
+	if unit_data == null:
+		return
+
+	# Option A (recommended): identify by id
+	if unit_data.id == "lifepot":
+		_apply_lifepot(unit_data)
+		return
+
+	# Option B (fallback): identify by missing scene
+	# if unit_data.unit_scene == null:
+	#     return
+
+	# Otherwise, it's a normal champion
 	spawn_unit(unit_data, 1)
+	
+func _apply_lifepot(item_data: ChampionData) -> void:
+	var heal_amount: int = int(item_data.hp)
+
+	if player == null or not is_instance_valid(player):
+		return
+
+	var old_hp = player.hp
+	player.hp = min(player.max_hp, player.hp + heal_amount)
+
+	print("LifePot used: +%d HP (%d -> %d)" % [heal_amount, old_hp, player.hp])
 
 func spawn_unit(data: ChampionData, level: int):
 	var new_unit = data.unit_scene.instantiate() 
