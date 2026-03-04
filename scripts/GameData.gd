@@ -67,6 +67,36 @@ var highest_level_reached: int = 1
 var level_start_time: float = 0.0
 var time_taken_per_level: Array[int] = [] 
 
+var killer_name: String = "Unknown"
+
+
+var total_actions: int = 0
+# Add this near your other variables
+var gold_drop_chance: float = 1.0
+
+var total_exp_collected: int = 0
+
+# --- META DATA (Persists across deaths) ---
+var meta_crystals: int = 0 # The permanent currency they spend in the menu
+var upgrade_hp_level: int = 0
+var upgrade_speed_level: int = 0
+var upgrade_gold_level: int = 0
+
+var is_quick_restart: bool = false
+
+func sync_from_talo():
+	if not Talo.current_player:
+		return
+	
+	# Talo stores props as strings, so we cast them back to integers!
+	# We use get_prop() with a fallback of "0" just in case they are a new player.
+	meta_crystals = int(Talo.current_player.get_prop("meta_crystals", "0"))
+	upgrade_hp_level = int(Talo.current_player.get_prop("upgrade_hp_level", "0"))
+	upgrade_speed_level = int(Talo.current_player.get_prop("upgrade_speed_level", "0"))
+	
+	print("Cloud Save Loaded! Crystals: ", meta_crystals)
+
+
 # Logic
 func add_gold(amount: int):
 	gold += amount
@@ -75,6 +105,7 @@ func add_gold(amount: int):
 
 func add_exp(amount: int):
 	current_exp += amount
+	total_exp_collected += amount
 	
 	# Check for level up loop (in case you get huge XP at once)
 	while current_exp >= exp_to_level_up:
@@ -90,6 +121,13 @@ func level_up():
 	level_start_time = now
 	
 	level += 1
+	
+	if level == 15:
+		Talo.events.track("content_exhausted", {
+			"time_taken_seconds": str(int(Time.get_unix_time_from_system() - session_start_time))
+		})
+		# Flush immediately so we don't lose it!
+		await Talo.events.flush()
 	
 	# Keep the all-time high score updated
 	if level > highest_level_reached:
@@ -108,3 +146,7 @@ func reset_gamedata():
 	gold_spent_in_game = 0
 	time_taken_per_level.clear()
 	level_start_time = Time.get_unix_time_from_system()
+	killer_name = "Unknown"
+	total_actions = 0
+	gold_drop_chance = 1.0
+	total_exp_collected = 0

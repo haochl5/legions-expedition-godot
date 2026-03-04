@@ -53,17 +53,17 @@ func perform_normal_attack():
 	$Sprite2D.vframes = 1
 	$Sprite2D.frame = facing_dir
 	
-	# 2. Windup
-	await get_tree().create_timer(0.3).timeout
+	# Windup (FASTER)
+	await get_tree().create_timer(0.3 * attack_speed_modifier).timeout
 	
-	# 3. Damage
+	# Damage (STRONGER)
 	if target and is_instance_valid(target):
 		var dist = global_position.distance_to(target.global_position)
 		if dist <= attack_range: 
-			target.take_damage(damage)
+			target.take_damage(int(damage * damage_multiplier))
 	
-	# 4. Cooldown
-	await get_tree().create_timer(0.5).timeout
+	# Cooldown (FASTER)
+	await get_tree().create_timer(0.5 * attack_speed_modifier).timeout
 	is_attacking = false
 
 func perform_whirlwind():
@@ -76,7 +76,7 @@ func perform_whirlwind():
 	for enemy in enemies:
 		# Hitting everything within 50px
 		if global_position.distance_to(enemy.global_position) <= 50:
-			enemy.take_damage(damage * 2) # Double Damage!
+			enemy.take_damage(damage * damage_multiplier) # Double Damage!
 			
 	await get_tree().create_timer(0.4).timeout
 	$Sprite2D.rotation_degrees = 0 # Reset rotation

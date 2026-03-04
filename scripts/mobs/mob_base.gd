@@ -119,7 +119,8 @@ func drop_gold():
 	# --- NEW: THE DICE ROLL ---
 	# randf() rolls a decimal between 0.0 and 1.0. 
 	# If it rolls higher than 0.3, we exit the function without dropping anything!
-	if randf() > coin_drop_chance:
+	var final_drop_chance = coin_drop_chance * GameData.gold_drop_chance
+	if randf() > final_drop_chance:
 		return
 	# --------------------------
 	

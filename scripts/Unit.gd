@@ -18,6 +18,10 @@ var facing_dir: int = 0  # 0:Down, 1:Up, 2:Left, 3:Right
 var is_attacking: bool = false
 var speed: int = 70
 
+var damage_multiplier: float = 1.0
+var attack_speed_modifier: float = 1.0 # Smaller number = faster attacks!
+
+
 var player: Node2D
 
 # Add state variable to remember what we are doing
@@ -43,9 +47,19 @@ func setup(new_data: ChampionData, level: int, new_player: Node2D):
 	star_level = level
 	player = new_player 
 	
-	var multiplier = 1.0 + ((star_level - 1) * 0.5)
-	current_hp = int(data.hp * multiplier)
-	print("champion spawned with hp = ", current_hp)
+	# Tier 1 = 1.0, Tier 2 = 1.5, Tier 3 = 2.0
+	var stat_multiplier = 1.0 + ((star_level - 1) * 0.5)
+	current_hp = data.hp * stat_multiplier
+	
+	# Apply 50% extra damage per tier
+	damage_multiplier = stat_multiplier 
+	
+	# Reduce timer cooldowns by 20% per tier (Tier 1 = 1.0, Tier 2 = 0.8, Tier 3 = 0.6)
+	attack_speed_modifier = 1.0 - ((star_level - 1) * 0.2)
+	
+	# Automatically set the correct scale right when they spawn (so they stay big if you load a save)
+	var visual_scale = 1.0 + ((star_level - 1) * 0.3)
+	scale = Vector2(visual_scale, visual_scale)
 
 func _ready():
 	if has_node("Hurtbox"):

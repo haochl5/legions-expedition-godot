@@ -183,7 +183,7 @@ func take_damage(damage: int, attacker_name: String = "Unknown"):
 	hp = max(hp, 0)
 	
 	# Remember who actually managed to hurt the Commander!
-	last_attacker = attacker_name 
+	GameData.killer_name = attacker_name
 	
 	if hp <= 0:
 		die()
@@ -202,7 +202,21 @@ func die():
 
 func start(pos):
 	position = pos
+	
+	# --- NEW: APPLY META UPGRADES ---
+	# Base HP is 10. Add 5 HP for every upgrade level they bought!
+	max_hp = 10 + (GameData.upgrade_hp_level * 5)
 	hp = max_hp
+	
+	# Base speed is 80. Add 5 speed per upgrade level!
+	base_speed = 80 + (GameData.upgrade_speed_level * 5)
+	current_speed = base_speed
+	
+	# Start with bonus gold in the shop!
+	if GameData.upgrade_gold_level > 0:
+		GameData.add_gold(GameData.upgrade_gold_level * 5)
+	# --------------------------------
+	
 	is_invincible = false
 	invincibility_timer = 0.0
 	$AnimatedSprite2D.visible = true
