@@ -26,14 +26,14 @@ func _ready():
 
 	player_group = detected_group
 	print("Final Resolved Group: ", player_group)
-	_sync_to_talo()
+	#_sync_to_talo()
 
-func _sync_to_talo():
-	var props = { "ab-group": player_group }
-	
-	if has_node("/root/Talo"):
-		var current_id = Talo.identity.get_id()
-		Talo.identity.identify(current_id, props)
-		print("Talo Sync Success: ", player_group, "player id =", current_id)
-	else:
-		push_warning("Talo Autoload not found!")
+#func _sync_to_talo():
+	#var props = { "ab-group": player_group }
+	#
+	#if has_node("/root/Talo"):
+		#var current_id = Talo.identity.get_id()
+		#Talo.identity.identify(current_id, props)
+		#print("Talo Sync Success: ", player_group, "player id =", current_id)
+	#else:
+		#push_warning("Talo Autoload not found!")
