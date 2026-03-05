@@ -67,6 +67,11 @@ func spawn_unit(data: ChampionData, level: int):
 	return new_unit
 
 func process_all_merges():
+	var living_units: Array[Unit] = [] 
+	for unit in squad_roster:
+		if is_instance_valid(unit) and not unit.is_queued_for_deletion():
+			living_units.append(unit)
+	squad_roster = living_units
 	# 1. Figure out which unique unit types we currently own
 	var unique_ids = []
 	for unit in squad_roster:
