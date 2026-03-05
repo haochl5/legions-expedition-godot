@@ -480,10 +480,10 @@ func setup_boundaries():
 # 3. Add this brand new function anywhere in main.gd!
 func increase_difficulty(current_level: int):
 	# A. Spawn enemies much faster (0.90 creates a steeper drop than 0.95)
-	$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * 0.90)
-	$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * 0.90)
-	$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * 0.90)
-	$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * 0.90)
+	$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * 0.95)
+	$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * 0.93)
+	$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * 0.95)
+	$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * 0.95)
 	
 	# B. Exponential Health Curve (Level 5 = ~2x HP, Level 15 = ~5x HP)
 	mob_spawner.health_multiplier = 1.0 + (current_level * 0.15) + (pow(current_level, 2) * 0.015)
