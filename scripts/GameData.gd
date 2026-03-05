@@ -54,7 +54,7 @@ var CHAMPS = {
 
 
 # Player State
-var gold: int = 3
+var gold: int = 5
 var current_exp: int = 0
 var level: int = 1
 var exp_to_level_up: int = 50
@@ -138,7 +138,7 @@ func level_up():
 	leveled_up.emit(level)
 
 func reset_gamedata():
-	gold = 3
+	gold = 5
 	current_exp = 0
 	level = 1
 	exp_to_level_up = 50
