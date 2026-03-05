@@ -77,6 +77,10 @@ func _init_player() -> void:
 	# Attempt identification
 	await Talo.players.identify("guest", final_id)
 
+	var group = GameManager.player_group
+	Talo.current_player.set_prop("ab-group", group)
+	print("Talo Sync Success: ", group, " player id =", final_id)
+
 	# --- NEW: START THE SESSION CLOCK ---
 	GameData.session_start_time = Time.get_unix_time_from_system()
 	
