@@ -21,9 +21,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GameManager="*uid://dvrav81wwnw1v"
+GameManager="*res://GameManager.gd"
 GameData="*res://scripts/GameData.gd"
-Talo="*uid://cf5txmco4tia4"
+Talo="*res://addons/talo/talo_manager.gd"
 
 [editor_plugins]
 
