@@ -78,7 +78,6 @@ func _init_player() -> void:
 	await Talo.players.identify("guest", final_id)
 	
 	var group = GameManager.player_group
-	var props = { "ab-group": group }
 	Talo.current_player.set_prop("ab-group", group)
 	#Talo.players.update_prop("ab-group", GameManager.player_group)
 	print("Talo Sync Success: ", group, " player id =", final_id)
