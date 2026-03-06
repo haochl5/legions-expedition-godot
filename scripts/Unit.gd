@@ -18,9 +18,15 @@ var facing_dir: int = 0  # 0:Down, 1:Up, 2:Left, 3:Right
 var is_attacking: bool = false
 var speed: int = 70
 
+var attack_timer: float = 0.0
+var base_attack_cooldown: float = 1.0
+
 var damage_multiplier: float = 1.0
 var attack_speed_modifier: float = 1.0 # Smaller number = faster attacks!
 
+@export var tether_distance: float = 250.0
+@export var is_melee: bool = false 
+@export var aggro_range: float = 200.0
 
 var player: Node2D
 
@@ -34,7 +40,7 @@ var state_is_following: bool = false
 var velocity_component: Vector2 = Vector2.ZERO
 const OVERLAP_THRESHOLD = 100
 
-@export var friction: float = 0.15  # <--- NEW: Controls movement wadsmoothness (0.1 = slippery, 0.5 = snappy)
+@export var friction: float = 0.15  # Controls movement smoothness
 
 # taking damage
 var is_invincible: bool = false
@@ -51,91 +57,127 @@ func setup(new_data: ChampionData, level: int, new_player: Node2D):
 	var stat_multiplier = 1.0 + ((star_level - 1) * 0.5)
 	current_hp = data.hp * stat_multiplier
 	
-	# Apply 50% extra damage per tier
+	# Apply extra damage per tier
 	damage_multiplier = stat_multiplier 
 	
-	# Reduce timer cooldowns by 20% per tier (Tier 1 = 1.0, Tier 2 = 0.8, Tier 3 = 0.6)
+	# Reduce timer cooldowns per tier
 	attack_speed_modifier = 1.0 - ((star_level - 1) * 0.2)
 	
-	# Automatically set the correct scale right when they spawn (so they stay big if you load a save)
+	# Automatically set the correct scale right when they spawn
 	var visual_scale = 1.0 + ((star_level - 1) * 0.3)
 	scale = Vector2(visual_scale, visual_scale)
 
 func _ready():
+	print("--- CHAMPION SPAWNED: ", self.name, " ---")
 	if has_node("Hurtbox"):
+		print("SUCCESS: Hurtbox node found! Connecting signals...")
 		$Hurtbox.body_entered.connect(_on_hurtbox_entered)
+		$Hurtbox.area_entered.connect(_on_hurtbox_entered)
+	else:
+		push_error("CRITICAL ERROR: Could not find a node named exactly 'Hurtbox' on " + self.name)
 	
+func _on_hurtbox_entered(node: Node2D):
+	# --- DIAGNOSTIC PRINT ---
+	print("--- HURTBOX TOUCHED BY: ", node.name, " ---")
+	print("Current Champion HP: ", current_hp)
+	print("Is Invincible: ", is_invincible)
 	
-func _on_hurtbox_entered(body: Node2D):
-	if is_invincible or current_hp <= 0:
+	# If we have 0 HP, heal to 100 just for testing!
+	if current_hp <= 0:
+		print("WARNING: HP was 0! Bypassing and setting to 100 to test damage!")
+		current_hp = 100
+		
+	if is_invincible:
+		print("WARNING: Champion is currently invincible! Ignoring hit.")
 		return
 		
-	if body.is_in_group("enemy") or body is MobBase:
-		var damage_to_take = body.get("damage")
-		if damage_to_take == null:
-			damage_to_take = 1
-		take_damage(damage_to_take)
+	# Find out if the node (or its parent) is the enemy
+	var enemy_node = node
+	if not (enemy_node.is_in_group("enemy") or enemy_node is MobBase):
+		enemy_node = node.get_parent()
 		
-func _physics_process(_delta):
-	if is_invincible:
-		invincibility_timer -= _delta
-		if invincibility_timer <= 0:
-			is_invincible = false
-			#$Sprite2D.visible = true
-		#else:
-			#$Sprite2D.visible = int(invincibility_timer * 10) % 2 == 0
+	if enemy_node and (enemy_node.is_in_group("enemy") or enemy_node is MobBase):
+		print("SUCCESS: Enemy detected. Applying damage...") 
+		var damage_to_take = enemy_node.get("damage")
+		if damage_to_take == null:
+			damage_to_take = 15 
 			
-	if is_attacking: return
-
-	# 1. AI: Find Target
-	if target == null or not is_instance_valid(target):
-		target = find_nearest_enemy()
-
+		take_damage(damage_to_take)
+	else:
+		print("FAILED: The object that touched the Hurtbox is NOT in the 'enemy' group!")
+		
+func _physics_process(delta):
 	var desired_velocity = Vector2.ZERO
 	var dist_to_player = 0.0
 	
 	if player and is_instance_valid(player):
 		dist_to_player = global_position.distance_to(player.global_position)
 	
-	# --- BEHAVIOR SELECTION ---
+	# --- EVERYONE NEEDS TO LOOK FOR ENEMIES! ---
+	if target == null or not is_instance_valid(target):
+		target = find_nearest_enemy()
 	
-	# CASE A: The Leash (Player walked too far away, drop everything and follow!)
-	if player and is_instance_valid(player) and dist_to_player > 300:
-		target = null # Forget the enemy, the boss is leaving!
+	# --- BEHAVIOR SELECTION (PRIORITY SYSTEM) ---
+	
+	# PRIORITY 1: The Leash (Sprint to catch up)
+	if player and is_instance_valid(player) and dist_to_player > tether_distance:
+		target = null 
 		var dir = global_position.direction_to(player.global_position)
-		desired_velocity = dir * speed
+		desired_velocity = dir * (speed * 1.5) 
 
-	# CASE B: Fighting (Only if target is valid and we haven't been leashed)
-	elif target and is_instance_valid(target):
+	# PRIORITY 2: Melee Movement
+	elif is_melee and target and is_instance_valid(target):
 		var dist_to_target = global_position.distance_to(target.global_position)
+		var current_attack_range = get("attack_range") if get("attack_range") != null else 40.0
 		
-		# If the enemy runs too far away, drop aggro so we don't chase them forever
-		if dist_to_target > 400:
-			target = null
-		else:
+		if dist_to_target <= current_attack_range:
+			desired_velocity = Vector2.ZERO
+			if attack_timer <= 0:
+				attack()
+				attack_timer = base_attack_cooldown * attack_speed_modifier
+		elif dist_to_target <= aggro_range:
 			var dir = global_position.direction_to(target.global_position)
 			desired_velocity = dir * speed
+		else:
+			target = null 
 
-	# CASE C: Following Commander (The "Polite" Mode)
+	# PRIORITY 3: Following Commander
 	elif player and is_instance_valid(player):
 		if dist_to_player > 50:
 			var dir = global_position.direction_to(player.global_position)
 			desired_velocity = dir * speed
-			
 		else:
 			desired_velocity = Vector2.ZERO
 			var push = get_comfort_push()
 			if push != Vector2.ZERO:
 				desired_velocity = push * comfort_force
 
+	# PRIORITY 4: Ranged Combat
+	if not is_melee and target and is_instance_valid(target):
+		var dist_to_target = global_position.distance_to(target.global_position)
+		if dist_to_target <= aggro_range:
+			if attack_timer <= 0:
+				attack() 
+				attack_timer = base_attack_cooldown * attack_speed_modifier
+		else:
+			target = null 
+
+	# --- TICK COOLDOWN TIMERS ---
+	if attack_timer > 0:
+		attack_timer -= delta
+		
+	# --- INVINCIBILITY & DAMAGE FLICKER ---
+	if is_invincible:
+		invincibility_timer -= delta
+		if invincibility_timer <= 0:
+			is_invincible = false
+
 	# --- PHYSICS APPLICATION ---
 	velocity = velocity.lerp(desired_velocity, friction)
-
 	if velocity.length() < 5.0:
 		velocity = Vector2.ZERO
 		
 	move_and_slide()
-	
 	update_facing_direction()
 	update_visuals()
 
@@ -150,17 +192,13 @@ func get_comfort_push() -> Vector2:
 	for area in neighbors:
 		var neighbor_unit = area.get_parent() 
 		
-		# --- THE FIX: SAFETY CHECKS ---
-		# 1. Skip if the parent isn't a 2D node (prevents the Window crash!)
-		# 2. Skip if the unit is accidentally detecting itself
+		# Skip if the parent isn't a 2D node or if detecting itself
 		if not neighbor_unit is Node2D or neighbor_unit == self:
 			continue
 			
 		var vector_to_me = global_position - neighbor_unit.global_position
 		var dist = vector_to_me.length()
 		
-		# Only push if we are strictly closer than the threshold
-		# (And ensure dist > 0 so we don't divide by zero if perfectly stacked)
 		if dist < OVERLAP_THRESHOLD and dist > 0:
 			total_push += vector_to_me.normalized()
 			
@@ -168,6 +206,7 @@ func get_comfort_push() -> Vector2:
 		return Vector2.ZERO
 		
 	return total_push.normalized()
+
 # --- HELPER FUNCTION ---
 func find_nearest_enemy():
 	var enemies = get_tree().get_nodes_in_group("enemy")
@@ -178,10 +217,11 @@ func find_nearest_enemy():
 	var shortest_dist = INF 
 	
 	for enemy in enemies:
+		if not is_instance_valid(enemy): continue
 		var dist = global_position.distance_to(enemy.global_position)
 		
-		# Only aggro if they are actually nearby (e.g., within 250 pixels)
-		if dist < shortest_dist and dist < 250:
+		# Use aggro_range instead of a hardcoded value
+		if dist < shortest_dist and dist < aggro_range:
 			shortest_dist = dist
 			nearest_enemy = enemy
 			
@@ -204,6 +244,9 @@ func update_facing_direction():
 
 # --- VISUALS LOGIC ---
 func update_visuals():
+	# Protect the attack animations from being overwritten!
+	if is_attacking: return
+	
 	if velocity.length() > 10:
 		if $Sprite2D.texture != tex_walk and tex_walk != null:
 			$Sprite2D.texture = tex_walk

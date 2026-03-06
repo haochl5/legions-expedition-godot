@@ -479,21 +479,25 @@ func setup_boundaries():
 
 # 3. Add this brand new function anywhere in main.gd!
 func increase_difficulty(current_level: int):
-	# A. Spawn enemies much faster (0.90 creates a steeper drop than 0.95)
-	$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * 0.95)
-	$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * 0.93)
-	$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * 0.95)
-	$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * 0.95)
+	# --- THE STAIRCASE METHOD ---
 	
-	# B. Exponential Health Curve (Level 5 = ~2x HP, Level 15 = ~5x HP)
-	mob_spawner.health_multiplier = 1.0 + (current_level * 0.15) + (pow(current_level, 2) * 0.015)
-	
-	# C. Faster Swarm Growth
-	if current_level % 2 == 0:
-		cluster_bonus += 1
+	# 1. ODD LEVELS: Faster Spawns & Tighter Economy
+	if current_level % 2 != 0:
+		$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * 0.95)
+		$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * 0.95)
+		$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * 0.95)
+		$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * 0.95)
 		
-	# D. --- NEW: Squeeze the Economy ---
-	# Drops 5% less often every level, capping at a strict 20% minimum chance
-	GameData.gold_drop_chance = max(0.20, 1.0 - (current_level * 0.05))
-	
+		# Squeeze economy slightly less aggressively
+		GameData.gold_drop_chance = max(0.25, 1.0 - (current_level * 0.03))
+
+	# 2. EVEN LEVELS: Tankier Mobs & Bigger Swarms
+	if current_level % 2 == 0:
+		# DIMINISHING RETURNS: Replaced exponential (pow) with square root (sqrt)
+		mob_spawner.health_multiplier = 1.0 + (sqrt(current_level) * 0.4)
+		
+		# Slower Swarm Growth: Only increase cluster size every 4 levels
+		if current_level % 4 == 0:
+			cluster_bonus += 1
+			
 	print("[Difficulty Up] HP: ", snapped(mob_spawner.health_multiplier, 0.1), " | Gold Drop Chance: ", GameData.gold_drop_chance)

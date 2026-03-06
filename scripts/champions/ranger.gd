@@ -1,41 +1,31 @@
 extends Unit
 
-# ASSETS (SamuraiBlue)
 const R_IDLE = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/SeparateAnim/Idle.png")
 const R_WALK = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/SeparateAnim/Walk.png")
 const R_ATTACK = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/SeparateAnim/Attack.png")
 const R_SPECIAL = preload("res://assets/Ninja Adventure - Asset Pack/Actor/Characters/SamuraiBlue/SeparateAnim/Special1.png")
-
 const ARROW_SCENE = preload("res://scenes/Projectiles/arrow.tscn")
-
-var attack_range = 150 # Ranged distance
 
 var attack_counter: int = 0
 
 func _ready():
 	super()
-	tex_idle = R_IDLE
-	tex_walk = R_WALK
-	tex_attack = R_ATTACK
-	tex_special = R_SPECIAL
+	tex_idle = R_IDLE; tex_walk = R_WALK; tex_attack = R_ATTACK; tex_special = R_SPECIAL
 	$Sprite2D.texture = tex_idle
-
-func _physics_process(delta):
-	if is_attacking: return
-
-	# RANGED LOGIC:
-	# Stop and shoot if within range
-	if target and is_instance_valid(target) and global_position.distance_to(target.global_position) <= attack_range:
-		attack()
-	else:
-		super(delta) # Chase the enemy if too far
+	
+	is_melee = false
+	aggro_range = 300.0
+	base_attack_cooldown = 0.7
 
 func attack():
 	is_attacking = true
-	# ... (Visuals code same as before) ...
+	$AnimationPlayer.stop()
+	$Sprite2D.texture = tex_attack
+	$Sprite2D.hframes = 4
+	$Sprite2D.vframes = 1 
+	$Sprite2D.frame = facing_dir
 	
-	# Windup
-	await get_tree().create_timer(0.3).timeout
+	await get_tree().create_timer(0.3 * attack_speed_modifier).timeout
 	
 	attack_counter += 1
 	if attack_counter >= 3:
@@ -44,8 +34,7 @@ func attack():
 	else:
 		fire_normal_arrow()
 		
-	# Cooldown
-	await get_tree().create_timer(0.4).timeout
+	await get_tree().create_timer(0.4 * attack_speed_modifier).timeout
 	is_attacking = false
 
 func fire_normal_arrow():
@@ -53,29 +42,19 @@ func fire_normal_arrow():
 		var dir = (target.global_position - global_position).normalized()
 		spawn_arrow(dir)
 	else:
-		# Fallback if target died during windup
 		spawn_arrow(Vector2.RIGHT)
 
 func fire_special_shotgun():
 	if not target or not is_instance_valid(target): return
-	
 	var center_dir = (target.global_position - global_position).normalized()
-	
-	# Fire 3 arrows: Center, -15 degrees, +15 degrees
 	spawn_arrow(center_dir) 
 	spawn_arrow(center_dir.rotated(deg_to_rad(-15)))
 	spawn_arrow(center_dir.rotated(deg_to_rad(15)))
 
 func spawn_arrow(dir: Vector2):
 	var arrow = ARROW_SCENE.instantiate()
-	
-	# --- THE FIX: Pass the multiplier to the arrow! ---
 	arrow.set("damage_multiplier", damage_multiplier)
-	
-	# BONUS: Make Level 2 and 3 arrows physically larger and more intimidating!
 	arrow.scale = Vector2(damage_multiplier, damage_multiplier)
-	# --------------------------------------------------
-	
 	get_parent().add_child(arrow)
 	arrow.global_position = global_position
 	arrow.direction = dir
