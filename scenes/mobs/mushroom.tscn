@@ -42,6 +42,7 @@ animations = [{
 }]
 
 [node name="Mob" unique_id=1251889614 instance=ExtResource("1_ynhbu")]
+collision_mask = 27
 script = ExtResource("2_w5ttn")
 chase_speed = 70.0
 holding_speed = 35.0
