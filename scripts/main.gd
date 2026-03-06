@@ -485,10 +485,10 @@ func increase_difficulty(current_level: int):
 	
 	# 1. ODD LEVELS: Faster Spawns & Tighter Economy
 	if current_level % 2 != 0:
-		$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * 0.95)
-		$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * 0.95)
-		$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * 0.95)
-		$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * 0.95)
+		$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * 0.9)
+		$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * 0.9)
+		$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * 0.9)
+		$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * 0.9)
 		
 		# Squeeze economy slightly less aggressively
 		GameData.gold_drop_chance = max(0.25, 1.0 - (current_level * 0.03))
