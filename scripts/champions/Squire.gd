@@ -46,7 +46,12 @@ func perform_normal_attack():
 	is_attacking = false
 
 func perform_whirlwind():
+	# --- THE FIX ---
+	$AnimationPlayer.stop() # 1. Stop the walking animation
 	$Sprite2D.texture = tex_special
+	$Sprite2D.frame = 0     # 2. Reset the frame to 0 BEFORE changing hframes
+	# ---------------
+	
 	$Sprite2D.hframes = 1 
 	$Sprite2D.vframes = 1 
 	
@@ -57,6 +62,7 @@ func perform_whirlwind():
 	for enemy in enemies:
 		if is_instance_valid(enemy) and global_position.distance_to(enemy.global_position) <= 50:
 			enemy.take_damage(damage * damage_multiplier) 
+			
 	await get_tree().create_timer(0.4).timeout
 	$Sprite2D.rotation_degrees = 0 
 	is_attacking = false
