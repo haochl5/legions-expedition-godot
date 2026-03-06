@@ -479,13 +479,18 @@ func setup_boundaries():
 # 3. Add this brand new function anywhere in main.gd!
 func increase_difficulty(current_level: int):
 	# --- THE STAIRCASE METHOD ---
+	var current_hp = $Commander.hp
+	# Health Threshold: 8
+	var too_difficult = current_hp < 8
 	
 	# 1. ODD LEVELS: Faster Spawns & Tighter Economy
 	if current_level % 2 != 0:
-		$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * 0.9)
-		$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * 0.9)
-		$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * 0.9)
-		$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * 0.9)
+		var reduce_wait_time_factor = 0.98 if too_difficult else 0.9
+		
+		$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * reduce_wait_time_factor)
+		$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * reduce_wait_time_factor)
+		$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * reduce_wait_time_factor)
+		$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * reduce_wait_time_factor)
 		
 		# Squeeze economy slightly less aggressively
 		GameData.gold_drop_chance = max(0.25, 1.0 - (current_level * 0.03))
@@ -497,6 +502,10 @@ func increase_difficulty(current_level: int):
 		
 		# Slower Swarm Growth: Only increase cluster size every 4 levels
 		if current_level % 4 == 0:
-			cluster_bonus += 1
+			if too_difficult:
+				cluster_bonus = max(0, cluster_bonus - 2)
+				print("Mercy Triggered: Reducing Cluster bonus to ", cluster_bonus)
+			else:
+				cluster_bonus += 1
 			
 	print("[Difficulty Up] HP: ", snapped(mob_spawner.health_multiplier, 0.1), " | Gold Drop Chance: ", GameData.gold_drop_chance)
