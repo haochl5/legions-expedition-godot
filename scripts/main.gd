@@ -498,8 +498,10 @@ func increase_difficulty(current_level: int):
 
 	# 2. EVEN LEVELS: Tankier Mobs & Bigger Swarms
 	if current_level % 2 == 0:
+		var health_multiply_factor = 0.15 if too_difficult else 0.4
+		
 		# DIMINISHING RETURNS: Replaced exponential (pow) with square root (sqrt)
-		mob_spawner.health_multiplier = 1.0 + (sqrt(current_level) * 0.4)
+		mob_spawner.health_multiplier = 1.0 + (sqrt(current_level) * health_multiply_factor)
 		
 		# Slower Swarm Growth: Only increase cluster size every 4 levels
 		if current_level % 4 == 0:
