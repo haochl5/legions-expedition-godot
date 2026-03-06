@@ -45,7 +45,7 @@ const OVERLAP_THRESHOLD = 100
 # taking damage
 var is_invincible: bool = false
 var invincibility_timer: float = 0.0
-const INVINCIBILITY_TIME = 0.6
+const INVINCIBILITY_TIME = 0.8
 
 # --- UPDATED SETUP ---
 func setup(new_data: ChampionData, level: int, new_player: Node2D):
@@ -68,27 +68,19 @@ func setup(new_data: ChampionData, level: int, new_player: Node2D):
 	scale = Vector2(visual_scale, visual_scale)
 
 func _ready():
-	print("--- CHAMPION SPAWNED: ", self.name, " ---")
 	if has_node("Hurtbox"):
-		print("SUCCESS: Hurtbox node found! Connecting signals...")
 		$Hurtbox.body_entered.connect(_on_hurtbox_entered)
 		$Hurtbox.area_entered.connect(_on_hurtbox_entered)
 	else:
 		push_error("CRITICAL ERROR: Could not find a node named exactly 'Hurtbox' on " + self.name)
 	
 func _on_hurtbox_entered(node: Node2D):
-	# --- DIAGNOSTIC PRINT ---
-	print("--- HURTBOX TOUCHED BY: ", node.name, " ---")
-	print("Current Champion HP: ", current_hp)
-	print("Is Invincible: ", is_invincible)
 	
 	# If we have 0 HP, heal to 100 just for testing!
 	if current_hp <= 0:
-		print("WARNING: HP was 0! Bypassing and setting to 100 to test damage!")
 		current_hp = 100
 		
 	if is_invincible:
-		print("WARNING: Champion is currently invincible! Ignoring hit.")
 		return
 		
 	# Find out if the node (or its parent) is the enemy
@@ -97,15 +89,12 @@ func _on_hurtbox_entered(node: Node2D):
 		enemy_node = node.get_parent()
 		
 	if enemy_node and (enemy_node.is_in_group("enemy") or enemy_node is MobBase):
-		print("SUCCESS: Enemy detected. Applying damage...") 
 		var damage_to_take = enemy_node.get("damage")
 		if damage_to_take == null:
 			damage_to_take = 15 
 			
 		take_damage(damage_to_take)
-	else:
-		print("FAILED: The object that touched the Hurtbox is NOT in the 'enemy' group!")
-		
+
 func _physics_process(delta):
 	var desired_velocity = Vector2.ZERO
 	var dist_to_player = 0.0
