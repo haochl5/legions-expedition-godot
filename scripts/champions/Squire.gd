@@ -47,7 +47,12 @@ func perform_normal_attack():
 	is_attacking = false
 
 func perform_whirlwind():
+	# --- THE FIX ---
+	$AnimationPlayer.stop() # 1. Stop the walking animation
 	$Sprite2D.texture = tex_special
+	$Sprite2D.frame = 0     # 2. Reset the frame to 0 BEFORE changing hframes
+	# ---------------
+	
 	$Sprite2D.hframes = 1 
 	$Sprite2D.vframes = 1 
 	
