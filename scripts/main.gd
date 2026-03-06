@@ -454,6 +454,8 @@ func setup_boundaries():
 	var boundary_body = StaticBody2D.new()
 	boundary_body.name = "MapBoundaries"
 	
+	boundary_body.collision_layer = 1 <<  (7 - 1)
+	
 	# We use collision layer 1 so the Commander and Mobs collide with it
 	add_child(boundary_body)
 	

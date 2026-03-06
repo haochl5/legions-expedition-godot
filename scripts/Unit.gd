@@ -45,7 +45,7 @@ const OVERLAP_THRESHOLD = 100
 # taking damage
 var is_invincible: bool = false
 var invincibility_timer: float = 0.0
-const INVINCIBILITY_TIME = 0.2
+const INVINCIBILITY_TIME = 0.6
 
 # --- UPDATED SETUP ---
 func setup(new_data: ChampionData, level: int, new_player: Node2D):
