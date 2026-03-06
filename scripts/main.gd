@@ -480,12 +480,13 @@ func setup_boundaries():
 func increase_difficulty(current_level: int):
 	# --- THE STAIRCASE METHOD ---
 	var current_hp = $Commander.hp
-	# Health Threshold: 8
-	var too_difficult = current_hp < 8
+	# Health Threshold: 7
+	var too_difficult = current_hp < 7
 	
 	# 1. ODD LEVELS: Faster Spawns & Tighter Economy
 	if current_level % 2 != 0:
 		var reduce_wait_time_factor = 0.98 if too_difficult else 0.9
+		var economy_factor = 0.01 if too_difficult else 0.03
 		
 		$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * reduce_wait_time_factor)
 		$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * reduce_wait_time_factor)
@@ -493,7 +494,7 @@ func increase_difficulty(current_level: int):
 		$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * reduce_wait_time_factor)
 		
 		# Squeeze economy slightly less aggressively
-		GameData.gold_drop_chance = max(0.25, 1.0 - (current_level * 0.03))
+		GameData.gold_drop_chance = max(0.25, 1.0 - (current_level * economy_factor))
 
 	# 2. EVEN LEVELS: Tankier Mobs & Bigger Swarms
 	if current_level % 2 == 0:
@@ -504,7 +505,6 @@ func increase_difficulty(current_level: int):
 		if current_level % 4 == 0:
 			if too_difficult:
 				cluster_bonus = max(0, cluster_bonus - 2)
-				print("Mercy Triggered: Reducing Cluster bonus to ", cluster_bonus)
 			else:
 				cluster_bonus += 1
 			
