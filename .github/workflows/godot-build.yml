@@ -2,9 +2,9 @@ name: "Godot Build Pipeline"
 
 on:
   push:
-    branches: [ "main", "dev", "v1-group-b" ]
+    branches: [ "main"]
   pull_request:
-    branches: [ "main", "dev", "v1-group-b" ]
+    branches: [ "main"]
 
 env:
   GODOT_VERSION: 4.6.1
@@ -80,6 +80,7 @@ jobs:
         run: |
           mkdir -p addons/talo/
           cat <<EOF > addons/talo/settings.cfg
+          [config]
           access_key="${{ secrets.TALO_API_KEY }}"
           api_url="https://api.trytalo.com"
           socket_url="wss://api.trytalo.com"
@@ -92,12 +93,6 @@ jobs:
           mkdir -p build/web
           godot --headless --export-release "Web" build/web/index.html
 
-      # - name: Inject coi-serviceworker
-      #   run: |
-      #     wget -q https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker/coi-serviceworker.js \
-      #          -O build/web/coi-serviceworker.js
-      #     sed -i 's|<head>|<head>\n  <script src="coi-serviceworker.js"></script>|' build/web/index.html
-
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -108,38 +103,23 @@ jobs:
     name: Deploy to GitHub Pages
     needs: export-web
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/v1-group-b')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
       contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-
       - name: Download Web Artifact
         uses: actions/download-artifact@v4
         with:
           name: Web Build
           path: build/web
 
-      - name: Set Destination Folder
-        id: set_folder
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "folder=version-a" >> $GITHUB_OUTPUT
-          else
-            echo "folder=version-b" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Deploy to Subfolder
+      - name: Deploy to gh-pages root
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build/web
-          target-folder: ${{ steps.set_folder.outputs.folder }}
           branch: gh-pages
-          clean: false
-  
+          folder: build/web
+          clean: true
+
   deploy-itch:
     name: Deploy to itch.io
     needs: [export-windows, export-web]
