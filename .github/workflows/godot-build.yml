@@ -2,9 +2,9 @@ name: "Godot Build Pipeline"
 
 on:
   push:
-    branches: [ "main"]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main"]
+    branches: [ "main", "dev" ]
 
 env:
   GODOT_VERSION: 4.6.1
@@ -80,7 +80,6 @@ jobs:
         run: |
           mkdir -p addons/talo/
           cat <<EOF > addons/talo/settings.cfg
-          [config]
           access_key="${{ secrets.TALO_API_KEY }}"
           api_url="https://api.trytalo.com"
           socket_url="wss://api.trytalo.com"
@@ -88,21 +87,16 @@ jobs:
           handle_tree_quit=true
           EOF
 
-      - name: Verify Talo Config
-        run: |
-          test -f addons/talo/settings.cfg || (echo "settings.cfg not found" && exit 1)
-          grep -q '^\[config\]' addons/talo/settings.cfg || (echo "[config] section missing" && exit 1)
-          grep -q '^access_key=".*"$' addons/talo/settings.cfg || (echo "access_key missing" && exit 1)
-          if grep -q '^access_key=""$' addons/talo/settings.cfg; then
-            echo "TALO_API_KEY is empty"
-            exit 1
-          fi
-          sed 's/access_key=".*"/access_key="***masked***"/' addons/talo/settings.cfg
-
       - name: Web Build
         run: |
           mkdir -p build/web
           godot --headless --export-release "Web" build/web/index.html
+
+      # - name: Inject coi-serviceworker
+      #   run: |
+      #     wget -q https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker/coi-serviceworker.js \
+      #          -O build/web/coi-serviceworker.js
+      #     sed -i 's|<head>|<head>\n  <script src="coi-serviceworker.js"></script>|' build/web/index.html
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -118,24 +112,19 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-
       - name: Download Web Artifact
         uses: actions/download-artifact@v4
         with:
           name: Web Build
           path: build/web
 
-      - name: Deploy to gh-pages root
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          branch: gh-pages
-          folder: build/web
-          clean: true
-
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/web
+          publish_branch: gh-pages
+  
   deploy-itch:
     name: Deploy to itch.io
     needs: [export-windows, export-web]
