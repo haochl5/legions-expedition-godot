@@ -88,6 +88,17 @@ jobs:
           handle_tree_quit=true
           EOF
 
+      - name: Verify Talo Config
+        run: |
+          test -f addons/talo/settings.cfg || (echo "settings.cfg not found" && exit 1)
+          grep -q '^\[config\]' addons/talo/settings.cfg || (echo "[config] section missing" && exit 1)
+          grep -q '^access_key=".*"$' addons/talo/settings.cfg || (echo "access_key missing" && exit 1)
+          if grep -q '^access_key=""$' addons/talo/settings.cfg; then
+            echo "TALO_API_KEY is empty"
+            exit 1
+          fi
+          sed 's/access_key=".*"/access_key="***masked***"/' addons/talo/settings.cfg
+
       - name: Web Build
         run: |
           mkdir -p build/web
