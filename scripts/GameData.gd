@@ -126,15 +126,16 @@ func level_up():
 		Talo.events.track("content_exhausted", {
 			"time_taken_seconds": str(int(Time.get_unix_time_from_system() - session_start_time))
 		})
-		# Flush immediately so we don't lose it!
 		await Talo.events.flush()
 	
-	# Keep the all-time high score updated
 	if level > highest_level_reached:
 		highest_level_reached = level
 
-	# Increase difficulty
-	exp_to_level_up = int(exp_to_level_up * 1.2) + 20
+	# --- THE NEW MATH ---
+	# Fast L1, steady mid-game, flat late-game
+	exp_to_level_up = int(exp_to_level_up * 1.05) + 35
+	# --------------------
+	
 	leveled_up.emit(level)
 
 func reset_gamedata():
