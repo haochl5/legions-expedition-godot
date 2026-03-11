@@ -26,7 +26,7 @@ var num_blockers = 150
 # Talo
 var _game_start_time: float = 0.0
 var heartbeat_timer: float = 0.0
-const HEARTBEAT_INTERVAL: float = 60.0 # Save to Talo every 60 seconds
+const HEARTBEAT_INTERVAL: float = 15.0 # Save to Talo every 60 seconds
 
 
 var cluster_bonus: int = 0
