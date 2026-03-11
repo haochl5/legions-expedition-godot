@@ -23,6 +23,9 @@ var num_blockers = 150
 @onready var game_over_screen = $CanvasLayer/GameOverScreen
 @onready var ingame_UI = $CanvasLayer/UI
 
+var levels_at_high_hp: int = 0
+var current_director_intensity: float = 1.0 # 1.0 is Normal, <1.0 is Easy, >1.0 is Hard
+
 # Talo
 var _game_start_time: float = 0.0
 var heartbeat_timer: float = 0.0
@@ -30,6 +33,7 @@ const HEARTBEAT_INTERVAL: float = 15.0 # Save to Talo every 60 seconds
 
 
 var cluster_bonus: int = 0
+var previous_level_hp: int = -1
 
 
 # Called when the node enters the scene tree for the first time.
@@ -475,36 +479,134 @@ func setup_boundaries():
 
 # 3. Add this brand new function anywhere in main.gd!
 func increase_difficulty(current_level: int):
-	# --- THE STAIRCASE METHOD ---
 	var current_hp = $Commander.hp
-	# Health Threshold: 7
-	var too_difficult = current_hp < 7
+	var max_hp = $Commander.max_hp
+	var current_hp_percent = float(current_hp) / float(max_hp)
 	
-	# 1. ODD LEVELS: Faster Spawns & Tighter Economy
-	if current_level % 2 != 0:
-		var reduce_wait_time_factor = 0.98 if too_difficult else 0.9
-		var economy_factor = 0.01 if too_difficult else 0.03
+	# Initialize previous_hp on the very first level up
+	if previous_level_hp == -1:
+		previous_level_hp = current_hp
 		
-		$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * reduce_wait_time_factor)
-		$GhostTimer.wait_time = max(0.3, $GhostTimer.wait_time * reduce_wait_time_factor)
-		$BearTimer.wait_time = max(0.8, $BearTimer.wait_time * reduce_wait_time_factor)
-		$MushroomTimer.wait_time = max(0.5, $MushroomTimer.wait_time * reduce_wait_time_factor)
-		
-		# Squeeze economy slightly less aggressively
-		GameData.gold_drop_chance = max(0.25, 1.0 - (current_level * economy_factor))
+	# Calculate the Momentum (Did they lose or gain health this level?)
+	var hp_delta_percent = float(current_hp - previous_level_hp) / float(max_hp)
+	
+	# --- 1. EVALUATE PLAYER PERFORMANCE (MOMENTUM & TIERS) ---
+	
+	# Calculate APM for AFK detection
+	var run_duration = max(0.1, float(Time.get_unix_time_from_system() - _game_start_time) / 60.0)
+	var current_apm = int(GameData.total_actions / run_duration)
 
-	# 2. EVEN LEVELS: Tankier Mobs & Bigger Swarms
-	if current_level % 2 == 0:
-		var health_multiply_factor = 0.15 if too_difficult else 0.4
+	# TIER 1: THE AFK PUNISHER
+	if current_hp_percent >= 0.75 and current_apm < 15:
+		current_director_intensity += 0.8
+		cluster_bonus += 2
 		
-		# DIMINISHING RETURNS: Replaced exponential (pow) with square root (sqrt)
-		mob_spawner.health_multiplier = 1.0 + (sqrt(current_level) * health_multiply_factor)
+		# Get the base spawn location
+		var base_spawn_pos = get_mob_spawn_position()
 		
-		# Slower Swarm Growth: Only increase cluster size every 4 levels
-		if current_level % 4 == 0:
-			if too_difficult:
-				cluster_bonus = max(0, cluster_bonus - 2)
-			else:
-				cluster_bonus += 1
+		# 1. Spawn the Samurai Boss with a slight offset
+		var samurai_offset = Vector2(randf_range(-150, 150), randf_range(-150, 150))
+		var samurai_boss = mob_spawner.spawn_mob("boss", base_spawn_pos + samurai_offset, $Commander)
+		if samurai_boss:
+			call_deferred("add_child", samurai_boss)
 			
-	print("[Difficulty Up] HP: ", snapped(mob_spawner.health_multiplier, 0.1), " | Gold Drop Chance: ", GameData.gold_drop_chance)
+		# 2. Spawn the Bamboo Boss with a different offset
+		var bamboo_offset = Vector2(randf_range(-150, 150), randf_range(-150, 150))
+		var bamboo_boss = mob_spawner.spawn_mob("boss_bamboo", base_spawn_pos + bamboo_offset, $Commander)
+		if bamboo_boss:
+			call_deferred("add_child", bamboo_boss)
+
+		print("[Director] ENRAGED! Player is AFK. Spawning Samurai AND Bamboo Bosses!")
+
+	# TIER 2: THE "GLASS CANNON" (Low HP, taking zero damage, hoarding gold)
+	elif current_hp_percent < 0.35 and hp_delta_percent >= 0.0 and GameData.gold >= 15:
+		current_director_intensity += 0.1 
+		print("[Director] GLASS CANNON DETECTED! Stable at low HP. Raising intensity to ", current_director_intensity)
+
+	# TIER 3: ACTUAL CRITICAL (Low HP AND actively took damage this level)
+	elif current_hp_percent < 0.25 and hp_delta_percent < 0.0:
+		current_director_intensity = max(0.4, current_director_intensity - 0.4) 
+		
+		# --- ACTIVE RELIEF (Panic Mode) ---
+		# 1. Instantly shrink swarm sizes
+		cluster_bonus = max(0, cluster_bonus - 2) 
+		
+		# 2. Push spawn timers backwards (Slows down spawning by 50%)
+		$MobTimer.wait_time *= 1.5 
+		$GhostTimer.wait_time *= 1.5
+		$BearTimer.wait_time *= 1.5
+		$MushroomTimer.wait_time *= 1.5
+		
+		# 3. Instantly nerf incoming mob health by 20%
+		mob_spawner.health_multiplier = max(1.0, mob_spawner.health_multiplier * 0.8) 
+		# ----------------------------------
+		
+		print("[Director] CRITICAL! Active relief triggered! Timers slowed 50%, health nerfed.")
+
+	# TIER 4: MASSIVE BLEED (Lost a huge chunk of HP this level)
+	elif hp_delta_percent <= -0.30:
+		current_director_intensity = max(0.6, current_director_intensity - 0.25)
+		
+		# --- ACTIVE RELIEF (Recovery Mode) ---
+		# 1. Strip away 1 layer of swarm scaling
+		cluster_bonus = max(0, cluster_bonus - 1)
+		
+		# 2. Push spawn timers backwards (Slows down spawning by 25%)
+		$MobTimer.wait_time *= 1.25
+		$GhostTimer.wait_time *= 1.25
+		$BearTimer.wait_time *= 1.25
+		$MushroomTimer.wait_time *= 1.25
+		
+		# 3. Instantly nerf incoming mob health by 10%
+		mob_spawner.health_multiplier = max(1.0, mob_spawner.health_multiplier * 0.9)
+		# ----------------------------------
+
+		print("[Director] BLEEDING! Active relief triggered! Timers slowed 25%.")
+
+	# TIER 5: DOMINATING (High HP, took zero damage)
+	elif current_hp_percent > 0.85 and hp_delta_percent >= 0.0:
+		current_director_intensity += 0.25 
+		print("[Director] DOMINATING! Raising intensity to ", current_director_intensity)
+
+	# TIER 6: UNTOUCHABLE (Catch-all for ANY flawless wave not caught by T2 or T5)
+	elif hp_delta_percent >= 0.0:
+		current_director_intensity += 0.15
+		print("[Director] UNTOUCHABLE! Flawless wave. Raising intensity to ", current_director_intensity)
+
+	# TIER 7: SLOW BLEED / STRUGGLING (HP is below 50% and they took chip damage)
+	elif current_hp_percent < 0.50 and hp_delta_percent < 0.0:
+		current_director_intensity = max(0.75, current_director_intensity - 0.1)
+		print("[Director] STRUGGLING! Slow bleed detected. Easing intensity to ", current_director_intensity)
+
+	# TIER 8: COASTING (Mid-to-High HP, taking normal chip damage)
+	else:
+		current_director_intensity = lerp(current_director_intensity, 1.0, 0.25)
+
+	# Update the tracker for the NEXT level
+	previous_level_hp = current_hp
+
+	# --- 2. EVALUATE ECONOMY ---
+	if current_level >= 5 and GameData.gold < 5:
+		GameData.gold_drop_chance = min(1.0, GameData.gold_drop_chance + 0.4)
+	elif GameData.gold >= 20:
+		GameData.gold_drop_chance = max(0.25, 1.0 - (current_level * 0.03))
+
+	# --- 3. APPLY THE SCALING ---
+	if current_level % 2 != 0:
+		var spawn_reduction = 1.0 - (0.05 * current_director_intensity) 
+		$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * spawn_reduction)
+		$GhostTimer.wait_time = max(0.1, $GhostTimer.wait_time * spawn_reduction)
+		$BearTimer.wait_time = max(0.7, $BearTimer.wait_time * spawn_reduction)
+		$MushroomTimer.wait_time = max(0.8, $MushroomTimer.wait_time * spawn_reduction)
+
+	if current_level % 2 == 0:
+		var health_growth = 0.4 * current_director_intensity
+		mob_spawner.health_multiplier = 1.0 + (sqrt(current_level) * health_growth)
+		
+		if current_level % 4 == 0:
+			if current_director_intensity >= 1.15: # Raised threshold so swarms only grow when actually dominating
+				cluster_bonus += 1
+			elif current_director_intensity <= 0.6:
+				cluster_bonus = max(0, cluster_bonus - 1) 
+			
+	print("[Level ", current_level, " Setup] Intensity: ", current_director_intensity, " | HP Multiplier: ", snapped(mob_spawner.health_multiplier, 0.1))
