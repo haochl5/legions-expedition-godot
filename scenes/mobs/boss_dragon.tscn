@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cixf2mdnvh4iq"]
+
+[ext_resource type="PackedScene" uid="uid://d1b8ao1pv0f32" path="res://scenes/mobs/mob_base.tscn" id="1_07ws3"]
+[ext_resource type="Script" uid="uid://do6be8npw65ap" path="res://scripts/mobs/boss_dragon.gd" id="2_8nx6d"]
+
+[node name="Mob" unique_id=405302456 instance=ExtResource("1_07ws3")]
+script = ExtResource("2_8nx6d")
+attack_interval_sec = 5.0
+cooldown_after_attack = 0.5
+move_speed = 30.0
+max_health = 500
+wave_segments = 7
+start_distance = 40.0
+segment_spacing = 55.0
+step_delay = 0.06
+spike_damage = 1
+bamboo_spike_scene = null

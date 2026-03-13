@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://d1b8ao1pv0f32"]
 
-[ext_resource type="Script" uid="uid://d15peq0biagy4" path="res://scripts/mobs/bear.gd" id="1_ilhiv"]
+[ext_resource type="Script" uid="uid://be2vb0w6qhbdv" path="res://scripts/mobs/mob_base.gd" id="1_qtdc4"]
 [ext_resource type="Texture2D" uid="uid://dxaxpuhee1qyp" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Spirit/SpriteSheet.png" id="2_bsing"]
-[ext_resource type="PackedScene" uid="uid://ue4gg8h6fxcs" path="res://scenes/Gold.tscn" id="2_lfvhh"]
 [ext_resource type="Texture2D" uid="uid://cvwl8jy47yf7w" path="res://assets/Ninja Adventure - Asset Pack/Actor/Monsters/Bear/SpriteSheet.png" id="2_qtdc4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lfvhh"]
@@ -179,8 +178,7 @@ radius = 7.05
 [node name="Mob" type="CharacterBody2D" unique_id=405302456 groups=["enemy"]]
 collision_layer = 8
 collision_mask = 27
-script = ExtResource("1_ilhiv")
-coin_scene = ExtResource("2_lfvhh")
+script = ExtResource("1_qtdc4")
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=685656536]
