@@ -56,6 +56,16 @@ enum State {
 # =========================
 
 @export var roar_scene: PackedScene
+@export var roar_interval: float = 17.0
+var _roar_timer: float = 0.0
+
+
+# =========================
+# water attack scene
+# =========================
+@export var water_attack_scene: PackedScene
+@export var water_attack_interval: float = 5.0
+var _water_attack_timer: float = 0.0
 
 # =========================
 # Runtime
@@ -161,6 +171,17 @@ func _physics_process(delta: float) -> void:
 		return
 
 	_time += delta
+	
+	_water_attack_timer += delta
+	if _water_attack_timer >= water_attack_interval:
+		_water_attack_timer = 0.0
+		print("water attack called")
+		cast_water_attack()
+		
+	_roar_timer += delta
+	if _roar_timer >= roar_interval:
+		_roar_timer = 0.0
+		play_roar()
 
 	_update_state()
 	_update_movement()
@@ -383,6 +404,16 @@ func play_roar() -> void:
 	attack_roar_player.play()
 
 	await roar.roar_finished
+	
+func cast_water_attack() -> void:
+	if water_attack_scene == null:
+		print("water_attack_scene == null")
+		return
+
+	var attack = water_attack_scene.instantiate()
+	get_parent().add_child(attack)
+	attack.target = target
+	print("target set")
 
 # =========================
 # Utility

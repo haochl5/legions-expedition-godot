@@ -6,23 +6,15 @@ signal roar_finished
 @export var max_radius: float = 5000.0
 @export var ring_thickness: float = 80.0
 
-# 这个值很重要：
-# 它表示你那张“原始声波贴图”在 scale = (1,1) 时，
-# 从中心到圆环边缘大概是多少像素。
-# 你需要按你的素材微调它。
 @export var base_visual_radius: float = 64.0
 
-# 玩家受到的伤害
 @export var player_damage: int = 0
 
-# 对 mob 用的大伤害值
 @export var mob_damage: int = 999999
 
-# 分组名可改
 @export var mob_group_name: String = "mobs"
 @export var player_group_name: String = "commander"
 
-# 是否在扩散时同步放大 CircleShape2D（主要用于调试观察）
 @export var update_collision_shape_radius: bool = true
 
 var current_radius: float = 0.0
@@ -40,7 +32,6 @@ func _ready() -> void:
 	if animated_sprite:
 		animated_sprite.play()
 
-	# 初始把碰撞圆也设小一点（虽然我们不用它做真正判定）
 	_update_collision_debug_radius()
 
 	_started = true
@@ -81,12 +72,10 @@ func _update_collision_debug_radius() -> void:
 
 
 func _check_targets_in_ring() -> void:
-	# 1) 清 mob
 	var mobs := get_tree().get_nodes_in_group(mob_group_name)
 	for mob in mobs:
 		_try_hit_mob(mob)
 
-	# 2) 打 player / commander
 	var players := get_tree().get_nodes_in_group(player_group_name)
 	for player in players:
 		_try_hit_player(player)
@@ -99,7 +88,6 @@ func _try_hit_mob(mob: Node) -> void:
 	if mob == self:
 		return
 
-	# 不要误伤生成这个 roar 的 boss 本体
 	if get_parent() == mob:
 		return
 
@@ -115,7 +103,6 @@ func _try_hit_mob(mob: Node) -> void:
 
 	_already_hit[mob] = true
 
-	# 优先调用现有逻辑
 	if mob.has_method("take_damage"):
 		mob.call("take_damage", mob_damage)
 	elif mob.has_method("die"):
@@ -144,8 +131,6 @@ func _try_hit_player(player: Node) -> void:
 		player.call("take_damage", player_damage)
 	elif player.has_method("hurt"):
 		player.call("hurt", player_damage)
-	# 如果你的 commander 用的是别的受伤函数名，
-	# 到这里改成你自己的方法名即可。
 
 
 func _is_position_inside_ring(target_global_pos: Vector2) -> bool:

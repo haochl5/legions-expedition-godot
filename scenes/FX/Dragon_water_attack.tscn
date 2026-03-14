@@ -1,0 +1,332 @@
+[gd_scene format=3 uid="uid://btdadpiij7d4f"]
+
+[ext_resource type="Script" uid="uid://c07xrexjqjvxd" path="res://scripts/dragon_water_attack.gd" id="1_0vxao"]
+[ext_resource type="Texture2D" uid="uid://c2iobxs0qifcq" path="res://assets/Ninja Adventure - Asset Pack/FX/Elemental/WaterPillar/SpriteSheet.png" id="1_xcw5i"]
+[ext_resource type="Texture2D" uid="uid://22tiij5rpkkn" path="res://assets/Ninja Adventure - Asset Pack/FX/Elemental/Water/SpriteSheet.png" id="2_diugy"]
+[ext_resource type="AudioStream" uid="uid://djox6fyrwuu1r" path="res://assets/Ninja Adventure - Asset Pack/Audio/Sounds/Elemental/Water10.wav" id="3_diugy"]
+[ext_resource type="AudioStream" uid="uid://dueyusqk6el4c" path="res://assets/Ninja Adventure - Asset Pack/Audio/Sounds/Creature/Wings.wav" id="4_7a5bl"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7a5bl"]
+radius = 11.0
+height = 38.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0vxao"]
+atlas = ExtResource("1_xcw5i")
+region = Rect2(0, 0, 30, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gfhl8"]
+atlas = ExtResource("1_xcw5i")
+region = Rect2(30, 0, 30, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1v8os"]
+atlas = ExtResource("1_xcw5i")
+region = Rect2(60, 0, 30, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ho2kw"]
+atlas = ExtResource("1_xcw5i")
+region = Rect2(90, 0, 30, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kd0ga"]
+atlas = ExtResource("1_xcw5i")
+region = Rect2(120, 0, 30, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ag3b7"]
+atlas = ExtResource("1_xcw5i")
+region = Rect2(150, 0, 30, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nwfpr"]
+atlas = ExtResource("1_xcw5i")
+region = Rect2(180, 0, 30, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rvr0x"]
+atlas = ExtResource("1_xcw5i")
+region = Rect2(210, 0, 30, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ny1jx"]
+atlas = ExtResource("1_xcw5i")
+region = Rect2(240, 0, 30, 41)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gbcpd"]
+atlas = ExtResource("2_diugy")
+region = Rect2(0, 0, 44, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_got6y"]
+atlas = ExtResource("2_diugy")
+region = Rect2(44, 0, 44, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5wx7j"]
+atlas = ExtResource("2_diugy")
+region = Rect2(88, 0, 44, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3flpa"]
+atlas = ExtResource("2_diugy")
+region = Rect2(132, 0, 44, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5dvin"]
+atlas = ExtResource("2_diugy")
+region = Rect2(176, 0, 44, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kbb2t"]
+atlas = ExtResource("2_diugy")
+region = Rect2(220, 0, 44, 33)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0ogd1"]
+resource_name = "attack"
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0vxao")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gfhl8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1v8os")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ho2kw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kd0ga")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ag3b7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nwfpr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rvr0x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ny1jx")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gbcpd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_got6y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5wx7j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3flpa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5dvin")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kbb2t")
+}],
+"loop": false,
+"name": &"prepare",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_diugy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [5]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AnimatedSprite2D:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"attack"]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AudioStreamPlayer2D:stream")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_diugy")]
+}
+
+[sub_resource type="Animation" id="Animation_7a5bl"]
+resource_name = "attack_phase"
+length = 1.5666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.06666666, 0.8333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 1, 2, 3, 4, 5, 5, 6, 8]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AnimatedSprite2D:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"attack"]
+}
+tracks/3/type = "audio"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AudioStreamPlayer2D")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("4_7a5bl")
+}],
+"times": PackedFloat32Array(0.100000024)
+}
+tracks/3/use_blend = true
+
+[sub_resource type="Animation" id="Animation_xcw5i"]
+resource_name = "prepare_phase"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.06666667, 0.16666667, 0.3, 0.4, 0.53333336),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AnimatedSprite2D:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"prepare"]
+}
+tracks/3/type = "audio"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("AudioStreamPlayer2D")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("3_diugy")
+}],
+"times": PackedFloat32Array(0.033333335)
+}
+tracks/3/use_blend = true
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AudioStreamPlayer2D:stream")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_diugy")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_diugy"]
+_data = {
+&"RESET": SubResource("Animation_diugy"),
+&"attack_phase": SubResource("Animation_7a5bl"),
+&"prepare_phase": SubResource("Animation_xcw5i")
+}
+
+[node name="DragonWaterAttack" type="Area2D" unique_id=1929802655]
+collision_mask = 2
+script = ExtResource("1_0vxao")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=724714920]
+shape = SubResource("CapsuleShape2D_7a5bl")
+disabled = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=20881]
+z_index = -1
+sprite_frames = SubResource("SpriteFrames_0ogd1")
+animation = &"attack"
+frame = 5
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=950287758]
+libraries/ = SubResource("AnimationLibrary_diugy")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=633751979]
+stream = ExtResource("3_diugy")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1075733325]
