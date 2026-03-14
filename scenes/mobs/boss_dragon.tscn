@@ -2,8 +2,10 @@
 
 [ext_resource type="Script" uid="uid://do6be8npw65ap" path="res://scripts/mobs/boss_dragon.gd" id="2_8nx6d"]
 [ext_resource type="Texture2D" uid="uid://dycfkw6f5eerg" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Head.png" id="2_bhs3d"]
+[ext_resource type="PackedScene" uid="uid://ue4gg8h6fxcs" path="res://scenes/Gold.tscn" id="2_nn3o6"]
 [ext_resource type="AudioStream" uid="uid://iy85ff4t4ibo" path="res://assets/Ninja Adventure - Asset Pack/Audio/Sounds/Alert/Alert5.wav" id="3_8nx6d"]
 [ext_resource type="Texture2D" uid="uid://bncfu5om6ambv" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Body1.png" id="3_g3q0c"]
+[ext_resource type="PackedScene" uid="uid://i1f5vuupftc4" path="res://scenes/exp.tscn" id="3_gpxoh"]
 [ext_resource type="Texture2D" uid="uid://df1f0iul1jusw" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Body2.png" id="4_nn3o6"]
 [ext_resource type="Texture2D" uid="uid://c8rpmf6c60dgy" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/BodyEnd.png" id="5_gpxoh"]
 [ext_resource type="Texture2D" uid="uid://cgy2xirl2ekxs" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Wing.png" id="6_185ua"]
@@ -16,8 +18,12 @@ height = 164.0
 radius = 65.0
 height = 130.0
 
-[node name="BossDragon" type="CharacterBody2D" unique_id=1291699381]
+[node name="BossDragon" type="CharacterBody2D" unique_id=1291699381 groups=["enemy"]]
+collision_layer = 8
+collision_mask = 2
 script = ExtResource("2_8nx6d")
+coin_scene = ExtResource("2_nn3o6")
+exp_scene = ExtResource("3_gpxoh")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1332989127]
 stream = ExtResource("3_8nx6d")

@@ -13,8 +13,8 @@ enum State {
 # Basic stats
 # =========================
 @export var mob_name: String = "Boss Dragon"
-@export var max_hp: int = 500
-@export var speed: float = 60.0
+@export var max_hp: int = 10
+@export var speed: float = 20.0
 @export var damage: int = 1
 
 # =========================
@@ -41,15 +41,15 @@ enum State {
 # Drop logic (copied from mob_base.gd)
 # =========================
 @export var coin_scene: PackedScene
-@export var gold_drop_count: int = 3
-@export var gold_drop_value: int = 10
+@export var gold_drop_count: int = 15
+@export var gold_drop_value: int = 2
 @export var drop_spread_radius: float = 30.0
-@export var coin_drop_chance: float = 0.3
+@export var coin_drop_chance: float = 0.8
 
 @export var exp_scene: PackedScene
-@export var exp_drop_count: int = 3
+@export var exp_drop_count: int = 20
 @export var exp_drop_value: int = 5
-@export var exp_drop_spread_radius: float = 30.0
+@export var exp_drop_spread_radius: float = 60.0
 
 # =========================
 # Runtime
