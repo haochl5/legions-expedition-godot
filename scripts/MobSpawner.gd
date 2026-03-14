@@ -7,6 +7,7 @@ const MOB_TYPES = {
 	"mushroom": preload("res://scenes/mobs/mushroom.tscn"),
 	"boss": preload("res://scenes/mobs/boss1.tscn"),
 	"boss_bamboo": preload("res://scenes/mobs/boss_bamboo.tscn"),
+	"boss_dragon": preload("res://scenes/mobs/boss_dragon.tscn"),
 }
 
 # Current wave's mob configuration
@@ -24,8 +25,18 @@ var last_boss_level: int = 0
 @export var bamboo_boss_interval: int = 7 # Spawn at 1, 7, 14, 21...
 var last_bamboo_boss_level: int = 0
 
+# --- NEW: Dragon Boss Tracking Variables ---
+@export var dragon_boss_first_level: int = 2
+@export var dragon_boss_interval: int = 13 # Spawn at 13, 26
+var last_dragon_boss_level: int = 0
+
+
 # Global scaling (applies to all mobs spawned via spawn_mob)
 var health_multiplier: float = 1.0
+
+# for bgm changing
+signal dragon_spawned
+signal dragon_died
 
 
 # generate a random mob
@@ -34,12 +45,12 @@ func spawn_random_mob(position: Vector2, target: Node2D) -> MobBase:
 	return spawn_mob(mob_type, position, target)
 
 # Generate a mob of a specified type
-func spawn_mob(type: String, position: Vector2, target: Node2D) -> MobBase:
+func spawn_mob(type: String, position: Vector2, target: Node2D):
 	if type not in MOB_TYPES:
 		push_error("Unknown mob type: " + type)
 		return null
 	
-	var mob: MobBase = MOB_TYPES[type].instantiate()
+	var mob = MOB_TYPES[type].instantiate()
 	
 	# Scale Health (assumes mob already has max_hp set by its script/scene)
 	mob.max_hp = int(mob.max_hp * health_multiplier)
@@ -121,3 +132,26 @@ func try_spawn_boss(current_level: int, position: Vector2, target: Node2D):
 		
 		last_bamboo_boss_level = current_level
 		print("WAVE ", current_level, ": ", bamboo_count, " BAMBOO BOSSES SPAWNED!")
+	
+	
+	# -------------------------
+	# 2) Dragon
+	# Spawn at level  13, 26...
+	# Count algorithm same style as samurai:
+	#   level 13 => 1, level 26 => 2, ...
+	# -------------------------	
+	var should_spawn_dragon := current_level % dragon_boss_interval == 0
+	if should_spawn_dragon:
+		var dragon_count: int =  int(current_level / dragon_boss_interval)
+		
+		for i in range(dragon_count):
+			var offset = Vector2(randf_range(-250, 250), randf_range(-250, 250))
+			var dragon = spawn_mob("boss_dragon", position + offset, target)
+			if dragon:
+				get_parent().call_deferred("add_child", dragon)
+				dragon.boss_dragon_spawned.connect(func(): dragon_spawned.emit())
+				dragon.boss_dragon_died.connect(func(): dragon_died.emit())
+				
+		
+		last_dragon_boss_level = current_level
+		print("WAVE ", current_level, ": ", dragon_count, " dragon BOSSES SPAWNED!")

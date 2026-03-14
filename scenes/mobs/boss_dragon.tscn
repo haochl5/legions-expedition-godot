@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://cixf2mdnvh4iq"]
+
+[ext_resource type="Script" uid="uid://do6be8npw65ap" path="res://scripts/mobs/boss_dragon.gd" id="2_8nx6d"]
+[ext_resource type="Texture2D" uid="uid://dycfkw6f5eerg" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Head.png" id="2_bhs3d"]
+[ext_resource type="PackedScene" uid="uid://ue4gg8h6fxcs" path="res://scenes/Gold.tscn" id="2_nn3o6"]
+[ext_resource type="AudioStream" uid="uid://iy85ff4t4ibo" path="res://assets/Ninja Adventure - Asset Pack/Audio/Sounds/Alert/Alert5.wav" id="3_8nx6d"]
+[ext_resource type="Texture2D" uid="uid://bncfu5om6ambv" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Body1.png" id="3_g3q0c"]
+[ext_resource type="PackedScene" uid="uid://i1f5vuupftc4" path="res://scenes/exp.tscn" id="3_gpxoh"]
+[ext_resource type="PackedScene" uid="uid://tn6djn4n58i0" path="res://scenes/FX/Dragon_boss_roar.tscn" id="4_185ua"]
+[ext_resource type="Texture2D" uid="uid://df1f0iul1jusw" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Body2.png" id="4_nn3o6"]
+[ext_resource type="Texture2D" uid="uid://c8rpmf6c60dgy" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/BodyEnd.png" id="5_gpxoh"]
+[ext_resource type="PackedScene" uid="uid://btdadpiij7d4f" path="res://scenes/FX/Dragon_water_attack.tscn" id="5_k36sf"]
+[ext_resource type="Texture2D" uid="uid://cgy2xirl2ekxs" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Wing.png" id="6_185ua"]
+[ext_resource type="AudioStream" uid="uid://d0w0lqd3h32v" path="res://assets/Ninja Adventure - Asset Pack/Audio/Sounds/Elemental/Explosion5.wav" id="11_6vts5"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g3q0c"]
+radius = 37.0
+height = 164.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nn3o6"]
+radius = 65.0
+height = 130.0
+
+[node name="BossDragon" type="CharacterBody2D" unique_id=1291699381 groups=["dragon_bosses", "enemy"]]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("2_8nx6d")
+coin_scene = ExtResource("2_nn3o6")
+exp_scene = ExtResource("3_gpxoh")
+roar_scene = ExtResource("4_185ua")
+water_attack_scene = ExtResource("5_k36sf")
+
+[node name="dying_roar" type="AudioStreamPlayer2D" parent="." unique_id=1332989127]
+stream = ExtResource("3_8nx6d")
+
+[node name="head_node" type="Node2D" parent="." unique_id=1610676187]
+
+[node name="head" type="Sprite2D" parent="head_node" unique_id=1981935307]
+position = Vector2(1, -47)
+texture = ExtResource("2_bhs3d")
+
+[node name="body1_node" type="Node2D" parent="." unique_id=245572506]
+
+[node name="body1" type="Sprite2D" parent="body1_node" unique_id=1438963918]
+position = Vector2(-1, -2)
+texture = ExtResource("3_g3q0c")
+
+[node name="body2_node" type="Node2D" parent="." unique_id=776419387]
+
+[node name="body2" type="Sprite2D" parent="body2_node" unique_id=802923093]
+position = Vector2(-1, 26)
+texture = ExtResource("4_nn3o6")
+
+[node name="tail_node" type="Node2D" parent="." unique_id=274460023]
+
+[node name="tail" type="Sprite2D" parent="tail_node" unique_id=537211486]
+position = Vector2(-1, 65)
+texture = ExtResource("5_gpxoh")
+
+[node name="left_wing_node" type="Node2D" parent="." unique_id=1500333222]
+
+[node name="left_wing" type="Sprite2D" parent="left_wing_node" unique_id=204039099]
+position = Vector2(-55, -18)
+texture = ExtResource("6_185ua")
+flip_h = true
+
+[node name="right_wing_node" type="Node2D" parent="." unique_id=1279881623]
+
+[node name="right_wing" type="Sprite2D" parent="right_wing_node" unique_id=1102579243]
+position = Vector2(57, -19)
+texture = ExtResource("6_185ua")
+
+[node name="Collision-vertical" type="CollisionShape2D" parent="." unique_id=1047717411]
+position = Vector2(2, 12)
+shape = SubResource("CapsuleShape2D_g3q0c")
+
+[node name="Collision-horizontal" type="CollisionShape2D" parent="." unique_id=1089802598]
+position = Vector2(3, -23)
+shape = SubResource("CapsuleShape2D_nn3o6")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1335381944]
+
+[node name="attack_roar" type="AudioStreamPlayer2D" parent="." unique_id=1877676685]
+stream = ExtResource("11_6vts5")
+volume_db = 1.243
+pitch_scale = 0.55

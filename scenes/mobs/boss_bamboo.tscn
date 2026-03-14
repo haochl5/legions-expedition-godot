@@ -2,7 +2,10 @@
 
 [ext_resource type="Script" uid="uid://53vnfwqxu3c0" path="res://scripts/mobs/boss_bamboo.gd" id="1_8ovj1"]
 [ext_resource type="Texture2D" uid="uid://725x4rocepd0" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/GiantBamboo/Attack.png" id="2_8ovj1"]
+[ext_resource type="PackedScene" uid="uid://cerph232cpjwn" path="res://scenes/Projectiles/Bamboo_Spike.tscn" id="2_isswc"]
+[ext_resource type="PackedScene" uid="uid://ue4gg8h6fxcs" path="res://scenes/Gold.tscn" id="3_pcco0"]
 [ext_resource type="Texture2D" uid="uid://b05xxvhkc5jit" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/GiantBamboo/Charge.png" id="3_vf8tm"]
+[ext_resource type="PackedScene" uid="uid://i1f5vuupftc4" path="res://scenes/exp.tscn" id="4_y57e7"]
 [ext_resource type="Texture2D" uid="uid://6r16wmbmo3m4" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/GiantBamboo/Hit.png" id="5_isswc"]
 [ext_resource type="Texture2D" uid="uid://boso6svvou11" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/GiantBamboo/Idle.png" id="6_pcco0"]
 [ext_resource type="Texture2D" uid="uid://dwvl1tifkfrnl" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/GiantBamboo/Walk.png" id="7_y57e7"]
@@ -248,10 +251,13 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_umv4o"]
 radius = 18.973665
 
-[node name="CharacterBody2D" type="CharacterBody2D" unique_id=460120251 groups=["enemy"]]
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=460120251 groups=["enemy", "mobs"]]
 collision_layer = 8
 collision_mask = 27
 script = ExtResource("1_8ovj1")
+bamboo_spike_scene = ExtResource("2_isswc")
+coin_scene = ExtResource("3_pcco0")
+exp_scene = ExtResource("4_y57e7")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2111064402]
 sprite_frames = SubResource("SpriteFrames_has8m")

@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://tn6djn4n58i0"]
+
+[ext_resource type="Texture2D" uid="uid://dph8e2yb6jdp4" path="res://assets/Ninja Adventure - Asset Pack/FX/Magic/Circle/SpriteSheetWhite.png" id="1_jhwwx"]
+[ext_resource type="Script" uid="uid://b5har51il7x6q" path="res://scripts/dragon_boss_roar.gd" id="1_pnuk8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jhwwx"]
+atlas = ExtResource("1_jhwwx")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pnuk8"]
+atlas = ExtResource("1_jhwwx")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s3v36"]
+atlas = ExtResource("1_jhwwx")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kk8ru"]
+atlas = ExtResource("1_jhwwx")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pnuk8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jhwwx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pnuk8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s3v36")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kk8ru")
+}],
+"loop": true,
+"name": &"wave_spread",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_s3v36"]
+
+[node name="DragonBossRoar" type="Area2D" unique_id=986378806]
+script = ExtResource("1_pnuk8")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=689649154]
+sprite_frames = SubResource("SpriteFrames_pnuk8")
+animation = &"wave_spread"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1655379875]
+shape = SubResource("CircleShape2D_s3v36")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=496861797]
