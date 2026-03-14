@@ -52,6 +52,12 @@ enum State {
 @export var exp_drop_spread_radius: float = 60.0
 
 # =========================
+# roar scene
+# =========================
+
+@export var roar_scene: PackedScene
+
+# =========================
 # Runtime
 # =========================
 var hp: int
@@ -65,7 +71,9 @@ var _hit_recovering: bool = false
 # =========================
 # Node references
 # =========================
-@onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var dying_roar_player: AudioStreamPlayer2D = $dying_roar
+@onready var attack_roar_player: AudioStreamPlayer2D = $attack_roar
+
 
 @onready var head_node: Node2D = $head_node
 @onready var body1_node: Node2D = $body1_node
@@ -138,7 +146,15 @@ func _ready() -> void:
 		screen_notifier.screen_exited.connect(_on_screen_exited)
 
 	current_state = State.CHASE
+	call_deferred("_start_intro")
 
+func _start_intro() -> void:
+	current_state = State.IDLE
+	velocity = Vector2.ZERO
+
+	await play_roar()
+
+	current_state = State.CHASE
 
 func _physics_process(delta: float) -> void:
 	if _is_dead:
@@ -292,8 +308,8 @@ func die() -> void:
 	death_tween.tween_property(self, "scale", Vector2(0.15, 0.15), 0.8)
 	death_tween.tween_property(self, "rotation", rotation + deg_to_rad(90.0), 0.8)
 
-	if audio_player:
-		audio_player.play()
+	if dying_roar_player:
+		dying_roar_player.play()
 
 	death_tween.chain().tween_callback(func():
 		drop_items()
@@ -355,6 +371,18 @@ func drop_gold() -> void:
 
 		get_parent().call_deferred("add_child", coin)
 
+
+func play_roar() -> void:
+	if roar_scene == null:
+		return
+
+	var roar = roar_scene.instantiate()
+	get_parent().add_child(roar)
+	roar.global_position = global_position
+	
+	attack_roar_player.play()
+
+	await roar.roar_finished
 
 # =========================
 # Utility

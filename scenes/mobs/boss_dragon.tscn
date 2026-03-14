@@ -6,9 +6,11 @@
 [ext_resource type="AudioStream" uid="uid://iy85ff4t4ibo" path="res://assets/Ninja Adventure - Asset Pack/Audio/Sounds/Alert/Alert5.wav" id="3_8nx6d"]
 [ext_resource type="Texture2D" uid="uid://bncfu5om6ambv" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Body1.png" id="3_g3q0c"]
 [ext_resource type="PackedScene" uid="uid://i1f5vuupftc4" path="res://scenes/exp.tscn" id="3_gpxoh"]
+[ext_resource type="PackedScene" uid="uid://tn6djn4n58i0" path="res://scenes/Dragon_boss_roar.tscn" id="4_185ua"]
 [ext_resource type="Texture2D" uid="uid://df1f0iul1jusw" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Body2.png" id="4_nn3o6"]
 [ext_resource type="Texture2D" uid="uid://c8rpmf6c60dgy" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/BodyEnd.png" id="5_gpxoh"]
 [ext_resource type="Texture2D" uid="uid://cgy2xirl2ekxs" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/DragonBlue/Wing.png" id="6_185ua"]
+[ext_resource type="AudioStream" uid="uid://d0w0lqd3h32v" path="res://assets/Ninja Adventure - Asset Pack/Audio/Sounds/Elemental/Explosion5.wav" id="11_6vts5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g3q0c"]
 radius = 37.0
@@ -24,8 +26,9 @@ collision_mask = 2
 script = ExtResource("2_8nx6d")
 coin_scene = ExtResource("2_nn3o6")
 exp_scene = ExtResource("3_gpxoh")
+roar_scene = ExtResource("4_185ua")
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1332989127]
+[node name="dying_roar" type="AudioStreamPlayer2D" parent="." unique_id=1332989127]
 stream = ExtResource("3_8nx6d")
 
 [node name="head_node" type="Node2D" parent="." unique_id=1610676187]
@@ -74,3 +77,8 @@ position = Vector2(3, -23)
 shape = SubResource("CapsuleShape2D_nn3o6")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1335381944]
+
+[node name="attack_roar" type="AudioStreamPlayer2D" parent="." unique_id=1877676685]
+stream = ExtResource("11_6vts5")
+volume_db = 1.243
+pitch_scale = 0.55
