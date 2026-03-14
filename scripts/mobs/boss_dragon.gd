@@ -13,7 +13,7 @@ enum State {
 # Basic stats
 # =========================
 @export var mob_name: String = "Boss Dragon"
-@export var max_hp: int = 10
+@export var max_hp: int = 2000
 @export var speed: float = 20.0
 @export var damage: int = 1
 
@@ -125,6 +125,9 @@ var _tail_base_rot: float
 var _left_wing_base_rot: float
 var _right_wing_base_rot: float
 
+# for bgm chaging
+signal boss_dragon_spawned
+signal boss_dragon_died
 
 func _ready() -> void:
 	hp = max_hp
@@ -157,6 +160,7 @@ func _ready() -> void:
 
 	current_state = State.CHASE
 	call_deferred("_start_intro")
+	boss_dragon_spawned.emit()
 
 func _start_intro() -> void:
 	current_state = State.IDLE
@@ -175,7 +179,6 @@ func _physics_process(delta: float) -> void:
 	_water_attack_timer += delta
 	if _water_attack_timer >= water_attack_interval:
 		_water_attack_timer = 0.0
-		print("water attack called")
 		cast_water_attack()
 		
 	_roar_timer += delta
@@ -331,6 +334,8 @@ func die() -> void:
 
 	if dying_roar_player:
 		dying_roar_player.play()
+		
+	boss_dragon_died.emit()
 
 	death_tween.chain().tween_callback(func():
 		drop_items()
@@ -413,7 +418,6 @@ func cast_water_attack() -> void:
 	var attack = water_attack_scene.instantiate()
 	get_parent().add_child(attack)
 	attack.target = target
-	print("target set")
 
 # =========================
 # Utility

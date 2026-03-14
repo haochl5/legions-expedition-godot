@@ -21,7 +21,7 @@ height = 164.0
 radius = 65.0
 height = 130.0
 
-[node name="BossDragon" type="CharacterBody2D" unique_id=1291699381 groups=["enemy"]]
+[node name="BossDragon" type="CharacterBody2D" unique_id=1291699381 groups=["dragon_bosses", "enemy"]]
 collision_layer = 8
 collision_mask = 2
 script = ExtResource("2_8nx6d")

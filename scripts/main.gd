@@ -64,6 +64,10 @@ func _ready() -> void:
 		title_screen_ready()
 		await _init_player()
 		GameData.sync_from_talo()
+		
+	# connect dragon signal for changing BGM
+	mob_spawner.dragon_spawned.connect(_on_spawner_boss_dragon_spawned_signal)
+	mob_spawner.dragon_died.connect(_on_spawner_boss_dragon_died_signal)
 	
 	
 func _init_player() -> void:
@@ -610,3 +614,35 @@ func increase_difficulty(current_level: int):
 				cluster_bonus = max(0, cluster_bonus - 1) 
 			
 	print("[Level ", current_level, " Setup] Intensity: ", current_director_intensity, " | HP Multiplier: ", snapped(mob_spawner.health_multiplier, 0.1))
+
+
+func _fade_switch_music(from_node: Node, to_node: Node, duration: float = 2.0):
+	if from_node == to_node: return
+	
+	to_node.volume_db = -80.0
+	if not to_node.playing:
+		to_node.play()
+	
+	var tween = create_tween().set_parallel(true)
+	
+	tween.tween_property(from_node, "volume_db", -80.0, duration).set_trans(Tween.TRANS_SINE)
+	
+	tween.tween_property(to_node, "volume_db", 0.0, duration).set_trans(Tween.TRANS_SINE)
+	
+	tween.chain().tween_callback(func():
+		from_node.stop()
+	)
+	
+func _on_spawner_boss_dragon_spawned_signal():
+	_fade_switch_music($"BGM-main", $"BGM-dragon", 2.0)
+	
+func _on_spawner_boss_dragon_died_signal():
+	await get_tree().process_frame
+	
+	var alive_dragons = 0
+	for dragon in get_tree().get_nodes_in_group("dragon_bosses"):
+		if not dragon.is_queued_for_deletion(): 
+			alive_dragons += 1
+	# don't ask me why it is "1", it is how it is
+	if alive_dragons == 1:
+		_fade_switch_music($"BGM-dragon", $"BGM-main", 3.0)

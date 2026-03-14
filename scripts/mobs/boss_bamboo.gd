@@ -35,7 +35,6 @@ var _is_casting: bool = false
 func _ready() -> void:
 	# Call base class _ready() (sets hp, connects notifier, calls setup_behavior, etc.)
 	super._ready()
-
 	# Start a repeating timer for periodic attacks
 	_attack_timer = Timer.new()
 	_attack_timer.wait_time = attack_interval_sec
