@@ -1043,7 +1043,7 @@ parameters/looping = true
 
 [node name="BGM-dragon" type="AudioStreamPlayer" parent="." unique_id=1719935695]
 stream = ExtResource("26_36rkl")
-volume_db = -9.674
+volume_db = -12.496
 parameters/looping = true
 
 [connection signal="hit" from="Commander" to="." method="game_over"]
