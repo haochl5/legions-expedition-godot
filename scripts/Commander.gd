@@ -45,6 +45,12 @@ signal gold_changed(new_amount)
 
 var last_attacker: String = "Unknown"
 
+# --- GRACE PERIOD SHIELD VARIABLES ---
+var shield_hits_remaining: int = 3
+var shield_active: bool = true
+var speed_boost_timer: Timer
+var shield_expiration_timer: Timer
+# -------------------------------------
 
 @onready var physics_body = $StaticBody2D
 @onready var magnet_area: Area2D = $MagnetArea
@@ -58,6 +64,20 @@ func _ready():
 	physics_body.set_meta("commander", self)
 	
 	magnet_area.area_entered.connect(_on_magnet_area_entered)
+	
+	# --- SHIELD TIMERS SETUP ---
+	shield_expiration_timer = Timer.new()
+	shield_expiration_timer.wait_time = 120.0
+	shield_expiration_timer.one_shot = true
+	shield_expiration_timer.timeout.connect(_on_shield_expired)
+	add_child(shield_expiration_timer)
+
+	speed_boost_timer = Timer.new()
+	speed_boost_timer.wait_time = 2.0
+	speed_boost_timer.one_shot = true
+	speed_boost_timer.timeout.connect(_on_speed_boost_ended)
+	add_child(speed_boost_timer)
+	# ---------------------------
 
 func _input(event):
 	# ESC exit mouse control
@@ -178,6 +198,13 @@ func _on_body_entered(body: Node2D) -> void:
 func take_damage(damage: int, attacker_name: String = "Unknown"):
 	if is_invincible:
 		return
+		
+	# --- SHIELD INTERCEPT ---
+	if shield_active:
+		trigger_shield_hit()
+		invincible_on() # Crucial: gives i-frames so the shield doesn't instantly double-break
+		return
+	# ------------------------
 	
 	hp -= damage
 	hp = max(hp, 0)
@@ -217,6 +244,18 @@ func start(pos):
 		GameData.add_gold(GameData.upgrade_gold_level * 5)
 	# --------------------------------
 	
+	# --- RESET GRACE PERIOD SHIELD ---
+	shield_hits_remaining = 3
+	shield_active = true
+	shield_expiration_timer.start(120.0) # Start the 2 minute clock
+	
+	if has_node("ShieldVisual"):
+		$ShieldVisual.modulate = Color(1, 1, 1, 1) # Reset transparency
+		$ShieldVisual.show()
+		if has_node("ShieldVisual/AnimationPlayer"):
+			$ShieldVisual/AnimationPlayer.play("pulse")
+	# ---------------------------------
+	
 	is_invincible = false
 	invincibility_timer = 0.0
 	$AnimatedSprite2D.visible = true
@@ -246,11 +285,58 @@ func _on_magnet_area_entered(area):
 		area.start_magnetize(self)
 
 func add_gold(amount: int):
-	#GameData.gold += amount
-	#total_gold_collected += amount
 	GameData.add_gold(amount)
 	emit_signal("gold_changed", GameData.gold)
 
 func add_exp(amount: int):
 	# Delegate strictly to GameData
 	GameData.add_exp(amount)
+
+
+# ==========================================
+# SHIELD LOGIC FUNCTIONS
+# ==========================================
+func trigger_shield_hit():
+	shield_hits_remaining -= 1
+	
+	# 1. Apply the Panic Speed Boost
+	if speed_boost_timer.is_stopped():
+		current_speed = base_speed * 1.5 
+	
+	speed_boost_timer.start() 
+	
+	# 2. Visual Feedback (Fades out AND flashes red briefly)
+	if has_node("ShieldVisual"):
+		$ShieldVisual.modulate.a = float(shield_hits_remaining) / 3.0 
+		$ShieldVisual.modulate = Color(1, 0.5, 0.5, $ShieldVisual.modulate.a) # Flash reddish
+		
+		# Tween color back to normal over 0.2 seconds
+		var tween = create_tween()
+		tween.tween_property($ShieldVisual, "modulate:r", 1.0, 0.2)
+		tween.tween_property($ShieldVisual, "modulate:g", 1.0, 0.2)
+		tween.tween_property($ShieldVisual, "modulate:b", 1.0, 0.2)
+		
+	print("[Shield] Hit taken! Absorbed. Remaining: ", shield_hits_remaining)
+	
+	# 3. Check if Shattered
+	if shield_hits_remaining <= 0:
+		break_shield()
+
+func break_shield():
+	shield_active = false
+	shield_expiration_timer.stop()
+	
+	if has_node("ShieldVisual"):
+		$ShieldVisual.hide() 
+		
+	print("[Shield] SHATTERED! Commander is now vulnerable.")
+
+func _on_shield_expired():
+	if shield_active:
+		break_shield()
+		print("[Shield] 2-Minute Grace Period Expired.")
+
+func _on_speed_boost_ended():
+	# Revert speed safely without breaking your 'slow' mechanic
+	if slow_stacks <= 0:
+		current_speed = base_speed
