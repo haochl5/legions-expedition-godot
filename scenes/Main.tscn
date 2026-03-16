@@ -1034,9 +1034,16 @@ visible = false
 
 [node name="TutorialBox" type="NinePatchRect" parent="CanvasLayer" unique_id=1639533297]
 visible = false
-offset_top = 485.0
-offset_right = 1154.0
-offset_bottom = 643.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -576.0
+offset_top = -148.0
+offset_right = 575.0
+grow_horizontal = 2
+grow_vertical = 0
 texture = ExtResource("22_ma7h6")
 patch_margin_left = 12
 patch_margin_top = 24
