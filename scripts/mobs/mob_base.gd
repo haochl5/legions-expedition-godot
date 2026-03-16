@@ -2,6 +2,10 @@
 class_name MobBase
 extends CharacterBody2D
 
+# --- NEW: PRELOAD THE DAMAGE TEXT SCENE ---
+const DAMAGE_TEXT_SCENE = preload("res://scenes/DamageText.tscn")
+# ------------------------------------------
+
 # general attributes
 @export var max_hp: int = 30
 @export var speed: float = 150.0
@@ -62,9 +66,22 @@ func _on_screen_exited():
 	pass
 	
 func take_damage(damage_amount: int):
-	# print("Mob hit! Damage: ", damage_amount, " HP left: ", hp)
 	hp -= damage_amount
 	hp = max(hp, 0)
+	
+	# --- NEW: SPAWN DAMAGE TEXT ---
+	if DAMAGE_TEXT_SCENE:
+		var dmg_text = DAMAGE_TEXT_SCENE.instantiate()
+		
+		# We add it to the current scene so it doesn't get deleted when the mob dies!
+		get_tree().current_scene.add_child(dmg_text) 
+		
+		# Place it exactly where the enemy currently is
+		dmg_text.global_position = global_position
+		
+		# Fire the animation!
+		dmg_text.setup(damage_amount)
+	# ------------------------------
 	
 	if hp <= 0:
 		die()
@@ -140,4 +157,3 @@ func drop_gold():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-	
