@@ -16,7 +16,7 @@ const DAMAGE_TEXT_SCENE = preload("res://scenes/DamageText.tscn")
 @export var gold_drop_count: int = 3  
 @export var gold_drop_value: int = 10  
 @export var drop_spread_radius: float = 30.0 
-@export var coin_drop_chance: float = 0.4
+@export var coin_drop_chance: float = 0.35
 
 # exp logic
 @export var exp_scene: PackedScene

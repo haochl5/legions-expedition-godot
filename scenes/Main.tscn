@@ -23,7 +23,9 @@
 [ext_resource type="Script" uid="uid://bl1xvv4obsedm" path="res://scripts/MobSpawner.gd" id="9_q8u5g"]
 [ext_resource type="PackedScene" uid="uid://dfftu6upf8jl5" path="res://scenes/Decorations/statue_blocker.tscn" id="10_fs0b5"]
 [ext_resource type="Texture2D" uid="uid://c48eo60vjidxu" path="res://assets/Ninja Adventure - Asset Pack/Backgrounds/Animated/Plant/SpriteSheet16x16.png" id="15_ebg2g"]
+[ext_resource type="Texture2D" uid="uid://ilm42ibkbswa" path="res://assets/Ninja Adventure - Asset Pack/Ui/Dialog/DialogBox.png" id="22_ma7h6"]
 [ext_resource type="PackedScene" uid="uid://dcihv82tngpvt" path="res://scenes/FX/merge_fx.tscn" id="23_2ofn6"]
+[ext_resource type="FontFile" uid="uid://2t3t6ncqg4pm" path="res://assets/Ninja Adventure - Asset Pack/Ui/Font/NormalFont.ttf" id="23_e2s0e"]
 [ext_resource type="AudioStream" uid="uid://cga6uoluvtrb5" path="res://assets/Ninja Adventure - Asset Pack/Audio/Musics/1 - Adventure Begin.ogg" id="25_xa025"]
 [ext_resource type="AudioStream" uid="uid://vldbw1n2ose5" path="res://assets/Ninja Adventure - Asset Pack/Audio/Musics/2 - The Cave.ogg" id="26_36rkl"]
 
@@ -1028,6 +1030,36 @@ process_mode = 3
 visible = false
 
 [node name="GameOverScreen" parent="CanvasLayer" unique_id=1717744705 instance=ExtResource("8_wp0k4")]
+visible = false
+
+[node name="TutorialBox" type="NinePatchRect" parent="CanvasLayer" unique_id=1639533297]
+visible = false
+offset_top = 485.0
+offset_right = 1154.0
+offset_bottom = 643.0
+texture = ExtResource("22_ma7h6")
+patch_margin_left = 12
+patch_margin_top = 24
+patch_margin_right = 12
+patch_margin_bottom = 12
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/TutorialBox" unique_id=1205621442]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -18.0
+offset_top = 32.0
+offset_right = -18.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("23_e2s0e")
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+text = "[center]Use [color=green]W A S D[/color]  to Move  and  [color=purple] SPACE [/color]  to  Dash.
+Aim  with  the  [color=aqua]MOUSE[/color]  and  [color=red]LEFT CLICK[/color]  to Shoot. [/center]"
 
 [node name="SquadManager" type="Node" parent="." unique_id=1103785219 node_paths=PackedStringArray("reinforcement_screen", "player")]
 script = ExtResource("7_nxtc6")
