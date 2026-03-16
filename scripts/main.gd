@@ -16,6 +16,13 @@ var map_height = 150
 var world_size = 2400 # map_width * 16 pixels
 var num_blockers = 150
 
+# --- LEVEL UP AUDIO ---
+var level_up_sounds = [
+	preload("res://assets/Ninja Adventure - Asset Pack/Audio/Jingles/LevelUp1.wav"), 
+	preload("res://assets/Ninja Adventure - Asset Pack/Audio/Jingles/LevelUp2.wav"),
+	preload("res://assets/Ninja Adventure - Asset Pack/Audio/Jingles/LevelUp3.wav")
+]
+
 # --- EXISTING NODES --- 
 @onready var mob_spawner = $MobSpawner
 @onready var reinforcement_screen = $CanvasLayer/Control
@@ -661,8 +668,14 @@ func _on_player_level_up(new_level: int):
 
 func trigger_level_up_juice():
 	is_leveling_up = true
-	var juice_duration = 1 
+	var juice_duration = 2 
 	
+	# --- NEW: PLAY RANDOM AUDIO ---
+	if has_node("LevelUpAudio"):
+		$LevelUpAudio.stream = level_up_sounds.pick_random()
+		$LevelUpAudio.play()
+	# ------------------------------
+
 	# 1. TRIGGER THE BURST ANIMATION (Normal Speed)
 	if has_node("Commander/LevelUpBurst"):
 		$Commander/LevelUpBurst.show()

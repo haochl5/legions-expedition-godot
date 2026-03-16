@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bq0p48aektwld"]
+
+[ext_resource type="Script" uid="uid://6i6mu5qqi314" path="res://scenes/damage_text.gd" id="1_s43ep"]
+[ext_resource type="FontFile" uid="uid://2t3t6ncqg4pm" path="res://assets/Ninja Adventure - Asset Pack/Ui/Font/NormalFont.ttf" id="1_tdn40"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_s43ep"]
+font = ExtResource("1_tdn40")
+outline_color = Color(0, 0, 0, 1)
+
+[node name="DamageText" type="Marker2D" unique_id=353829835]
+script = ExtResource("1_s43ep")
+
+[node name="Label" type="Label" parent="." unique_id=1719893457]
+offset_left = -8.0
+offset_top = -13.0
+offset_right = 32.0
+offset_bottom = 10.0
+text = "10"
+label_settings = SubResource("LabelSettings_s43ep")

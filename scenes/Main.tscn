@@ -1046,6 +1046,8 @@ stream = ExtResource("26_36rkl")
 volume_db = -12.496
 parameters/looping = true
 
+[node name="LevelUpAudio" type="AudioStreamPlayer2D" parent="." unique_id=380891963]
+
 [connection signal="hit" from="Commander" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
 [connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
