@@ -258,18 +258,19 @@ func _on_mushroom_timer_timeout() -> void:
 	var mob_spawn_location = get_mob_spawn_position()
 	mob_spawner.spawn_cluster("mushroom", mob_spawn_location, $Commander, randi_range(1, 2) + cluster_bonus)
 
-func get_mob_spawn_position():
+# Add the boolean parameter here, defaulting to false
+func get_mob_spawn_position(is_boss: bool = false):
 	var mob_spawn_location = $Commander/MobPath/MobSpawnLocation
 	mob_spawn_location.progress_ratio = randf()
 	
 	var raw_pos = mob_spawn_location.global_position
-	var commander_pos = $Commander.global_position
 	
-	# --- THE FIX: DYNAMICALLY SHRINK THE SPAWN RADIUS ---
-	# We use lerp (Linear Interpolate) to pull the spawn point closer to the player.
-	# 0.0 means "use the original path distance".
-	# 1.0 means "spawn exactly on top of the commander".
-	# 0.4 means "spawn 40% closer than the path currently is".
+	# THE FIX: If it's a boss, give them the raw edge-of-screen position!
+	if is_boss:
+		return raw_pos
+		
+	# Otherwise, it's a normal mob, so shrink the distance
+	var commander_pos = $Commander.global_position
 	return raw_pos.lerp(commander_pos, 0.4)
 
 func _on_start_timer_timeout() -> void:
@@ -646,8 +647,11 @@ func _on_spawner_boss_dragon_died_signal():
 		_fade_switch_music($"BGM-dragon", $"BGM-main", 3.0)
 
 func _on_player_level_up(new_level: int):
-	# 1. TRIGGER PROGRESSION IMMEDIATELY (Invisible to player)
-	var spawn_pos = get_mob_spawn_position()
+	# 1. TRIGGER PROGRESSION IMMEDIATELY 
+	
+	# THE FIX: Pass 'true' so the game knows to spawn them far away!
+	var spawn_pos = get_mob_spawn_position(true) 
+	
 	mob_spawner.try_spawn_boss(new_level, spawn_pos, $Commander)
 	increase_difficulty(new_level)
 	

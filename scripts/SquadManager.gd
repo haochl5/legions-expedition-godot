@@ -26,10 +26,13 @@ func _on_unit_bought(unit_data: ChampionData):
 	if unit_data.id == "lifepot":
 		_apply_lifepot(unit_data)
 		return
-
-	# Option B (fallback): identify by missing scene
-	# if unit_data.unit_scene == null:
-	#     return
+		
+	# --- THE NEW BUFF INTERCEPT ---
+	if unit_data.id.begins_with("buff_"):
+		if player and player.has_method("apply_player_buff"):
+			player.apply_player_buff(unit_data.id)
+		return # Stop here so it doesn't try to spawn a unit!
+	# ------------------------------
 
 	# Otherwise, it's a normal champion
 	spawn_unit(unit_data, 1)

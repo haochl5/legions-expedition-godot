@@ -9,11 +9,12 @@ signal wave_started
 
 # State
 var available_champions: Array[ChampionData] = []
+var available_buffs: Array[ChampionData] = []
 
 # UI References
 @onready var bank_label = $VBoxContainer/BankLabel
 @onready var cards_container = $VBoxContainer/CardsContainer
-
+@onready var lock_shop_btn = $VBoxContainer/Buttons/LockShopButton
 func _ready():
 	_init_champion_database()
 
@@ -31,6 +32,9 @@ func _init_champion_database():
 	
 	# Facesets for Lifepot
 	var lifepot_face = preload("res://assets/Ninja Adventure - Asset Pack/Items/Potion/LifePot.png")
+	var damage_face = preload("res://assets/Ninja Adventure - Asset Pack/Items/Food/Beaf.png")
+	var firerate_face = preload("res://assets/Ninja Adventure - Asset Pack/Items/Object/Hourglass.png")
+	var barrel_face = preload("res://assets/Ninja Adventure - Asset Pack/Items/Projectile/Shuriken.png")
 
 	# --- TIER 3 CHAMPIONS (Cost 3) ---
 	var squire = ChampionData.new()
@@ -109,22 +113,63 @@ func _init_champion_database():
 	lifepot.description = "Instantly heals the Commander by 3 HP."
 	lifepot.unit_scene = null # IMPORTANT: not a Champion scene
 	available_champions.append(lifepot)
+	
+	# --- PLAYER BUFFS ---
+	# You can reuse the lifepot icon or add new icons later!
+	var buff_dmg = ChampionData.new()
+	buff_dmg.id = "buff_damage"
+	buff_dmg.display_name = "Hollow Points"
+	buff_dmg.role = "Player Buff"
+	buff_dmg.icon = damage_face 
+	buff_dmg.cost = 10
+	buff_dmg.description = "Increases Commander bullet damage by 5."
+	buff_dmg.unit_scene = null
+	available_buffs.append(buff_dmg)
+
+	var buff_spd = ChampionData.new()
+	buff_spd.id = "buff_firerate"
+	buff_spd.display_name = "Hair Trigger"
+	buff_spd.role = "Player Buff"
+	buff_spd.icon = firerate_face
+	buff_spd.cost = 10
+	buff_spd.description = "Increases Commander shooting speed by 15%."
+	buff_spd.unit_scene = null
+	available_buffs.append(buff_spd)
+
+	var buff_multi = ChampionData.new()
+	buff_multi.id = "buff_multishot"
+	buff_multi.display_name = "Twin Barrels"
+	buff_multi.role = "Player Buff"
+	buff_multi.icon = barrel_face
+	buff_multi.cost = 10
+	buff_multi.description = "Fires an additional bullet in a spread pattern."
+	buff_multi.unit_scene = null
+	available_buffs.append(buff_multi)
 
 # --- 2. SHOP LOGIC ---
 func generate_shop_items():
-	# Clear existing cards
 	for child in cards_container.get_children():
 		child.queue_free()
 	
-	# Create 3 new cards (simulating your random logic)
+	# 1. Roll to see if a Player Buff appears (e.g., 25% chance)
+	var show_buff = randf() < 0.25 
+	# If true, pick a random slot (0, 1, or 2) for the buff to sit in
+	var buff_slot = randi() % 3 if show_buff else -1
+	
 	for i in range(3):
 		var card_instance = SHOP_CARD_SCENE.instantiate()
-		var random_champ = get_random_champion()
-		cards_container.add_child(card_instance)
+		var chosen_data: ChampionData
 		
-		# Setup data and connect signal
-		card_instance.setup(random_champ)
+		# 2. Check if this specific slot is the chosen Buff Slot
+		if i == buff_slot:
+			chosen_data = available_buffs.pick_random()
+		else:
+			chosen_data = get_random_champion() # Normal unit/lifepot logic
+			
+		cards_container.add_child(card_instance)
+		card_instance.setup(chosen_data)
 		card_instance.card_clicked.connect(_on_card_clicked)
+
 
 func _on_card_clicked(data: ChampionData, card_ref: Control):
 	if GameData.gold >= data.cost:
@@ -149,6 +194,10 @@ func _on_reroll_pressed():
 	if GameData.gold >= 2:
 		GameData.gold -= 2
 		
+		# If they manually hit reroll, pop the button back up!
+		if lock_shop_btn.button_pressed:
+			lock_shop_btn.button_pressed = false
+			
 		generate_shop_items()
 		update_ui()
 
@@ -161,7 +210,15 @@ func update_ui():
 	
 func on_shop_opened():
 	update_ui()
-	generate_shop_items()
+	
+	# Check the button's built-in pressed property
+	if lock_shop_btn.button_pressed:
+		# The shop is locked! We DO NOT generate new items.
+		# Automatically un-toggle the lock button so it pops back up!
+		lock_shop_btn.button_pressed = false 
+		print("Shop was locked! Keeping previous cards.")
+	else:
+		generate_shop_items()
 
 # Connect Buttons via Editor or _ready
 func _on_reroll_btn_down():
@@ -188,3 +245,12 @@ func get_random_champion() -> ChampionData:
 	if valid_pool.is_empty():
 		return available_champions.pick_random()
 	return valid_pool.pick_random()
+
+func _on_lock_shop_toggled(toggled_on: bool):
+	if toggled_on:
+		lock_shop_btn.text = "LOCKED"
+		# Optional: Tint it red so the player definitely notices it's active
+		lock_shop_btn.modulate = Color(0.9, 0.3, 0.3) 
+	else:
+		lock_shop_btn.text = "Lock Shop"
+		lock_shop_btn.modulate = Color(1, 1, 1) # Resets to normal

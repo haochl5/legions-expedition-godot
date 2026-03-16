@@ -63,6 +63,12 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
+[node name="LockShopButton" type="Button" parent="VBoxContainer/Buttons" unique_id=113474654]
+layout_mode = 2
+toggle_mode = true
+text = "Lock Shop"
+
 [connection signal="pressed" from="VBoxContainer/Buttons/RerollBtn" to="." method="_on_reroll_btn_pressed"]
 [connection signal="pressed" from="VBoxContainer/Buttons/RerollBtn" to="." method="_on_reroll_btn_down"]
 [connection signal="pressed" from="VBoxContainer/Buttons/DeployBtn" to="." method="_on_deploy_btn_down"]
+[connection signal="toggled" from="VBoxContainer/Buttons/LockShopButton" to="." method="_on_lock_shop_toggled"]

@@ -19,10 +19,15 @@ var is_invincible = false
 var invincibility_timer = 0.0
 
 # Shooting parameters
-const SHOOT_COOLDOWN = 0.5    # shooting interval
-const BULLET_OFFSET = 20     # Bullet generation offset distance
-
+var shoot_cooldown: float = 0.5  # Changed from const to var so we can upgrade it!
+const BULLET_OFFSET = 20
 var bullet_scene = preload("res://scenes/Projectiles/Bullet.tscn")
+
+# --- NEW: PLAYER BUFF VARIABLES ---
+var bonus_damage: int = 0
+var multi_shot: int = 1 # Number of barrels/bullets fired at once
+var spread_angle: float = 15.0 # Degrees between multiple bullets
+var has_explosive_rounds: bool = false
 
 # Dash state
 var is_dashing = false
@@ -173,20 +178,30 @@ func shoot():
 	if shoot_cooldown_timer > 0:
 		return
 	
-	# reset timer
-	shoot_cooldown_timer = SHOOT_COOLDOWN
+	shoot_cooldown_timer = shoot_cooldown # Use the new variable here!
 	
-	# create a instance of a bullet
-	var bullet = bullet_scene.instantiate()
+	var base_dir = (get_global_mouse_position() - global_position).normalized()
 	
-	var shoot_direction = (get_global_mouse_position() - global_position).normalized()
+	# Calculate the starting angle so multi-shot spreads are perfectly centered
+	var start_angle = base_dir.angle() - deg_to_rad(spread_angle * (multi_shot - 1) / 2.0)
 	
-	bullet.direction = shoot_direction
-	
-	# Set the initial position of the bullet (slightly in front of the character).
-	bullet.global_position = global_position + shoot_direction * BULLET_OFFSET
-	
-	get_tree().root.add_child(bullet)
+	# Fire a bullet for every barrel/multi-shot we have!
+	for i in range(multi_shot):
+		var bullet = bullet_scene.instantiate()
+		
+		# Calculate this specific bullet's angle
+		var current_angle = start_angle + deg_to_rad(spread_angle * i)
+		var shoot_direction = Vector2.RIGHT.rotated(current_angle)
+		
+		bullet.direction = shoot_direction
+		bullet.global_position = global_position + shoot_direction * BULLET_OFFSET
+		
+		# --- APPLY PLAYER BUFFS ---
+		bullet.damage += bonus_damage
+		if has_explosive_rounds:
+			bullet.is_explosive = true
+		
+		get_tree().root.add_child(bullet)
 
 
 func _on_body_entered(body: Node2D) -> void:
@@ -340,3 +355,19 @@ func _on_speed_boost_ended():
 	# Revert speed safely without breaking your 'slow' mechanic
 	if slow_stacks <= 0:
 		current_speed = base_speed
+
+func apply_player_buff(buff_id: String):
+	match buff_id:
+		"buff_damage":
+			bonus_damage += 5
+			print("Buff Acquired: Damage +5")
+		"buff_firerate":
+			# Reduce cooldown by 15%, but cap it at a machine-gun speed of 0.1s
+			shoot_cooldown = max(0.1, shoot_cooldown - 0.075)
+			print("Buff Acquired: Faster Fire Rate")
+		"buff_multishot":
+			multi_shot += 1
+			print("Buff Acquired: Extra Barrel!")
+		"buff_explosive":
+			has_explosive_rounds = true
+			print("Buff Acquired: Explosive Rounds!")
