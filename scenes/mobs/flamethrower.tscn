@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://bmisumr01y2v2"]
+
+[ext_resource type="Script" uid="uid://cjh1gnig6pcwi" path="res://scripts/mobs/flamethrower.gd" id="1_djqg8"]
+[ext_resource type="Texture2D" uid="uid://cresjxmh0rrbf" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/GiantFlam/Hit.png" id="2_djqg8"]
+[ext_resource type="PackedScene" uid="uid://bdpn46jsawbge" path="res://scenes/Projectiles/fire_ball.tscn" id="2_ekfem"]
+[ext_resource type="Texture2D" uid="uid://b4s15a0ksl02g" path="res://assets/Ninja Adventure - Asset Pack/Actor/Boss/GiantFlam/Idle.png" id="3_ekfem"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lykxh"]
+atlas = ExtResource("2_djqg8")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sj0fk"]
+atlas = ExtResource("2_djqg8")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exoe3"]
+atlas = ExtResource("2_djqg8")
+region = Rect2(100, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_70g2p"]
+atlas = ExtResource("3_ekfem")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gggkp"]
+atlas = ExtResource("3_ekfem")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_57nmx"]
+atlas = ExtResource("3_ekfem")
+region = Rect2(100, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8d8ow"]
+atlas = ExtResource("3_ekfem")
+region = Rect2(150, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qkill"]
+atlas = ExtResource("3_ekfem")
+region = Rect2(200, 0, 50, 50)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1ku3h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lykxh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sj0fk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exoe3")
+}],
+"loop": true,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_70g2p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gggkp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_57nmx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8d8ow")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qkill")
+}],
+"loop": true,
+"name": &"movement",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i5fto"]
+radius = 19.0
+
+[node name="flamethrower" type="CharacterBody2D" unique_id=282630859 groups=["enemy"]]
+scale = Vector2(0.7, 0.7)
+script = ExtResource("1_djqg8")
+fire_projectile_scene = ExtResource("2_ekfem")
+metadata/_custom_type_script = "uid://be2vb0w6qhbdv"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1369079546]
+sprite_frames = SubResource("SpriteFrames_1ku3h")
+animation = &"movement"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1490182202]
+position = Vector2(0, 3)
+shape = SubResource("CircleShape2D_i5fto")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1361923]

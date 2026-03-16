@@ -279,6 +279,7 @@ func _on_start_timer_timeout() -> void:
 	$GhostTimer.start()
 	$BearTimer.start()
 	$MushroomTimer.start()
+	$FlamethrowerTimer.start()
 	
 # --- SHOP LOGIC ---
 func _on_wave_started():
@@ -691,3 +692,7 @@ func trigger_level_up_juice():
 	
 	print("Level Up Juice Finished! Opening Shop...")
 	open_shop()
+
+func _on_flamethrower_timer_timeout() -> void:
+	var mob_spawn_location = get_mob_spawn_position()
+	mob_spawner.spawn_cluster("flamethrower", mob_spawn_location, $Commander, 1 + cluster_bonus)

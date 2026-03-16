@@ -8,12 +8,14 @@ const MOB_TYPES = {
 	"boss": preload("res://scenes/mobs/boss1.tscn"),
 	"boss_bamboo": preload("res://scenes/mobs/boss_bamboo.tscn"),
 	"boss_dragon": preload("res://scenes/mobs/boss_dragon.tscn"),
+	"flamethrower": preload("res://scenes/mobs/flamethrower.tscn")
 }
 
 # Current wave's mob configuration
 @export var wave_config = [
 	{"type": "ghost", "weight": 0.5},
-	{"type": "bear", "weight": 0.5}
+	{"type": "bear", "weight": 0.4},
+	{"type": "flamethrower", "weight": 0.1}
 ]
 
 # --- Boss Tracking Variables (Samurai boss) ---

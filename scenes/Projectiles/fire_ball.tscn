@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://bdpn46jsawbge"]
+
+[ext_resource type="Texture2D" uid="uid://bc7t47rofooec" path="res://assets/Ninja Adventure - Asset Pack/FX/Elemental/Flam/SpriteSheet.png" id="1_fwlct"]
+[ext_resource type="Script" uid="uid://bn88jkx7duxit" path="res://scripts/fire_ball.gd" id="1_igagd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_igagd"]
+atlas = ExtResource("1_fwlct")
+region = Rect2(50, 0, 25, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6l6at"]
+atlas = ExtResource("1_fwlct")
+region = Rect2(75, 0, 25, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_brkxk"]
+atlas = ExtResource("1_fwlct")
+region = Rect2(100, 0, 25, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0oodd"]
+atlas = ExtResource("1_fwlct")
+region = Rect2(125, 0, 25, 30)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ambiv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_igagd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6l6at")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_brkxk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0oodd")
+}],
+"loop": true,
+"name": &"fire",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5mr3e"]
+radius = 11.0
+height = 32.0
+
+[node name="fire_ball" type="Area2D" unique_id=1269559005]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_igagd")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2028960523]
+sprite_frames = SubResource("SpriteFrames_ambiv")
+animation = &"fire"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1415196919]
+shape = SubResource("CapsuleShape2D_5mr3e")
