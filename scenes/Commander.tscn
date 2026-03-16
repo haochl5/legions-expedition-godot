@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dbxm3x0u6vblc" path="res://scripts/Commander.gd" id="1_8r5yp"]
 [ext_resource type="Texture2D" uid="uid://cojrrfr0nxnx8" path="res://assets/Ninja Adventure - Asset Pack/Actor/Characters/NinjaDark/SpriteSheet.png" id="2_8r5yp"]
+[ext_resource type="Texture2D" uid="uid://dhubf78w5x3tg" path="res://assets/Ninja Adventure - Asset Pack/FX/Projectile/Shuriken/SpriteSheet.png" id="3_4iiit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4iiit"]
 atlas = ExtResource("2_8r5yp")
@@ -147,6 +148,107 @@ radius = 2.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_eunaa"]
 radius = 45.0
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_8r5yp"]
+load_path = "res://.godot/imported/SpriteSheetBlue.png-61520ecab9d2fdad535154cfc767ee53.ctex"
+
+[sub_resource type="Animation" id="Animation_4iiit"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [SubResource("CompressedTexture2D_8r5yp")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_eunaa"]
+resource_name = "pulse"
+length = 0.9
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 1,
+"values": []
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.6, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u2daa"]
+_data = {
+&"RESET": SubResource("Animation_4iiit"),
+&"pulse": SubResource("Animation_eunaa")
+}
+
+[sub_resource type="Animation" id="Animation_u2daa"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_tqcja"]
+resource_name = "burst"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2oagx"]
+_data = {
+&"RESET": SubResource("Animation_u2daa"),
+&"burst": SubResource("Animation_tqcja")
+}
+
 [node name="Commander" type="Area2D" unique_id=547804967 groups=["commander"]]
 y_sort_enabled = true
 disable_mode = 1
@@ -180,5 +282,22 @@ collision_mask = 32
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MagnetArea" unique_id=181197943]
 shape = SubResource("CircleShape2D_eunaa")
+
+[node name="ShieldVisual" type="Sprite2D" parent="." unique_id=1109217110]
+scale = Vector2(0.83035713, 0.8076922)
+texture = SubResource("CompressedTexture2D_8r5yp")
+hframes = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ShieldVisual" unique_id=1514915841]
+libraries/ = SubResource("AnimationLibrary_u2daa")
+autoplay = &"pulse"
+
+[node name="LevelUpBurst" type="Sprite2D" parent="." unique_id=815273509]
+visible = false
+texture = ExtResource("3_4iiit")
+hframes = 10
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LevelUpBurst" unique_id=1818686308]
+libraries/ = SubResource("AnimationLibrary_2oagx")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

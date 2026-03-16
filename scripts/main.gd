@@ -35,6 +35,7 @@ const HEARTBEAT_INTERVAL: float = 15.0 # Save to Talo every 60 seconds
 var cluster_bonus: int = 0
 var previous_level_hp: int = -1
 
+var is_leveling_up: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:	
@@ -43,7 +44,6 @@ func _ready() -> void:
 	# ----------------------------------------
 	
 	reinforcement_screen.wave_started.connect(_on_wave_started)
-	GameData.leveled_up.connect(_on_level_up)
 	mob_spawner.set_wave_config([
 		{"type": "bear", "weight": 0.2},
 		{"type": "ghost", "weight": 0.2},
@@ -68,6 +68,7 @@ func _ready() -> void:
 	# connect dragon signal for changing BGM
 	mob_spawner.dragon_spawned.connect(_on_spawner_boss_dragon_spawned_signal)
 	mob_spawner.dragon_died.connect(_on_spawner_boss_dragon_died_signal)
+	GameData.leveled_up.connect(_on_player_level_up)
 	
 	
 func _init_player() -> void:
@@ -260,7 +261,16 @@ func _on_mushroom_timer_timeout() -> void:
 func get_mob_spawn_position():
 	var mob_spawn_location = $Commander/MobPath/MobSpawnLocation
 	mob_spawn_location.progress_ratio = randf()
-	return mob_spawn_location.global_position
+	
+	var raw_pos = mob_spawn_location.global_position
+	var commander_pos = $Commander.global_position
+	
+	# --- THE FIX: DYNAMICALLY SHRINK THE SPAWN RADIUS ---
+	# We use lerp (Linear Interpolate) to pull the spawn point closer to the player.
+	# 0.0 means "use the original path distance".
+	# 1.0 means "spawn exactly on top of the commander".
+	# 0.4 means "spawn 40% closer than the path currently is".
+	return raw_pos.lerp(commander_pos, 0.4)
 
 func _on_start_timer_timeout() -> void:
 	$MobTimer.start()
@@ -287,17 +297,6 @@ func _unhandled_input(event):
 			var boss = mob_spawner.spawn_mob("boss", spawn_pos, $Commander)
 			if boss:
 				add_child(boss)
-
-func _on_level_up(new_level: int):
-	var spawn_pos = get_mob_spawn_position()
-	mob_spawner.try_spawn_boss(new_level, spawn_pos, $Commander)
-	
-	# --- NEW: TRIGGER PROGRESSION ---
-	increase_difficulty(new_level)
-	# --------------------------------
-	
-	print("Level Up! Opening Shop...")
-	open_shop()
 	
 func open_shop():
 	get_tree().paused = true
@@ -645,3 +644,46 @@ func _on_spawner_boss_dragon_died_signal():
 	# don't ask me why it is "1", it is how it is
 	if alive_dragons == 1:
 		_fade_switch_music($"BGM-dragon", $"BGM-main", 3.0)
+
+func _on_player_level_up(new_level: int):
+	# 1. TRIGGER PROGRESSION IMMEDIATELY (Invisible to player)
+	var spawn_pos = get_mob_spawn_position()
+	mob_spawner.try_spawn_boss(new_level, spawn_pos, $Commander)
+	increase_difficulty(new_level)
+	
+	# 2. TRIGGER THE VISUALS 
+	if not is_leveling_up:
+		trigger_level_up_juice()
+
+func trigger_level_up_juice():
+	is_leveling_up = true
+	var juice_duration = 1 
+	
+	# 1. TRIGGER THE BURST ANIMATION (Normal Speed)
+	if has_node("Commander/LevelUpBurst"):
+		$Commander/LevelUpBurst.show()
+		$Commander/LevelUpBurst/AnimationPlayer.speed_scale = 1.0 
+		$Commander/LevelUpBurst/AnimationPlayer.play("burst")
+	
+	# 2. CREATE THE SCREEN FLASH
+	var flash = ColorRect.new()
+	flash.color = Color(1, 1, 1, 1) # Pure white
+	flash.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(flash) 
+	
+	# Tween the flash to fade out over the duration
+	var tween = create_tween()
+	tween.tween_property(flash, "color:a", 0.0, juice_duration)
+	tween.tween_callback(flash.queue_free) 
+	
+	# 4. WAIT FOR THE JUICE TO FINISH
+	await get_tree().create_timer(juice_duration).timeout
+	
+	# 5. CLEANUP AND OPEN SHOP
+	if has_node("Commander/LevelUpBurst"):
+		$Commander/LevelUpBurst.hide()
+	
+	is_leveling_up = false
+	
+	print("Level Up Juice Finished! Opening Shop...")
+	open_shop()
