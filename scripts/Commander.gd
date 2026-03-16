@@ -67,7 +67,7 @@ func _ready():
 	
 	# --- SHIELD TIMERS SETUP ---
 	shield_expiration_timer = Timer.new()
-	shield_expiration_timer.wait_time = 120.0
+	shield_expiration_timer.wait_time = 90
 	shield_expiration_timer.one_shot = true
 	shield_expiration_timer.timeout.connect(_on_shield_expired)
 	add_child(shield_expiration_timer)
@@ -247,7 +247,7 @@ func start(pos):
 	# --- RESET GRACE PERIOD SHIELD ---
 	shield_hits_remaining = 3
 	shield_active = true
-	shield_expiration_timer.start(120.0) # Start the 2 minute clock
+	shield_expiration_timer.start(90) # Start the 2 minute clock
 	
 	if has_node("ShieldVisual"):
 		$ShieldVisual.modulate = Color(1, 1, 1, 1) # Reset transparency
