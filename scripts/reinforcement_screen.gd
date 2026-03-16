@@ -131,7 +131,7 @@ func _init_champion_database():
 	buff_spd.display_name = "Hair Trigger"
 	buff_spd.role = "Player Buff"
 	buff_spd.icon = firerate_face
-	buff_spd.cost = 10
+	buff_spd.cost = 15
 	buff_spd.description = "Increases Commander shooting speed by 15%."
 	buff_spd.unit_scene = null
 	available_buffs.append(buff_spd)
@@ -141,7 +141,7 @@ func _init_champion_database():
 	buff_multi.display_name = "Twin Barrels"
 	buff_multi.role = "Player Buff"
 	buff_multi.icon = barrel_face
-	buff_multi.cost = 10
+	buff_multi.cost = 15
 	buff_multi.description = "Fires an additional bullet in a spread pattern."
 	buff_multi.unit_scene = null
 	available_buffs.append(buff_multi)

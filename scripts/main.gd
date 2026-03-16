@@ -237,6 +237,20 @@ func new_game():
 	_game_start_time = Time.get_unix_time_from_system()
 	$Commander.start($StartPosition.position)
 	$StartTimer.start()
+	# --- NEW: TUTORIAL BOX FADE OUT ---
+	if has_node("CanvasLayer/TutorialBox"):
+		var tutorial_box = $CanvasLayer/TutorialBox
+		tutorial_box.show()
+		tutorial_box.modulate.a = 1.0 # Ensure it is fully visible
+		
+		var tween = create_tween()
+		# Wait 6 seconds for them to read it
+		tween.tween_interval(6.0) 
+		# Fade the transparency (alpha) to 0 over 1.5 seconds
+		tween.tween_property(tutorial_box, "modulate:a", 0.0, 1.5) 
+		# Hide the node completely when the fade finishes
+		tween.tween_callback(tutorial_box.hide)
+	# ----------------------------------
 
 func _on_mob_timer_timeout() -> void:
 	# random spown position

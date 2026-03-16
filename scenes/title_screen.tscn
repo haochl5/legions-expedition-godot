@@ -13,6 +13,7 @@ bg_color = Color(0, 0, 0, 1)
 
 [node name="TitleScreen" type="Control" unique_id=794328610]
 process_mode = 3
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -44,7 +45,7 @@ layout_mode = 2
 [node name="GameTitle" type="Label" parent="TitleScreenContainer/TitleVBoxContainer" unique_id=1164087298]
 layout_mode = 2
 theme_override_font_sizes/font_size = 37
-text = "Legion's Expedition v.0.0.1"
+text = "Legion's Expedition v.0.0.4"
 
 [node name="StartButton" type="Button" parent="TitleScreenContainer/TitleVBoxContainer" unique_id=1253502888]
 custom_minimum_size = Vector2(0, 50)
