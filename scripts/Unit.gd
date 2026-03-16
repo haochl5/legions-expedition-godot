@@ -33,11 +33,14 @@ var state_is_following: bool = false
 
 @export var move_speed: float = 150
 @onready var comfort_zone: Area2D = $ComfortZone
-@export var comfort_force: float = 50.0 
+@export var comfort_force: float = 70
 
 var velocity_component: Vector2 = Vector2.ZERO
 const OVERLAP_THRESHOLD = 100
-@export var friction: float = 0.15  
+@export var friction: float = 0.15
+
+var cached_push_vector: Vector2 = Vector2.ZERO
+var push_timer: int = 0
 
 # --- UPDATED SETUP ---
 func setup(new_data: ChampionData, level: int, new_player: Node2D):
@@ -60,10 +63,9 @@ func _physics_process(delta):
 	if player and is_instance_valid(player):
 		dist_to_player = global_position.distance_to(player.global_position)
 	
-	# --- THE FIX: EVERYONE NEEDS TO LOOK FOR ENEMIES! ---
+	# --- EVERYONE NEEDS TO LOOK FOR ENEMIES! ---
 	if target == null or not is_instance_valid(target):
 		target = find_nearest_enemy()
-	# ----------------------------------------------------
 	
 	# --- BEHAVIOR SELECTION (PRIORITY SYSTEM) ---
 	
@@ -95,10 +97,8 @@ func _physics_process(delta):
 			var dir = global_position.direction_to(player.global_position)
 			desired_velocity = dir * speed
 		else:
+			# THE FIX: We just tell them to stop. The global push handles the spacing.
 			desired_velocity = Vector2.ZERO
-			var push = get_comfort_push()
-			if push != Vector2.ZERO:
-				desired_velocity = push * comfort_force
 
 	# PRIORITY 4: Ranged Combat
 	if not is_melee and target and is_instance_valid(target):
@@ -106,6 +106,20 @@ func _physics_process(delta):
 		if dist_to_target <= aggro_range and attack_timer <= 0:
 			attack() 
 			attack_timer = base_attack_cooldown * attack_speed_modifier
+
+
+	# --- THE FIX: GLOBAL SOCIAL DISTANCING ---
+	# Calculate the push force regardless of what state the unit is in
+	push_timer -= 1
+	if push_timer <= 0:
+		cached_push_vector = get_comfort_push()
+		# Randomize the timer so all 50 units don't run the math on the exact same frame!
+		push_timer = randi_range(4, 8) 
+		
+	if cached_push_vector != Vector2.ZERO:
+		desired_velocity += cached_push_vector * comfort_force
+	# -----------------------------------------
+
 
 	# --- TICK COOLDOWN TIMER ---
 	if attack_timer > 0:
@@ -121,21 +135,39 @@ func _physics_process(delta):
 	update_visuals()
 
 func get_comfort_push() -> Vector2:
-	var total_push = Vector2.ZERO
-	var neighbors = comfort_zone.get_overlapping_areas() 
-	
+	var neighbors = comfort_zone.get_overlapping_bodies() 
 	if neighbors.is_empty(): return Vector2.ZERO
 	
-	for area in neighbors:
-		var neighbor_unit = area.get_parent() 
-		if not neighbor_unit is Node2D or neighbor_unit == self:
+	var total_push = Vector2.ZERO
+	var overlap_squared = OVERLAP_THRESHOLD * OVERLAP_THRESHOLD # Math trick!
+	var processed_count = 0
+	var max_neighbors_to_check = 6 # The Hard Cap
+	
+	for body in neighbors:
+		if body == self or not body is CharacterBody2D:
 			continue
 			
-		var vector_to_me = global_position - neighbor_unit.global_position
-		var dist = vector_to_me.length()
+		var vector_to_me = global_position - body.global_position
 		
-		if dist < OVERLAP_THRESHOLD and dist > 0:
-			total_push += vector_to_me.normalized()
+		# FAST CHECK: length_squared() doesn't use a square root!
+		var dist_sq = vector_to_me.length_squared()
+		
+		if dist_sq == 0:
+			vector_to_me = Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0))
+			dist_sq = 0.1
+		
+		# Only do the expensive math if they are definitely inside the threshold
+		if dist_sq < overlap_squared:
+			var dist = sqrt(dist_sq) # Now we do the square root just once
+			var push_strength = 1.0 - (dist / OVERLAP_THRESHOLD)
+			
+			# MATH TRICK: dividing by 'dist' does the exact same thing as .normalized() but faster
+			total_push += (vector_to_me / dist) * push_strength
+			
+			# Stop checking once we've processed 6 nearby units
+			processed_count += 1
+			if processed_count >= max_neighbors_to_check:
+				break 
 			
 	return total_push.normalized() if total_push != Vector2.ZERO else Vector2.ZERO
 

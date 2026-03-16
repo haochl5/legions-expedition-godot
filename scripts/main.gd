@@ -524,7 +524,7 @@ func increase_difficulty(current_level: int):
 
 	# TIER 2: THE "GLASS CANNON" (Low HP, taking zero damage, hoarding gold)
 	elif current_hp_percent < 0.35 and hp_delta_percent >= 0.0 and GameData.gold >= 15:
-		current_director_intensity += 0.1 
+		current_director_intensity += 0.1
 		print("[Director] GLASS CANNON DETECTED! Stable at low HP. Raising intensity to ", current_director_intensity)
 
 	# TIER 3: ACTUAL CRITICAL (Low HP AND actively took damage this level)
@@ -569,7 +569,7 @@ func increase_difficulty(current_level: int):
 
 	# TIER 5: DOMINATING (High HP, took zero damage)
 	elif current_hp_percent > 0.85 and hp_delta_percent >= 0.0:
-		current_director_intensity += 0.25 
+		current_director_intensity += 0.2 
 		print("[Director] DOMINATING! Raising intensity to ", current_director_intensity)
 
 	# TIER 6: UNTOUCHABLE (Catch-all for ANY flawless wave not caught by T2 or T5)
@@ -598,8 +598,8 @@ func increase_difficulty(current_level: int):
 	# --- 3. APPLY THE SCALING ---
 	if current_level % 2 != 0:
 		var spawn_reduction = 1.0 - (0.05 * current_director_intensity) 
-		$MobTimer.wait_time = max(0.1, $MobTimer.wait_time * spawn_reduction)
-		$GhostTimer.wait_time = max(0.1, $GhostTimer.wait_time * spawn_reduction)
+		$MobTimer.wait_time = max(0.6, $MobTimer.wait_time * spawn_reduction)
+		$GhostTimer.wait_time = max(0.6, $GhostTimer.wait_time * spawn_reduction)
 		$BearTimer.wait_time = max(0.7, $BearTimer.wait_time * spawn_reduction)
 		$MushroomTimer.wait_time = max(0.8, $MushroomTimer.wait_time * spawn_reduction)
 
@@ -614,7 +614,6 @@ func increase_difficulty(current_level: int):
 				cluster_bonus = max(0, cluster_bonus - 1) 
 			
 	print("[Level ", current_level, " Setup] Intensity: ", current_director_intensity, " | HP Multiplier: ", snapped(mob_spawner.health_multiplier, 0.1))
-
 
 func _fade_switch_music(from_node: Node, to_node: Node, duration: float = 2.0):
 	if from_node == to_node: return
