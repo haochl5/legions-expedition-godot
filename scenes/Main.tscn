@@ -1011,6 +1011,9 @@ wait_time = 20.0
 [node name="MushroomTimer" type="Timer" parent="." unique_id=1576291629]
 wait_time = 15.0
 
+[node name="FlamethrowerTimer" type="Timer" parent="." unique_id=1117686311]
+wait_time = 20.0
+
 [node name="StartPosition" type="Marker2D" parent="." unique_id=782387401]
 position = Vector2(240, 450)
 
@@ -1054,3 +1057,4 @@ parameters/looping = true
 [connection signal="timeout" from="GhostTimer" to="." method="_on_ghost_timer_timeout"]
 [connection signal="timeout" from="BearTimer" to="." method="_on_bear_timer_timeout"]
 [connection signal="timeout" from="MushroomTimer" to="." method="_on_mushroom_timer_timeout"]
+[connection signal="timeout" from="FlamethrowerTimer" to="." method="_on_flamethrower_timer_timeout"]
